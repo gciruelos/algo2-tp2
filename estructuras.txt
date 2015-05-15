@@ -1,0 +1,21 @@
+*Red:
+1-dicc(compu, dicc(compu,compu))
+2-dicc(compu, conj(tupla(interfaz,interaz, compu)))
+
+*Dcnet:
+3-red
+4-dicc(compu, tupla(colaprior(paquetes), conj(paquetes), nat))
+5-dicc(paquete, secu(compu))
+6-compu
+
+
+*crearPaquete:
+-Busca en 4 la computadora origen (O(L)), encola (O(log(k), en el peor de los casos)y
+agrega al conjunto (O(log(k)). Agrega el paquete a 5 (log(k)).
+
+*avanzarSegundo:
+Recorre 4 con un iterador, y para cada compu desencola (O(log(k))), 
+borra al elemento del conjunto (log(k)), incrementa en 1 el nat, y agrega el elemento a una pila (log(k)).
+n veces desapilo, busco (en 1, cuesta log(n)) la compu a la que tiene que ir (L) y encolo 
+y agrego al conjunto. Busco en 5 el paquete, y agrego la compu atras de la secu.
+Busco el nuevo maximo (n).

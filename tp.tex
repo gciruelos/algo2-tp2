@@ -10,6 +10,7 @@
 \usepackage{fancyhdr}
 \usepackage{aed2-tad,aed2-symb,aed2-itef}
 \usepackage[bottom]{footmisc}
+\usepackage{modulos}
 
 \newcommand{\moduloNombre}[1]{\textbf{#1}}
 
@@ -35,6 +36,20 @@
 }
 \newcommand{\DRef}{\ensuremath{\rightarrow}}
 
+%%Información para la carátula
+\materia{Algoritmos y Estructuras de Datos II}
+
+\titulo{\LARGE Trabajo Práctico Nº2}
+
+\grupo{Grupo 18}
+
+\integrante{Ciruelos Rodríguez, Gonzalo}{063/14}{gonzalo.ciruelos@gmail.com}
+\integrante{Costa, Manuel José Joaquín}{035/14}{manuc94@hotmail.com}
+\integrante{Gatti, Mathias Nicolás}{477/14}{mathigatti@gmail.com}
+\integrante{Ginsberg, Mario Ezequiel}{145/14}{ezequielginsberg@gmail.com}
+
+\def\cuatrimestre{1}
+
 %%fancyhdr
 \pagestyle{fancy}
 \thispagestyle{fancy}
@@ -48,11 +63,15 @@
 
 
 \begin{document}
-
-
+\maketitle
 \thispagestyle{empty}
-\input{interfaz.tex}
+
+\section{Módulo Red}
+\input{red.tex}
+
 \newpage
+\section{Módulo DCNet}
+\input{dcnet.tex}
 
 \clearpage
 

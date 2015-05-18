@@ -13,7 +13,7 @@ DCNet
 
 * 3 -> secu(secu(compus))
 * 4 -> itdicc
-* 5 -> nat
+* 5 -> tupla(nat,compu)
 
 crearPaquete
 ------------

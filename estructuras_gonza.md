@@ -12,7 +12,7 @@ DCNet
                           nat)))                          TRIE
 
 * 3 -> secu(secu(compus))
-* 4 -> itdicc
+* 4 -> itdicc             º
 * 5 -> tupla(nat,compu)
 
 crearPaquete
@@ -27,8 +27,9 @@ crearPaquete
 avanzarSegundo
 --------------
 
-1. Para las n computadoras (n) busco el paquete que tiene que ir a continuación (1), edito el contador y actualizo la que mas envió si es necesario (1), pongo el it_3 en una secuencia (1), lo elimino de los conjuntos (O(log(k) + log(k))   (Total de este paso: n\*(1+1+log(k)+log(k)))
-2. Para cada paquete en la lista, lo pongo en la computadora que tiene que ir y edito 3 agregandole al final ese elemento (n\* (L + L+ L+ log(k) + log(k)))
+1. Para las n computadoras (n) busco el paquete que tiene que ir a continuación (1), edito el contador y actualizo la que mas envió si es necesario (1), pongo tupla (paq,it_3) en una secuencia (1), lo elimino de los conjuntos (O(log(k) + log(k))   (Total de este paso: n\*(1+1+log(k)+log(k)))
+
+2. Para cada paquete en la lista, agrego la computadora de la que esta saliendo a la lista apuntada por el iterador (L). Despues lo pongo en la computadora que tiene que ir y edito 3 agregandole al final ese elemento (n\* (L + L + L+ L+ log(k) + log(k)))
 
 caminoRecorrido
 ---------------

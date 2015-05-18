@@ -12,7 +12,7 @@ DCNet
                           nat)))                          TRIE
 
 * 3 -> secu(secu(compus))
-* 4 -> secu(itdicc)
+* 4 -> itdicc
 * 5 -> nat
 
 crearPaquete
@@ -32,7 +32,7 @@ avanzarSegundo
 
 caminoRecorrido
 ---------------
-1. Recorro 4 para buscar el elemento y por cada uno busco el elemento, cuando lo encuentro listo (n\*log(k))
+1. Recorro con 4 para buscar el elemento y por cada uno busco el elemento, cuando lo encuentro listo (n\*log(k))
 
 
 

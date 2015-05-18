@@ -1,45 +1,55 @@
 \begin{Interfaz}
   
-  \textbf{parámetros formales}\hangindent=2\parindent\\
-  \parbox{1.7cm}{\textbf{géneros}} $\alpha$\\
-  \parbox[t]{1.7cm}{\textbf{función}}\parbox[t]{\textwidth-2\parindent-1.7cm}{%
-    \InterfazFuncion{Copiar}{\In{a}{$\alpha$}}{$\alpha$}
-    {$res \igobs a$}
-    [$\Theta(copy(a))$]
-    [función de copia de $\alpha$'s]
-  }
+  \textbf{se explica con}: \tadNombre{Red}.
 
-  \textbf{se explica con}: \tadNombre{Secuencia$(\alpha)$}, \tadNombre{Iterador Bidireccional($\alpha$)}.
-
-  \textbf{géneros}: \TipoVariable{lista$(\alpha)$}, \TipoVariable{itLista($\alpha$)}.
-
-  \section*{Operaciones básicas de lista}
-
-  \InterfazFuncion{Vacía}{}{lista$(\alpha)$}%
-  {$res \igobs \secuencia{}$}%
-  [$\Theta(1)$]
-  [genera una lista vacía.]
-
-  \InterfazFuncion{AgregarAdelante}{\Inout{l}{lista($\alpha$)}, \In{a}{$\alpha$}}{itLista($\alpha$}
-  [$l \igobs l_0$]
-  {$l \igobs \secuencia{a}[l_0]$ $\land$ $res$ $=$ CrearItBi(\secuencia{}, $l$) $\land$ alias(SecuSuby($res$) $=$ $l$)}
-  [$\Theta(copy(a))$]
-  [agrega el elemento $a$ como primer elemento de la lista.  Retorna un iterador a $l$, de forma tal que Siguiente devuelva $a$.]
-  [el elemento $a$ agrega por copia. El iterador se invalida si y sólo si se elimina el elemento siguiente del iterador sin utilizar la función \NombreFuncion{EliminarSiguiente}.]
-
-  \section*{Operaciones del iterador}
-
-  \InterfazFuncion{CrearIt}{\In{l}{lista($\alpha$)}}{itLista($\alpha$)}
-  {$res$ $\igobs$ crearItBi(\secuencia{}, $l$) $\land$ alias(SecuSuby($it$) $=$ $l$)}
-  [$\Theta(1)$]
-  [crea un iterador bidireccional de la lista, de forma tal que al pedir \NombreFuncion{Siguiente} se obtenga el primer elemento de $l$.]
-  [el iterador se invalida si y sólo si se elimina el elemento siguiente del iterador sin utilizar la función \NombreFuncion{EliminarSiguiente}.]
   
-  \InterfazFuncion{CrearItUlt}{\In{l}{lista($\alpha$)}}{itLista($\alpha$)}
-  {$res$ $\igobs$ crearItBi($l$, \secuencia{}) $\land$ alias(SecuSuby($it$) $=$ $l$)}
-  [$\Theta(1)$]
-  [crea un iterador bidireccional de la lista, de forma tal que al pedir \NombreFuncion{Anterior} se obtenga el último elemento de $l$.]  
-  [el iterador se invalida si y sólo si se elimina el elemento siguiente del iterador sin utilizar la función \NombreFuncion{EliminarSiguiente}.]
+  \section*{Operaciones básicas de \tadNombre{Red}}
+
+  \InterfazFuncion{IniciarRed}{}{red}
+  {$res \igobs iniciarRed()$}%
+  [$\Theta()$]
+  [genera la red vacía]
+
+  \InterfazFuncion{AgregarComputadora}{\Inout{r}{\tadNombre{Red}}, \In{c}{\tadNombre{Compu}}}{}
+  [$r \igobs r_0 \land (\forall c' : compu) (c' \in computadoras(r) \impluego ip(c) \neq ip(c'))$] 
+  {$computadoras(r) = Ag(c, computadoras(r_0)) \yluego \\
+     (\forall c_1, c_2 : compu) (c_1 \in computadoras(r_0) \land c_2 \in computadoras(r_0) \impluego \\ 
+   conectadas(r_0, c_1, c_2) = conectadas(r, c_1, c_2) \land interfazUsada(r_0, c_1, c_2) = interfazUsada(r, c_1, c_2)$)}
+  [$\Theta()$]
+  [agrega el la computadora $c$ a la red $r$.]
+  [el elemento $c$ agrega por copia.]
+  
+  
+  \InterfazFuncion{conectar}{\Inout{r}{\tadNombre{Red}}, \In{c_1}{\tadNombre{Compu}},  \In{i_1}{\tadNombre{Interfaz}}, \In{c_2}{\tadNombre{Interfaz}}, \In{i_2}{\tadNombre{Interfaz}}}{}
+ [$r \igobs r_0 \land c_1 \in computadoras(r) \land c_2 \in computadoras(r) \land ip(c_1) \neq ip(c_2) \land \neg conectadas?(r, c_1, c_2) \land \neg usaInterfaz?(r,c_1, i_1) \land \neg usaInterfaz?(r, c_2, i_2)$]
+  {$computadoras(r) = computadoras(r_0) \yluego \\
+    (\forall c'_1, c'_2 : compu) (c'_1 \in computadoras(r_0) \land c'_2 \in computadoras(r_0) \land \{c_1, c_2\} \neq \{c'_1, c'_2\} \impluego \\ 
+   conectadas(r_0, c'_1, c'_2) = conectadas(r, c'_1, c'_2) \land interfazUsada(r_0, c'_1, c'_2) = interfazUsada(r, c'_1, c'_2)) \land \\
+   conectadas(r_0, c_1, c_2) \land interfazUsada(r, c_1, c_2) = i_1 \land interfazUsada(r, c_2, c_1) = i_2$}
+  [$\Theta()$]
+  [conecta las computadoras $c_1$ y $c_2$ mediante las interfaces $i_1$ e $i_2$ respectivamente en la red $r$.]
+
+
+  \InterfazFuncion{computadoras}{\In{r}{\tadNombre{Red}}}{}
+  {$res = computadoras(r)$}
+  [$\Theta()$]
+  [devuelve un conjunto con todas las computadoras de la red $r$.]
+  [?]
+
+
+  \InterfazFuncion{conectadas?}{\In{r}{\tadNombre{Red}}, \In{c_1}{\tadNombre{Compu}}, \In{c_2}{\tadNombre{Compu}}}{\tadNombre{bool}}
+  [$c_1 \in computadoras(r) \land c_2 \in computadoras(r)$]
+  {$res = conectadas?(r,c_1,c_2)$}
+  [$\Theta()$]
+  [dice si las computadoras $c_1$ y $c_2$ están conectadas en la red $r$]
+
+
+  \InterfazFuncion{interfazUsada}{\In{r}{\tadNombre{Red}}, \In{c_1}{\tadNombre{Compu}}, \In{c_2}{\tadNombre{Compu}}}{\tadNombre{bool}}
+  [$conectadas?(r,c_1,c_2)$]
+  {$res = interfazUsada(r,c_1,c_2)$}
+  [$\Theta()$]
+  [devuelve la interfaz mediante la cual $c_1$ se conecta a $c_2$  en la red $r$.]
+
 
 \end{Interfaz}
 

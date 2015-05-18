@@ -1,7 +1,7 @@
 Red
 ---
+* 0 -> dicc(compu, conj(tupla (interfaz, interfaz, compu)))
 * 1 -> dicc(compu, dicc(compu, compu)) TRIE
-
 
 DCNet
 -----

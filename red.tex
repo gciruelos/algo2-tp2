@@ -51,6 +51,37 @@
   [devuelve la interfaz mediante la cual $c_1$ se conecta a $c_2$  en la red $r$.]
 
 
+  \InterfazFuncion{vecinos}{\In{r}{\tadNombre{Red}}, \In{c}{\tadNombre{Compu}}}{\tadNombre{conj(compu)}}
+  [$c \in computadoras(r)$]
+  {$res = vecinos(r,c)$}
+  [$\Theta()$]
+  [devuelve las computadoras conectadas a $c$ en la red $r$.]
+  [?]
+
+
+  \InterfazFuncion{usaInterfaz?}{\In{r}{\tadNombre{Red}}, \In{c}{\tadNombre{Compu}}, \In{i}{\tadNombre{Interfaz}}}{\tadNombre{bool}}
+  [$c \in computadoras(r)$]
+  {$res = usaInterfaz?(r,c,i)$}
+  [$\Theta()$]
+  [devuelve true si y solo si $c$ está conectada a otra pc mediante la interfaz $i$ en la red $r$.]
+
+
+  \InterfazFuncion{caminosMinimos}{\In{r}{\tadNombre{Red}}, \In{c_1}{\tadNombre{Compu}}, \In{c_2}{\tadNombre{Compu}}}{\tadNombre{conj(secu(compu))}}
+  [$c_1 \in computadoras(r) \land c_2 \in computadoras(r)$]
+  {$res = caminosMinimos(r,c_1,c_2)$}
+  [$\Theta()$]
+  [devuelve un conjunto con los caminos más cortos entre las computadoras $c_1$ y $c_2$ en la red $r$.]
+
+%%
+
+  \InterfazFuncion{hayCamino?}{\In{r}{\tadNombre{Red}}, \In{c_1}{\tadNombre{Compu}}, \In{c_2}{\tadNombre{Compu}}}{\tadNombre{bool}}
+  [$c_1 \in computadoras(r) \land c_2 \in computadoras(r)$]
+  {$res = hayCamino?(r,c_1,c_2)$}
+  [$\Theta()$]
+  [devuelve true si y solo si hay un camino entre las computadoras $c_1$ y $c_2$ en la red $r$.]
+
+
+
 \end{Interfaz}
 
 \begin{Representacion}

@@ -88,16 +88,10 @@
   
   \section*{Representación de la lista}
 
-  \begin{Estructura}{lista$(\alpha)$}[lst]
-    \begin{Tupla}[lst]
-      \tupItem{primero}{puntero(nodo)}%
-      \tupItem{longitud}{nat}%
-    \end{Tupla}
-
-    \begin{Tupla}[nodo]
-      \tupItem{dato}{$\alpha$}%
-      \tupItem{anterior}{puntero(nodo)}%
-      \tupItem{siguiente}{puntero(nodo)}%
+  \begin{Estructura}{red}[estr]
+    \begin{Tupla}[estr]
+      \tupItem{vecinos}{(ip, conj(tupla(interfaz, interfaz, compu)))}%
+      \tupItem{interfaces}{(ip, conj(interfaz))}%
     \end{Tupla}
   \end{Estructura}
 

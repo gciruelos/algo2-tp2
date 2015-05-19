@@ -1,32 +1,32 @@
 \begin{Interfaz}
   
-  \textbf{parámetros formales}\hangindent=2\parindent\\
-  \parbox{1.7cm}{\textbf{géneros}} $\alpha$\\
-  \parbox[t]{1.7cm}{\textbf{función}}\parbox[t]{\textwidth-2\parindent-1.7cm}{%
-    \InterfazFuncion{Copiar}{\In{a}{$\alpha$}}{$\alpha$}
-    {$res \igobs a$}
-    [$\Theta(copy(a))$]
-    [función de copia de $\alpha$'s]
-  }
+  \textbf{se explica con}: \tadNombre{dcnet}.
 
-  \textbf{se explica con}: \tadNombre{Secuencia$(\alpha)$}, \tadNombre{Iterador Bidireccional($\alpha$)}.
+  \textbf{géneros}: \TipoVariable{dcnet}.
 
-  \textbf{géneros}: \TipoVariable{lista$(\alpha)$}, \TipoVariable{itLista($\alpha$)}.
+  \section*{Operaciones básicas de DCNet}
 
-  \section*{Operaciones básicas de lista}
-
-  \InterfazFuncion{Vacía}{}{lista$(\alpha)$}%
-  {$res \igobs \secuencia{}$}%
+  \InterfazFuncion{Iniciar}{\In{r}{red}}{dcnet}
+  {$res \igobs iniciarDCNet(r)$}
   [$\Theta(1)$]
-  [genera una lista vacía.]
+  [genera una DCNet con las computadoras y conexiones de la red pasada como parámetro.]
 
-  \InterfazFuncion{AgregarAdelante}{\Inout{l}{lista($\alpha$)}, \In{a}{$\alpha$}}{itLista($\alpha$}
-  [$l \igobs l_0$]
-  {$l \igobs \secuencia{a}[l_0]$ $\land$ $res$ $=$ CrearItBi(\secuencia{}, $l$) $\land$ alias(SecuSuby($res$) $=$ $l$)}
-  [$\Theta(copy(a))$]
-  [agrega el elemento $a$ como primer elemento de la lista.  Retorna un iterador a $l$, de forma tal que Siguiente devuelva $a$.]
-  [el elemento $a$ agrega por copia. El iterador se invalida si y sólo si se elimina el elemento siguiente del iterador sin utilizar la función \NombreFuncion{EliminarSiguiente}.]
-
+  \InterfazFuncion{CrearPaquete}{\Inout{d}{dcnet}, \In{p}{paquete}}{}
+  [$d \igobs d_0 \land 
+   \neg((\exists p':paquete) (paqueteEnTransito?(d_0,p') \land id(p') \igobs id(p)) \land\\ 
+   \hspace*{3em} origen(p) \in computadoras(red(d_0)) \yluego
+   destino(p) \in computadoras(red(d_0)) \yluego\\
+   \hspace*{3em} hayCamino?(red(d), origen(p), destino(p))$]
+  {$d \igobs crearPaquete(d_0, p)$}
+  [$\Theta()$]
+  [agrega el paquete $p$ a la cola de la computadora $p.origen$.]
+  
+  \InterfazFuncion{AvanzarSegundo}{\Inout{d}{dcnet}}{dcnet}
+  [$d \igobs d_0$]  
+  {$res \igobs avanzarSegundo(d_0)$}
+  [$\Theta()$]
+  [avanza un segundo; todas las computadoras que tengan paquetes por enviar los envían.]
+  
   \section*{Operaciones del iterador}
 
   \InterfazFuncion{CrearIt}{\In{l}{lista($\alpha$)}}{itLista($\alpha$)}
@@ -45,7 +45,7 @@
 
 \begin{Representacion}
   
-  \section*{Representación de la lista}
+  \section*{Representación de DCNet}
 
   \begin{Estructura}{lista$(\alpha)$}[lst]
     \begin{Tupla}[lst]

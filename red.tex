@@ -109,16 +109,85 @@ $\land$\\
   
    
    \AbsFc[estr]{red}[e]{
-     r : red / computadoras(r) = claves(e.vecinos) $\land$ \\ 
+     r : red / computadoras(r) = juntar(claves(e.vecinos), e.interfaces) $\land$ \\ 
      ($\forall c_1, c_2$ : computadora) conectadas($r, c_1, c_2$) = def?(id($c_1$), obtener(id($c_2$), e.vecinos)) $\land$ \\
      ($\forall c_1, c_2$: computadora) ($\forall i$ : interfaz) conectadas($r,c_1,c_2$) $\impluego$ interfazUsada($r, c_1, c_2$) = obtener(id($c_1$), obtener(id($c_2$), e.vecinos))
   }
 
 \end{Representacion}
 
+\begin{Algoritmos}
+
+
+\begin{algorithm}
+\caption{Iniciar Red}
+\begin{algorithmic}[1]
+  \Procedure{IniciarRed}{}
+  \State vecinos $\gets$ Vacia()
+  \State interfaces $\gets$ Vacia()
+  \State r $\gets$ (vecinos, interfaces)
+  \State \Return r
+  \EndProcedure
+\end{algorithmic}
+\end{algorithm}
+
+
+
+
+\begin{algorithm}
+\caption{Agregar Computadora}
+\begin{algorithmic}[1]
+  \Procedure{AgregarComputadora($r$ : red, $c$ : compu)}{}
+  \State definir(r.vecinos, id($c$), Vacia())
+  \State definir(r.interfaces, id($c$), interfaces($c$))
+ \EndProcedure
+\end{algorithmic}
+\end{algorithm}
+
+
+\begin{algorithm}
+\caption{Conectar}
+\begin{algorithmic}[1]
+  \Procedure{Conectar($r$ : red, $c_1$ : compu, $c_2$ : compu, $i_1$ : interfaz, $i_2$ : interfaz)}{}
+  \State $x \gets$ obtener(r.vecinos, $c_1$)
+  \State definir($x$, $c_2$, $i_1$)
+  \State $x \gets$ obtener(r.vecinos, $c_2$)
+  \State definir($x$, $c_1$, $i_2$)
+ \EndProcedure
+\end{algorithmic}
+\end{algorithm}
+
+
+\begin{algorithm}
+\caption{Computadoras}
+\begin{algorithmic}[1]
+  \Procedure{Computadoras($r$ : red)}{}
+  \State $x \gets$ claves(r.vecinos)
+  \State \Return $x$
+ \EndProcedure
+\end{algorithmic}
+\end{algorithm}
+
+
+\begin{algorithm}
+\caption{Conectadas?}
+\begin{algorithmic}[1]
+  \Procedure{Conectadas?($r$ : red, $c_1$ : compu, $c_2$ : compu)}{}
+  \State $x \gets$ obtener(id($c_1$))
+  \State \Return $x$
+ \EndProcedure
+\end{algorithmic}
+\end{algorithm}
 
 
 
 
 
 
+
+
+
+
+
+
+\end{Algoritmos}

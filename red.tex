@@ -86,70 +86,108 @@
 
 \begin{Representacion}
   
-  \section*{Representación de la lista}
+  
+  
+  \section*{Representación de la red}
 
   \begin{Estructura}{red}[estr]
     \begin{Tupla}[estr]
-      \tupItem{vecinos}{(ip, conj(tupla(interfaz, interfaz, compu)))}%
-      \tupItem{interfaces}{(ip, conj(interfaz))}%
+      \tupItem{vecinos}{dicc(id, dicc(id, interfaz))}\\
+      \tupItem{interfaces}{dicc(id, conj(interfaz))}%
     \end{Tupla}
+
   \end{Estructura}
 
-  \Rep[lst][l]{($l$.primero $=$ NULL) $=$ ($l$.longitud $=$ $0$) $\yluego$ ($l$.longitud $\neq$ $0$ \impluego \\
-    Nodo($l$, $l$.longitud) $=$ $l$.primero $\land$ \\
-    ($\forall i$: nat)(Nodo($l$,$i$)\DRef siguiente $=$ Nodo($l$,$i+1$)\DRef anterior) $\land$ \\
-    ($\forall i$: nat)($1 \leq i <$ $l$.longitud $\implies$ Nodo($l$,$i$) $\neq$ $l$.primero)}\mbox{}
+  \Rep[estr][e]{claves(e.vecinos) $=$ claves(e.interfaces) $\yluego$ \\
+  ($\forall i_1, i_2$ : id) def?($i_2$, (obtener($i_1$, e.vecinos))) $\impluego$ def?($i_2$, e.vecinos) $\yluego$ def?($i_1$, obtener($i_2$, e.vecinos)) $\yluego$ \\
+obtener($i_2$, obtener($i_1$, e.vecinos)) $\in$ obtener($i_1$, e.interfaces)
+$\land$\\ 
+($\forall i, i_1, i_2$ : id) def?($i$, e.vecinos) $\impluego$ \\
+(def?($i_1$, obtener($i$, e.vecinos)) $\land$ def?($i_2$, obtener($i$, e.vecinos)) $\land$ $i_1 \neq i_2$ $\impluego$ obtener($i_1$, obtener($i$, e.vecinos)) $\neq$ obtener($i_2$, obtener($i$, e.vecinos)))
 
-  ~      
-
-  \tadOperacion{Nodo}{lst/l,nat}{puntero(nodo)}{$l$.primero $\neq$ NULL}
-  \tadAxioma{Nodo($l$,$i$)}{\IF $i = 0$ THEN $l$.primero ELSE Nodo(FinLst($l$), $i-1$) FI}
-
-  ~
-
-  \tadOperacion{FinLst}{lst}{lst}{}
-  \tadAxioma{FinLst($l$)}{Lst($l$.primero\DRef siguiente, $l$.longitud $-$ $\min$\{$l$.longitud, $1$\})}
-
-  ~
-
-  \tadOperacion{Lst}{puntero(nodo),nat}{lst}{}
-  \tadAxioma{Lst($p,n$)}{$\langle p, n\rangle$}
-
-  ~
- 
-  \AbsFc[lst]{secu($\alpha$)}[l]{\IF $l$.longitud $=$ $0$ THEN \secuencia{} ELSE \secuencia{$l$.primero\DRef dato}[Abs(FinLst($l$))] FI}
-
-  \section*{Representación del iterador}
-
-  \begin{Estructura}{itLista($\alpha$)}[iter]
-    \begin{Tupla}[iter]
-      \tupItem{siguiente}{puntero(nodo)}%
-      \tupItem{lista}{puntero(lst)}%
-    \end{Tupla}
-  \end{Estructura}
-
-  \Rep[iter][it]{Rep($\ast$($it$.lista)) $\yluego$ ($it$.siguiente $=$ NULL $\oluego$ ($\exists i$: nat)(Nodo($\ast it$.lista, $i$) $=$ $it$.siguiente)}
-
-  ~
-
-  \Abs[iter]{itBi($\alpha$)}[it]{b}{Siguientes($b$) $=$ Abs(Sig($it$.lista, $it$.siguiente)) $\land$\\
-    Anteriores($b$) $=$ Abs(Ant($it$.lista, $it$.siguiente))}
-
-  ~
-
-  \tadOperacion{Sig}{puntero(lst)/l,puntero(nodo)/p}{lst}{Rep($\langle l, p\rangle$)}
-  \tadAxioma{Sig($i, p$)}{Lst($p$, $l$\DRef longitud $-$ Pos($\ast l$, $p$))}
-
-  ~
-
-  \tadOperacion{Ant}{puntero(lst)/l,puntero(nodo)/p}{lst}{Rep($\langle l, p\rangle$)}
-  \tadAxioma{Ant($i, p$)}{Lst(\IF $p$ $=$ $l$\DRef primero THEN NULL ELSE $l$\DRef primero FI, Pos($\ast l$, $p$))}
-
-  ~
-
-  {\small Nota: cuando $p$ $=$ NULL, Pos devuelve la longitud de la lista, lo cual está bien, porque significa que el iterador no tiene siguiente.}
-  \tadOperacion{Pos}{lst/l,puntero(nodo)/p}{puntero(nodo)}{Rep($\langle l, p\rangle$)}
-  \tadAxioma{Pos($l$,$p$)}{\IF $l$.primero $=$ $p$ $\lor$ $l$.longitud $=$ $0$ THEN $0$ ELSE $1$ $+$ Pos(FinLst($l$), $p$) FI}
-
+}\mbox{}
+  
+   
+   \AbsFc[estr]{red}[e]{
+     r : red / computadoras(r) = juntar(claves(e.vecinos), e.interfaces) $\land$ \\ 
+     ($\forall c_1, c_2$ : computadora) conectadas($r, c_1, c_2$) = def?(id($c_1$), obtener(id($c_2$), e.vecinos)) $\land$ \\
+     ($\forall c_1, c_2$: computadora) ($\forall i$ : interfaz) conectadas($r,c_1,c_2$) $\impluego$ interfazUsada($r, c_1, c_2$) = obtener(id($c_1$), obtener(id($c_2$), e.vecinos))
+  }
 
 \end{Representacion}
+
+\begin{Algoritmos}
+
+
+\begin{algorithm}
+\caption{Iniciar Red}
+\begin{algorithmic}[1]
+  \Procedure{IniciarRed}{}
+  \State vecinos $\gets$ Vacia()
+  \State interfaces $\gets$ Vacia()
+  \State r $\gets$ (vecinos, interfaces)
+  \State \Return r
+  \EndProcedure
+\end{algorithmic}
+\end{algorithm}
+
+
+
+
+\begin{algorithm}
+\caption{Agregar Computadora}
+\begin{algorithmic}[1]
+  \Procedure{AgregarComputadora($r$ : red, $c$ : compu)}{}
+  \State definir(r.vecinos, id($c$), Vacia())
+  \State definir(r.interfaces, id($c$), interfaces($c$))
+ \EndProcedure
+\end{algorithmic}
+\end{algorithm}
+
+
+\begin{algorithm}
+\caption{Conectar}
+\begin{algorithmic}[1]
+  \Procedure{Conectar($r$ : red, $c_1$ : compu, $c_2$ : compu, $i_1$ : interfaz, $i_2$ : interfaz)}{}
+  \State $x \gets$ obtener(r.vecinos, $c_1$)
+  \State definir($x$, $c_2$, $i_1$)
+  \State $x \gets$ obtener(r.vecinos, $c_2$)
+  \State definir($x$, $c_1$, $i_2$)
+ \EndProcedure
+\end{algorithmic}
+\end{algorithm}
+
+
+\begin{algorithm}
+\caption{Computadoras}
+\begin{algorithmic}[1]
+  \Procedure{Computadoras($r$ : red)}{}
+  \State $x \gets$ claves(r.vecinos)
+  \State \Return $x$
+ \EndProcedure
+\end{algorithmic}
+\end{algorithm}
+
+
+\begin{algorithm}
+\caption{Conectadas?}
+\begin{algorithmic}[1]
+  \Procedure{Conectadas?($r$ : red, $c_1$ : compu, $c_2$ : compu)}{}
+  \State $x \gets$ obtener(id($c_1$))
+  \State \Return $x$
+ \EndProcedure
+\end{algorithmic}
+\end{algorithm}
+
+
+
+
+
+
+
+
+
+
+
+
+\end{Algoritmos}

@@ -1,31 +1,45 @@
 \begin{Interfaz}
-  
-  \textbf{se explica con}: \tadNombre{dcnet}.
+  \textbf{parámetros formales}\hangindent=2\parindent\\
+  \parbox{1.7cm}{\textbf{géneros}} $\sigma$\\
+  \parbox[t]{1.7cm}{\textbf{función}}\parbox[t]{\textwidth-2\parindent-1.7cm}{    	
+    \InterfazFuncion{Copiar}{\In{s}{$\sigma$}}{$\sigma$}
+    {$res \igobs s$}
+    [$\Theta(copy(s))$]
+    [función de copia de $\sigma$]
+    }
+      
+  \textbf{se explica con}: \tadNombre{diccionario($string, \sigma$)}.
 
-  \textbf{géneros}: \TipoVariable{dcnet}.
+  \textbf{géneros}: \TipoVariable{diccTrie($\sigma$)}.
 
-  \section*{Operaciones básicas de DCNet}
+  \section*{Operaciones básicas DiccTrie($\sigma$)}
 
-  \InterfazFuncion{Iniciar}{\In{r}{red}}{dcnet}
-  {$res \igobs iniciarDCNet(r)$}
+  \InterfazFuncion{Vacío}{}{diccTrie($\sigma$)}
+  {$res$ \igobs vacío()}
   [$\Theta(1)$]
-  [genera una DCNet con las computadoras y conexiones de la red pasada como parámetro.]
+  [genera un diccionario vacío.]
 
-  \InterfazFuncion{CrearPaquete}{\Inout{s}{dcnet}, \In{p}{paquete}}{}
-  [$s \igobs s_0 \land 
-   \neg((\exists p':paquete) (paqueteEnTransito?(s_0,p') \land id(p') \igobs id(p)) \land\\ 
-   \hspace*{3em} origen(p) \in computadoras(red(s_0)) \yluego
-   destino(p) \in computadoras(red(s_0)) \yluego\\
-   \hspace*{3em} hayCamino?(red(s), origen(p), destino(p))$]
-  {$s \igobs crearPaquete(s_0, p)$}
-  [$\Theta()$]
-  [agrega el paquete $p$ a la cola de la computadora $p.origen$.]
+  \InterfazFuncion{Definir}{\Inout{d}{diccTrie($\sigma$)}, \In{k}{$string$}, \In{s}{$\sigma$}}{}
+  [$d \igobs d_0$]  
+  {$d$ \igobs definir($k, s, d_0$)}
+  [$\Theta(log(L))$, donde $L$ es el largo de $k$]
+  [define la clave $k$ con el sinificado $s$.]
+    
+  \InterfazFuncion{Definido?}{\In{d}{diccTrie($\sigma$)}, \In{k}{$string$}}{bool}
+  {$res$ \igobs def?($k$, $d$) }
+  [$\Theta(log(L))$]
+  [devuelve $true$ si la clave $k$ está definida en el diccionario.]
   
-  \InterfazFuncion{AvanzarSegundo}{\Inout{s}{dcnet}}{dcnet}
-  [$s \igobs s_0$]  
-  {$res \igobs avanzarSegundo(s_0)$}
+  \InterfazFuncion{Obtener}{\In{d}{diccTrie($\sigma$)}, \In{k}{$string$}}{$\sigma$}
+  [def?($k$, $d$)]  
+  {$res$ \igobs obtener($k$, $d$)}
+  [$\Theta(log(L))$, donde $L$ es el largo de $k$]
+  [devuelve el significado de la clave $k$.]
+  
+  \InterfazFuncion{Claves}{\In{d}{diccTrie($\sigma$)}}{conj(string)}
+  {$res$ \igobs claves($d$)}
   [$\Theta()$]
-  [avanza un segundo; todas las computadoras que tengan paquetes por enviar los envían.]
+  [devuelve un conjunto con todas las claves del diccionario.]  
   
   \section*{Operaciones del iterador}
 
@@ -45,7 +59,7 @@
 
 \begin{Representacion}
   
-  \section*{Representación de DCNet}
+  \section*{Representación de DiccTrie($\kappa, \sigma$)}
 
   \begin{Estructura}{lista$(\alpha)$}[lst]
     \begin{Tupla}[lst]

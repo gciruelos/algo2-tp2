@@ -1,239 +1,95 @@
 
-\begin{Interfaz}
-  
-  INCOMPLETO
-  \textbf{se explica con}: \tadNombre{colaPrior($\alpha$)}.
 
+
+\section{Módulo Cola de Prioridad($\alpha$)}
+
+\begin{Interfaz}
+
+  \textbf{se explica con}: Cola de Prioridad($\alpha$), Iterador Unidireccional Modificable($\alpha$)
+
+  \textbf{usa}: Nat, bool
   
-  \section*{Operaciones básicas de \tadNombre{colaPrior($\alpha$)}}
+  \textbf{genero}: colaPrior($\alpha$), itColaPrior($\alpha$)
+  
+\subsubsection{Operaciones de Cola de Prioridad}
 
   \InterfazFuncion{Vacia}{}{colaPrior($\alpha$)}
-  {$res \igobs vacia()$}
-  [$\Theta()$]
-  [genera la cola de prioridades vacía]
-
-  \InterfazFuncion{Encolar}{\Inout{r}{\tadNombre{colaPrior($\alpha$)}}, \In{a}{$\alpha$}{}
-
-
-  [$r \igobs r_0 \land (\forall c' : compu) (c' \in computadoras(r) \impluego ip(c) \neq ip(c'))$] 
-  {$computadoras(r) = Ag(c, computadoras(r_0)) \yluego \\
-     (\forall c_1, c_2 : compu) (c_1 \in computadoras(r_0) \land c_2 \in computadoras(r_0) \impluego \\ 
-   conectadas(r_0, c_1, c_2) = conectadas(r, c_1, c_2) \land interfazUsada(r_0, c_1, c_2) = interfazUsada(r, c_1, c_2)$)}
-  [$\Theta()$]
-  [agrega el la computadora $c$ a la red $r$.]
-  [el elemento $c$ agrega por copia.]
+  [true]
+  {$res$ $\igobs$ vacia}
+  [O(1)]
+  [Crea una cola de prioridad]\\ 
   
+  \InterfazFuncion{Vacia?}{\In{c}{colaPrior($\alpha$)}}{bool}
+  [true]
+  {$res$ $\igobs$ vacia?(c)}
+  [O(1)]
+  [Dice si la cola no tiene ningun elemento]\\ 
+
+  \InterfazFuncion{Desencolar}{\Inout{c}{colaPrior($\alpha$)}}{$\alpha$}
+  [$\neg$vacia?($c$) $\land$ $c$ $\igobs$ $c_0$]
+  {$res$ $\igobs$ proximo($c_0$) $\land$ $c$ $\igobs$ desencolar($c_0$)}
+  [O(log(tamano(c)))]
+  [Quita el elemento mas prioritario]\\   
   
-  \InterfazFuncion{conectar}{\Inout{r}{\tadNombre{Red}}, \In{c_1}{\tadNombre{Compu}},  \In{i_1}{\tadNombre{Interfaz}}, \In{c_2}{\tadNombre{Interfaz}}, \In{i_2}{\tadNombre{Interfaz}}}{}
- [$r \igobs r_0 \land c_1 \in computadoras(r) \land c_2 \in computadoras(r) \land ip(c_1) \neq ip(c_2) \land \neg conectadas?(r, c_1, c_2) \land \neg usaInterfaz?(r,c_1, i_1) \land \neg usaInterfaz?(r, c_2, i_2)$]
-  {$computadoras(r) = computadoras(r_0) \yluego \\
-    (\forall c'_1, c'_2 : compu) (c'_1 \in computadoras(r_0) \land c'_2 \in computadoras(r_0) \land \{c_1, c_2\} \neq \{c'_1, c'_2\} \impluego \\ 
-   conectadas(r_0, c'_1, c'_2) = conectadas(r, c'_1, c'_2) \land interfazUsada(r_0, c'_1, c'_2) = interfazUsada(r, c'_1, c'_2)) \land \\
-   conectadas(r_0, c_1, c_2) \land interfazUsada(r, c_1, c_2) = i_1 \land interfazUsada(r, c_2, c_1) = i_2$}
-  [$\Theta()$]
-  [conecta las computadoras $c_1$ y $c_2$ mediante las interfaces $i_1$ e $i_2$ respectivamente en la red $r$.]
-
-
-  \InterfazFuncion{computadoras}{\In{r}{\tadNombre{Red}}}{}
-  {$res = computadoras(r)$}
-  [$\Theta()$]
-  [devuelve un conjunto con todas las computadoras de la red $r$.]
-  [?]
-
-
-  \InterfazFuncion{conectadas?}{\In{r}{\tadNombre{Red}}, \In{c_1}{\tadNombre{Compu}}, \In{c_2}{\tadNombre{Compu}}}{\tadNombre{bool}}
-  [$c_1 \in computadoras(r) \land c_2 \in computadoras(r)$]
-  {$res = conectadas?(r,c_1,c_2)$}
-  [$\Theta()$]
-  [dice si las computadoras $c_1$ y $c_2$ están conectadas en la red $r$]
-
-
-  \InterfazFuncion{interfazUsada}{\In{r}{\tadNombre{Red}}, \In{c_1}{\tadNombre{Compu}}, \In{c_2}{\tadNombre{Compu}}}{\tadNombre{bool}}
-  [$conectadas?(r,c_1,c_2)$]
-  {$res = interfazUsada(r,c_1,c_2)$}
-  [$\Theta()$]
-  [devuelve la interfaz mediante la cual $c_1$ se conecta a $c_2$  en la red $r$.]
-
-
-  \InterfazFuncion{vecinos}{\In{r}{\tadNombre{Red}}, \In{c}{\tadNombre{Compu}}}{\tadNombre{conj(compu)}}
-  [$c \in computadoras(r)$]
-  {$res = vecinos(r,c)$}
-  [$\Theta()$]
-  [devuelve las computadoras conectadas a $c$ en la red $r$.]
-  [?]
-
-
-  \InterfazFuncion{usaInterfaz?}{\In{r}{\tadNombre{Red}}, \In{c}{\tadNombre{Compu}}, \In{i}{\tadNombre{Interfaz}}}{\tadNombre{bool}}
-  [$c \in computadoras(r)$]
-  {$res = usaInterfaz?(r,c,i)$}
-  [$\Theta()$]
-  [devuelve true si y solo si $c$ está conectada a otra pc mediante la interfaz $i$ en la red $r$.]
-
-
-  \InterfazFuncion{caminosMinimos}{\In{r}{\tadNombre{Red}}, \In{c_1}{\tadNombre{Compu}}, \In{c_2}{\tadNombre{Compu}}}{\tadNombre{conj(secu(compu))}}
-  [$c_1 \in computadoras(r) \land c_2 \in computadoras(r)$]
-  {$res = caminosMinimos(r,c_1,c_2)$}
-  [$\Theta()$]
-  [devuelve un conjunto con los caminos más cortos entre las computadoras $c_1$ y $c_2$ en la red $r$.]
-
-%%
-
-  \InterfazFuncion{hayCamino?}{\In{r}{\tadNombre{Red}}, \In{c_1}{\tadNombre{Compu}}, \In{c_2}{\tadNombre{Compu}}}{\tadNombre{bool}}
-  [$c_1 \in computadoras(r) \land c_2 \in computadoras(r)$]
-  {$res = hayCamino?(r,c_1,c_2)$}
-  [$\Theta()$]
-  [devuelve true si y solo si hay un camino entre las computadoras $c_1$ y $c_2$ en la red $r$.]
-
-
-
+  \InterfazFuncion{Encolar}{\Inout{c}{colaPrior($\alpha$)}, \In{a}{$\alpha$}}{}
+  [$c$ $\igobs$ $c_0$ $\land$ $\neg$esta($a$, $c$)] %agregar el esta
+  {$c$ $\igobs$ encolar(a,$c_0$)}
+  [O(log(tamano(c)))]
+  [Agrega al elemento a a la cola de prioridad]
+  [El iterador se invalida si, y solo si se elimina el elemento siguiente del iterador sin llamar a la funcion Eliminar del mismo]\\ 
 \end{Interfaz}
 
+
+\subsection{Representación de la cola de prioridad}
 \begin{Representacion}
   
-  
-  
-  \section*{Representación de la red}
+  \begin{Estructura}{colaPrior($\alpha$)}[estr]
 
-  \begin{Estructura}{red}[estr]
-    \begin{Tupla}[estr]
-      \tupItem{vecinos}{dicc(id, dicc(id, interfaz))}\\
-      \tupItem{compus}{dicc(id, conj(compu))}%
-    \end{Tupla}
+  \begin{Tupla}[estr]
+    \tupItem{tam}{nat}%
+    \tupItem{\\ cabeza}{puntero(nodo)}%
+    \tupItem{\\ ultimo}{puntero(nodo)}%
+  \end{Tupla}
+
+  ~
+
+  \begin{Tupla}[nodo]
+    \tupItem{padre}{puntero(nodo)}%
+    \tupItem{\\ izq}{puntero(nodo)}%
+    \tupItem{\\ der}{puntero(nodo)}%
+    \tupItem{\\ dato}{puntero($\alpha$)}%
+  \end{Tupla}
 
   \end{Estructura}
 
-  \Rep[estr][e]{claves(e.vecinos) $=$ claves(e.compus) $\yluego$ \\
-  ($\forall i_1, i_2$ : id) def?($i_2$, (obtener($i_1$, e.vecinos))) $\impluego$ def?($i_2$, e.vecinos) $\yluego$ def?($i_1$, obtener($i_2$, e.vecinos)) $\yluego$ \\
-obtener($i_2$, obtener($i_1$, e.vecinos)) $\in$  interfaces(obtener($i_1$, e.compus))
-$\land$\\ 
-($\forall i, i_1, i_2$ : id) def?($i$, e.vecinos) $\impluego$ \\
-(def?($i_1$, obtener($i$, e.vecinos)) $\land$ def?($i_2$, obtener($i$, e.vecinos)) $\land$ $i_1 \neq i_2$ $\impluego$ obtener($i_1$, obtener($i$, e.vecinos)) $\neq$ obtener($i_2$, obtener($i$, e.vecinos)))
 
-}\mbox{}
   
-   
-   \AbsFc[estr]{red}[e]{
-     r : red / computadoras(r) = significados(e.compus) $\land$ \\ 
-     ($\forall c_1, c_2$ : computadora) conectadas($r, c_1, c_2$) = def?(id($c_1$), obtener(id($c_2$), e.vecinos)) $\land$ \\
-     ($\forall c_1, c_2$: computadora) ($\forall i$ : interfaz) conectadas($r,c_1,c_2$) $\impluego$ interfazUsada($r, c_1, c_2$) = obtener(id($c_1$), obtener(id($c_2$), e.vecinos))
-  }
+FALTA INVREP Y ABS
+
+
 
 \end{Representacion}
+
+
+
 
 
 
 \begin{Algoritmos}
 
 
-\begin{algorithm}
-  \caption{Algoritmos de \tadNombre{RED}}
-\begin{algorithmic}[1]
-  \Procedure{IniciarRed() $\to$ $res$ : red}{}
-  \State vecinos $\gets$ Vacia()
-  \State interfaces $\gets$ Vacia()
-  \State $res \gets$ (vecinos, interfaces)
-  \EndProcedure
-\end{algorithmic}
-
-
-%\caption{Agregar Computadora}
-\begin{algorithmic}[1]
-  \Procedure{AgregarComputadora(\textbf{in/out} $r$ : red, \textbf{in} $c$ : compu)}{}
-  \State definir(r.vecinos, id($c$), Vacia())
-  \State definir(r.interfaces, id($c$), $c$)
- \EndProcedure
-\end{algorithmic}
-
-
-
-
-%\caption{Conectar}
-\begin{algorithmic}[1]
-  \Procedure{Conectar(\textbf{in/out} $r$ : red, \textbf{in} $c_1$ : compu, \textbf{in} $c_2$ : compu, \textbf{in} $i_1$ : interfaz, \textbf{in} $i_2$ : interfaz)}{}
-  \State $x \gets$ obtener(r.vecinos, $c_1$)
-  \State definir($x$, id($c_2$), $i_1$)
-  \State $x \gets$ obtener(r.vecinos, $c_2$)
-  \State definir($x$, id($c_1$), $i_2$)
- \EndProcedure
-\end{algorithmic}
-
-
-
-
-%\caption{Computadoras}
-\begin{algorithmic}[1]
-  \Procedure{Computadoras(\textbf{in} $r$ : red) $\to res$ : conj(compu)}{} 
-  \State $i :\tadNombre{itdicc} \gets$ NuevoIterador($r$.vecinos)
-  \State $res :\tadNombre{conj(compu)} \gets$ Vacio()
-  \While{haySiguiente($i$)}
-    \State Agregar($res$, Obtener(Siguiente($i$), $r$.vecinos))
-    \State Avanzar($i$)
-  \EndWhile
- \EndProcedure
-\end{algorithmic}
-
-
-%\caption{Conectadas?}
-\begin{algorithmic}[1]
-  \Procedure{Conectadas?(\textbf{in} $r$ : red, \textbf{in} $c_1$ : compu, \textbf{in} $c_2$ : compu)  $\to res$ : bool}{}
-  \State $x \gets$ Obtener(id($c_1$), $r$.vecinos)
-  \State $res \gets$ def?(id($c_2$), $x$)
- \EndProcedure
-\end{algorithmic}
-
-
-%\caption{InterfazUsada}
-\begin{algorithmic}[1]
-  \Procedure{InterfazUsada(\textbf{in} $r$ : red, \textbf{in} $c_1$ : compu, \textbf{in} $c_2$ : compu)  $\to res$ : interfaz}{}
-  \State $x \gets$ Obtener(id($c_1$), $r$.vecinos)
-  \State $res \gets$ Obtener(id($c_2$), $x$)
- \EndProcedure
-\end{algorithmic}
-
-
-%\caption{Vecinos}
-\begin{algorithmic}[1]
-  \Procedure{Vecinos(\textbf{in} $r$ : red, \textbf{in} $c$ : compu)  $\to res$ : conj(compu)}{}
-  \State $x \gets$ Obtener(id($c$), $r$.vecinos)
-  \State $res \gets$ Claves($x$)
- \EndProcedure
-\end{algorithmic}
-
-
-%\caption{UsaInterfaz?}
-\begin{algorithmic}[1]
-  \Procedure{UsaInterfaz?(\textbf{in} $r$ : red, \textbf{in} $c$ : compu,  \textbf{in} $i$ : interfaz) $\to res$ : bool}{} 
-  \State $x \gets$ Obtener(id($c$), $r$.vecinos)
-  \State $i :\tadNombre{itdicc} \gets$ NuevoIterador($x$)
-  \State $res \gets$ False
-  \While{haySiguiente($i$)}
-    \If {Obtener(Siguiente($i$), $x$) = $i$} $res \gets$ True  \EndIf
-    \State Avanzar($i$)
-  \EndWhile
- \EndProcedure
-\end{algorithmic}
-
-
-
-%\caption{CaminosMinimos}
-\begin{algorithmic}[1]
-  \Procedure{CaminosMinimos(\textbf{in} $r$ : red, \textbf{in} $c_1$ : compu,  \textbf{in} $c_2$ : compu) $\to res$ : conj(secu(compu))}{} 
-   \State En construcción 
-\EndProcedure
-\end{algorithmic}
-
-
-%\caption{HayCamino?}
-\begin{algorithmic}[1]
-  \Procedure{HayCamino?(\textbf{in} $r$ : red, \textbf{in} $c_1$ : compu,  \textbf{in} $c_2$ : compu) $\to res$ : bool}{} 
-   \State $res \gets$ $\neg$ esVacio?(CaminosMinimos($r$,$c_1$, $c_2$))
-\EndProcedure
-\end{algorithmic}
-
-
-\end{algorithm}
 
 
 
 \end{Algoritmos}
+
+
+
+
+
+
+
+
+
+
 

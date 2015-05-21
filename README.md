@@ -1,6 +1,20 @@
 # algo2-tp2
 algo2-tp2 1c 2015
 
+Cosas que faltan
+----------------
+[ ] Algoritmo de caminos minimos en red
+[ ] interfaz dcnet
+[ ] invrep y abs dcnet
+[ ] algoritmos dcnet
+[ ] interfaz dicc trie
+[ ] invrep y abs dicc trie
+[ ] algoritmos dicc trie
+[ ] interfaz colaprior heap
+[ ] invrep y abs colaprior heap
+[ ] algoritmos colaprior heap
+
+
 Git
 ---
 0. Antes que nada, tienen que copiar el repositorio en su computadora, con ```git clone https://github.com/gciruelos/algo2-tp2.git```

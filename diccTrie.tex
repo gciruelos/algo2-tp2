@@ -10,7 +10,7 @@
       
   \textbf{se explica con}: \tadNombre{diccionario($string, \sigma$)}.
 
-  \textbf{géneros}: \TipoVariable{diccTrie($\sigma$)}.
+  \textbf{géneros}: \TipoVariable{diccTrie($\sigma$), itClavesDiccTrie($\sigma$)}.
 
   \section*{Operaciones básicas DiccTrie($\sigma$)}
 
@@ -72,7 +72,7 @@
   \begin{Estructura}{diccTrie($\sigma$)}[estr]
     \begin{Tupla}[estr]
       \tupItem{primero}{puntero(nodo)}
-      \tupItem{cantClaves}{nat}
+      \tupItem{claves}{conj(tupla(string, puntero($\sigma$)))}
     \end{Tupla}
 
     \begin{Tupla}[nodo]
@@ -87,23 +87,13 @@
   \tadOperacion{Nodo}{lst/l,nat}{puntero(nodo)}{$l$.primero $\neq$ NULL}
   \tadAxioma{Nodo($l$,$i$)}{\IF $i = 0$ THEN $l$.primero ELSE Nodo(FinLst($l$), $i-1$) FI}
 
-
-  \tadOperacion{FinLst}{lst}{lst}{}
-  \tadAxioma{FinLst($l$)}{Lst($l$.primero\DRef siguiente, $l$.longitud $-$ $\min$\{$l$.longitud, $1$\})}
-
-
-  \tadOperacion{Lst}{puntero(nodo),nat}{lst}{}
-  \tadAxioma{Lst($p,n$)}{$\langle p, n\rangle$}
-
- 
   \AbsFc[estr]{dicc($string, \sigma$)}[e]{}
 
   \section*{Representación del iterador}
 
-  \begin{Estructura}{itLista($\alpha$)}[iter]
+  \begin{Estructura}{itClavesDiccTrie($\sigma$)}[iter]
     \begin{Tupla}[iter]
-      \tupItem{siguiente}{puntero(nodo)}%
-      \tupItem{lista}{puntero(lst)}%
+      \tupItem{iterador}{itConj(tupla(string, puntero($\sigma$)))}
     \end{Tupla}
   \end{Estructura}
 

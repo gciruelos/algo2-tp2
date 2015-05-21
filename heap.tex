@@ -1,16 +1,20 @@
+
 \begin{Interfaz}
   
-  \textbf{se explica con}: \tadNombre{Red}.
+  INCOMPLETO
+  \textbf{se explica con}: \tadNombre{colaPrior($\alpha$)}.
 
   
-  \section*{Operaciones básicas de \tadNombre{Red}}
+  \section*{Operaciones básicas de \tadNombre{colaPrior($\alpha$)}}
 
-  \InterfazFuncion{IniciarRed}{}{red}
-  {$res \igobs iniciarRed()$}
+  \InterfazFuncion{Vacia}{}{colaPrior($\alpha$)}
+  {$res \igobs vacia()$}
   [$\Theta()$]
-  [genera la red vacía]
+  [genera la cola de prioridades vacía]
 
-  \InterfazFuncion{AgregarComputadora}{\Inout{r}{\tadNombre{Red}}, \In{c}{\tadNombre{Compu}}}{}
+  \InterfazFuncion{Encolar}{\Inout{r}{\tadNombre{colaPrior($\alpha$)}}, \In{a}{$\alpha$}{}
+
+
   [$r \igobs r_0 \land (\forall c' : compu) (c' \in computadoras(r) \impluego ip(c) \neq ip(c'))$] 
   {$computadoras(r) = Ag(c, computadoras(r_0)) \yluego \\
      (\forall c_1, c_2 : compu) (c_1 \in computadoras(r_0) \land c_2 \in computadoras(r_0) \impluego \\ 
@@ -232,10 +236,4 @@ $\land$\\
 
 
 \end{Algoritmos}
-
-
-
-
-
-
 

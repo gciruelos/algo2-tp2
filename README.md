@@ -3,22 +3,19 @@ algo2-tp2 1c 2015
 
 Cosas que faltan
 ----------------
-[ ] Algoritmo de caminos minimos en red
-[ ] interfaz dcnet
-[ ] invrep y abs dcnet
-[ ] algoritmos dcnet
-[ ] interfaz dicc trie
-[ ] invrep y abs dicc trie
-[ ] algoritmos dicc trie
-
-[ ] interfaz iterador dicc trie
-[ ] invrep y abs iterador dicc trie
-[ ] algoritmos iterador dicc trie
-
-
-[ ] interfaz colaprior heap
-[ ] invrep y abs colaprior heap
-[ ] algoritmos colaprior heap
+- [ ] Algoritmo de caminos minimos en red
+- [ ] interfaz dcnet
+- [ ] invrep y abs dcnet
+- [ ] algoritmos dcnet
+- [ ] interfaz dicc trie
+- [ ] invrep y abs dicc trie
+- [ ] algoritmos dicc trie 
+- [ ] interfaz iterador dicc trie
+- [ ] invrep y abs iterador dicc trie
+- [ ] algoritmos iterador dicc trie
+- [ ] interfaz colaprior heap
+- [ ] invrep y abs colaprior heap
+- [ ] algoritmos colaprior heap
 
 
 Git

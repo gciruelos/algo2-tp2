@@ -93,14 +93,14 @@
   \begin{Estructura}{red}[estr]
     \begin{Tupla}[estr]
       \tupItem{vecinos}{dicc(id, dicc(id, interfaz))}\\
-      \tupItem{interfaces}{dicc(id, conj(interfaz))}%
+      \tupItem{compus}{dicc(id, conj(compu))}%
     \end{Tupla}
 
   \end{Estructura}
 
-  \Rep[estr][e]{claves(e.vecinos) $=$ claves(e.interfaces) $\yluego$ \\
+  \Rep[estr][e]{claves(e.vecinos) $=$ claves(e.compus) $\yluego$ \\
   ($\forall i_1, i_2$ : id) def?($i_2$, (obtener($i_1$, e.vecinos))) $\impluego$ def?($i_2$, e.vecinos) $\yluego$ def?($i_1$, obtener($i_2$, e.vecinos)) $\yluego$ \\
-obtener($i_2$, obtener($i_1$, e.vecinos)) $\in$ obtener($i_1$, e.interfaces)
+obtener($i_2$, obtener($i_1$, e.vecinos)) $\in$  interfaces(obtener($i_1$, e.compus))
 $\land$\\ 
 ($\forall i, i_1, i_2$ : id) def?($i$, e.vecinos) $\impluego$ \\
 (def?($i_1$, obtener($i$, e.vecinos)) $\land$ def?($i_2$, obtener($i$, e.vecinos)) $\land$ $i_1 \neq i_2$ $\impluego$ obtener($i_1$, obtener($i$, e.vecinos)) $\neq$ obtener($i_2$, obtener($i$, e.vecinos)))
@@ -109,81 +109,125 @@ $\land$\\
   
    
    \AbsFc[estr]{red}[e]{
-     r : red / computadoras(r) = juntar(claves(e.vecinos), e.interfaces) $\land$ \\ 
+     r : red / computadoras(r) = significados(e.compus) $\land$ \\ 
      ($\forall c_1, c_2$ : computadora) conectadas($r, c_1, c_2$) = def?(id($c_1$), obtener(id($c_2$), e.vecinos)) $\land$ \\
      ($\forall c_1, c_2$: computadora) ($\forall i$ : interfaz) conectadas($r,c_1,c_2$) $\impluego$ interfazUsada($r, c_1, c_2$) = obtener(id($c_1$), obtener(id($c_2$), e.vecinos))
   }
 
 \end{Representacion}
 
+
+
 \begin{Algoritmos}
 
 
 \begin{algorithm}
-\caption{Iniciar Red}
+  \caption{Algoritmos de \tadNombre{RED}}
 \begin{algorithmic}[1]
-  \Procedure{IniciarRed}{}
+  \Procedure{IniciarRed() $\to$ $res$ : red}{}
   \State vecinos $\gets$ Vacia()
   \State interfaces $\gets$ Vacia()
-  \State r $\gets$ (vecinos, interfaces)
-  \State \Return r
+  \State $res \gets$ (vecinos, interfaces)
   \EndProcedure
 \end{algorithmic}
-\end{algorithm}
 
 
-
-
-\begin{algorithm}
-\caption{Agregar Computadora}
+%\caption{Agregar Computadora}
 \begin{algorithmic}[1]
-  \Procedure{AgregarComputadora($r$ : red, $c$ : compu)}{}
+  \Procedure{AgregarComputadora(\textbf{in/out} $r$ : red, \textbf{in} $c$ : compu)}{}
   \State definir(r.vecinos, id($c$), Vacia())
-  \State definir(r.interfaces, id($c$), interfaces($c$))
+  \State definir(r.interfaces, id($c$), $c$)
  \EndProcedure
 \end{algorithmic}
-\end{algorithm}
 
 
-\begin{algorithm}
-\caption{Conectar}
+
+
+%\caption{Conectar}
 \begin{algorithmic}[1]
-  \Procedure{Conectar($r$ : red, $c_1$ : compu, $c_2$ : compu, $i_1$ : interfaz, $i_2$ : interfaz)}{}
+  \Procedure{Conectar(\textbf{in/out} $r$ : red, \textbf{in} $c_1$ : compu, \textbf{in} $c_2$ : compu, \textbf{in} $i_1$ : interfaz, \textbf{in} $i_2$ : interfaz)}{}
   \State $x \gets$ obtener(r.vecinos, $c_1$)
-  \State definir($x$, $c_2$, $i_1$)
+  \State definir($x$, id($c_2$), $i_1$)
   \State $x \gets$ obtener(r.vecinos, $c_2$)
-  \State definir($x$, $c_1$, $i_2$)
+  \State definir($x$, id($c_1$), $i_2$)
  \EndProcedure
 \end{algorithmic}
-\end{algorithm}
 
 
-\begin{algorithm}
-\caption{Computadoras}
+
+
+%\caption{Computadoras}
 \begin{algorithmic}[1]
-  \Procedure{Computadoras($r$ : red)}{}
-  \State $x \gets$ claves(r.vecinos)
-  \State \Return $x$
+  \Procedure{Computadoras(\textbf{in} $r$ : red) $\to res$ : conj(compu)}{} 
+  \State $i :\tadNombre{itdicc} \gets$ NuevoIterador($r$.vecinos)
+  \State $res :\tadNombre{conj(compu)} \gets$ Vacio()
+  \While{haySiguiente($i$)}
+    \State Agregar($res$, Obtener(Siguiente($i$), $r$.vecinos))
+    \State Avanzar($i$)
+  \EndWhile
  \EndProcedure
 \end{algorithmic}
-\end{algorithm}
 
 
-\begin{algorithm}
-\caption{Conectadas?}
+%\caption{Conectadas?}
 \begin{algorithmic}[1]
-  \Procedure{Conectadas?($r$ : red, $c_1$ : compu, $c_2$ : compu)}{}
-  \State $x \gets$ obtener(id($c_1$))
-  \State \Return $x$
+  \Procedure{Conectadas?(\textbf{in} $r$ : red, \textbf{in} $c_1$ : compu, \textbf{in} $c_2$ : compu)  $\to res$ : bool}{}
+  \State $x \gets$ Obtener(id($c_1$), $r$.vecinos)
+  \State $res \gets$ def?(id($c_2$), $x$)
  \EndProcedure
 \end{algorithmic}
+
+
+%\caption{InterfazUsada}
+\begin{algorithmic}[1]
+  \Procedure{InterfazUsada(\textbf{in} $r$ : red, \textbf{in} $c_1$ : compu, \textbf{in} $c_2$ : compu)  $\to res$ : interfaz}{}
+  \State $x \gets$ Obtener(id($c_1$), $r$.vecinos)
+  \State $res \gets$ Obtener(id($c_2$), $x$)
+ \EndProcedure
+\end{algorithmic}
+
+
+%\caption{Vecinos}
+\begin{algorithmic}[1]
+  \Procedure{Vecinos(\textbf{in} $r$ : red, \textbf{in} $c$ : compu)  $\to res$ : conj(compu)}{}
+  \State $x \gets$ Obtener(id($c$), $r$.vecinos)
+  \State $res \gets$ Claves($x$)
+ \EndProcedure
+\end{algorithmic}
+
+
+%\caption{UsaInterfaz?}
+\begin{algorithmic}[1]
+  \Procedure{UsaInterfaz?(\textbf{in} $r$ : red, \textbf{in} $c$ : compu,  \textbf{in} $i$ : interfaz) $\to res$ : bool}{} 
+  \State $x \gets$ Obtener(id($c$), $r$.vecinos)
+  \State $i :\tadNombre{itdicc} \gets$ NuevoIterador($x$)
+  \State $res \gets$ False
+  \While{haySiguiente($i$)}
+    \If {Obtener(Siguiente($i$), $x$) = $i$} $res \gets$ True  \EndIf
+    \State Avanzar($i$)
+  \EndWhile
+ \EndProcedure
+\end{algorithmic}
+
+
+
+%\caption{CaminosMinimos}
+\begin{algorithmic}[1]
+  \Procedure{CaminosMinimos(\textbf{in} $r$ : red, \textbf{in} $c_1$ : compu,  \textbf{in} $c_2$ : compu) $\to res$ : conj(secu(compu))}{} 
+   \State En construcción 
+\EndProcedure
+\end{algorithmic}
+
+
+%\caption{HayCamino?}
+\begin{algorithmic}[1]
+  \Procedure{HayCamino?(\textbf{in} $r$ : red, \textbf{in} $c_1$ : compu,  \textbf{in} $c_2$ : compu) $\to res$ : bool}{} 
+   \State $res \gets$ $\neg$ esVacio?(CaminosMinimos($r$,$c_1$, $c_2$))
+\EndProcedure
+\end{algorithmic}
+
+
 \end{algorithm}
-
-
-
-
-
-
 
 
 

@@ -22,28 +22,36 @@
   \InterfazFuncion{Definir}{\Inout{d}{diccTrie($\sigma$)}, \In{k}{$string$}, \In{s}{$\sigma$}}{}
   [$d \igobs d_0$]  
   {$d$ \igobs definir($k, s, d_0$)}
-  [$\Theta(log(L))$, donde $L$ es el largo de $k$]
+  [$\Theta(|k| + copy(s))$]
   [define la clave $k$ con el sinificado $s$.]
+  [$k$ y $s$ se definen por copia.]
     
   \InterfazFuncion{Definido?}{\In{d}{diccTrie($\sigma$)}, \In{k}{$string$}}{bool}
   {$res$ \igobs def?($k$, $d$) }
-  [$\Theta(log(L))$]
+  [$\Theta(|k|)$]
   [devuelve $true$ si la clave $k$ está definida en el diccionario.]
   
   \InterfazFuncion{Obtener}{\In{d}{diccTrie($\sigma$)}, \In{k}{$string$}}{$\sigma$}
   [def?($k$, $d$)]  
-  {$res$ \igobs obtener($k$, $d$)}
-  [$\Theta(log(L))$, donde $L$ es el largo de $k$]
-  [devuelve el significado de la clave $k$.]
+  {alias($res$ \igobs obtener($k$, $d$))}
+  [$\Theta(|k|)$,]
+  [devuelve el significado de la clave $k$ en $d$.]
+  [$res$ es modificable si y sólo si $d$ lo es]
   
   \InterfazFuncion{Claves}{\In{d}{diccTrie($\sigma$)}}{conj(string)}
   {$res$ \igobs claves($d$)}
   [$\Theta()$]
-  [devuelve un conjunto con todas las claves del diccionario.]  
+  [devuelve un conjunto con todas las claves del diccionario.] 
+  
+  \InterfazFuncion{Borrar}{\In{d}{diccTrie($\sigma$)}, \In{k}{$string$}}{}
+  [$d$ \igobs $d_0 \land$ def?($k$, $d_0$) ]
+  {$d \igobs$ borrar($k$, $d_0$)}
+  [$\Theta(|k|)$]
+  [elimina la entrada $k$ del diccionario.] 
   
   \section*{Operaciones del iterador}
 
-  \InterfazFuncion{CrearIt}{\In{l}{lista($\alpha$)}}{itLista($\alpha$)}
+  \InterfazFuncion{CrearIt}{\In{d}{diccTrie($\sigma$)}}{itDiccTrie($\sigma$)}
   {$res$ $\igobs$ crearItBi(\secuencia{}, $l$) $\land$ alias(SecuSuby($it$) $=$ $l$)}
   [$\Theta(1)$]
   [crea un iterador bidireccional de la lista, de forma tal que al pedir \NombreFuncion{Siguiente} se obtenga el primer elemento de $l$.]
@@ -59,44 +67,36 @@
 
 \begin{Representacion}
   
-  \section*{Representación de DiccTrie($\kappa, \sigma$)}
+  \section*{Representación de DiccTrie($\sigma$)}
 
-  \begin{Estructura}{lista$(\alpha)$}[lst]
-    \begin{Tupla}[lst]
-      \tupItem{primero}{puntero(nodo)}%
-      \tupItem{longitud}{nat}%
+  \begin{Estructura}{diccTrie($\sigma$)}[estr]
+    \begin{Tupla}[estr]
+      \tupItem{primero}{puntero(nodo)}
+      \tupItem{cantClaves}{nat}
     \end{Tupla}
 
     \begin{Tupla}[nodo]
-      \tupItem{dato}{$\alpha$}%
-      \tupItem{anterior}{puntero(nodo)}%
-      \tupItem{siguiente}{puntero(nodo)}%
+      \tupItem{caracteres}{arreglo\_estático[256] de puntero(nodo)}
+      \tupItem{significado}{puntero($\sigma$)}
     \end{Tupla}
   \end{Estructura}
 
-  \Rep[lst][l]{($l$.primero $=$ NULL) $=$ ($l$.longitud $=$ $0$) $\yluego$ ($l$.longitud $\neq$ $0$ \impluego \\
-    Nodo($l$, $l$.longitud) $=$ $l$.primero $\land$ \\
-    ($\forall i$: nat)(Nodo($l$,$i$)\DRef siguiente $=$ Nodo($l$,$i+1$)\DRef anterior) $\land$ \\
-    ($\forall i$: nat)($1 \leq i <$ $l$.longitud $\implies$ Nodo($l$,$i$) $\neq$ $l$.primero)}\mbox{}
+  \Rep[estr][e]{}\mbox{}
 
-  ~      
 
   \tadOperacion{Nodo}{lst/l,nat}{puntero(nodo)}{$l$.primero $\neq$ NULL}
   \tadAxioma{Nodo($l$,$i$)}{\IF $i = 0$ THEN $l$.primero ELSE Nodo(FinLst($l$), $i-1$) FI}
 
-  ~
 
   \tadOperacion{FinLst}{lst}{lst}{}
   \tadAxioma{FinLst($l$)}{Lst($l$.primero\DRef siguiente, $l$.longitud $-$ $\min$\{$l$.longitud, $1$\})}
 
-  ~
 
   \tadOperacion{Lst}{puntero(nodo),nat}{lst}{}
   \tadAxioma{Lst($p,n$)}{$\langle p, n\rangle$}
 
-  ~
  
-  \AbsFc[lst]{secu($\alpha$)}[l]{\IF $l$.longitud $=$ $0$ THEN \secuencia{} ELSE \secuencia{$l$.primero\DRef dato}[Abs(FinLst($l$))] FI}
+  \AbsFc[estr]{dicc($string, \sigma$)}[e]{}
 
   \section*{Representación del iterador}
 

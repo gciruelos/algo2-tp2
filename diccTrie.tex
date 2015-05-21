@@ -51,18 +51,31 @@
   
   \section*{Operaciones del iterador}
 
-  \InterfazFuncion{CrearIt}{\In{d}{diccTrie($\sigma$)}}{itDiccTrie($\sigma$)}
-  {$res$ $\igobs$ crearItBi(\secuencia{}, $l$) $\land$ alias(SecuSuby($it$) $=$ $l$)}
+  \InterfazFuncion{CrearItClaves}{\In{d}{diccTrie($\sigma$)}}{itClavesDiccTrie($\sigma$)}
+  {alias(esPermutación?(SecuSuby($res$), clavesExtendidas($d$))) $\land$ vacia?(Anteriores($res$))}
   [$\Theta(1)$]
-  [crea un iterador bidireccional de la lista, de forma tal que al pedir \NombreFuncion{Siguiente} se obtenga el primer elemento de $l$.]
-  [el iterador se invalida si y sólo si se elimina el elemento siguiente del iterador sin utilizar la función \NombreFuncion{EliminarSiguiente}.]
+  [crea un iterador sobre el conjunto de las \textit{claves extendidas} (acá vendría una footnote diciendo a que llamo eso)
+  de forma tal que pueda recorrer todos los elementos aplicando iterativamente Siguiente.]
+  [El iterador se invalida si y sólo si se elimina el elemento siguiente del iterador. Además, Siguiente($res$) podría cambiar completamente ante cual operación que modifique $d$.]
   
-  \InterfazFuncion{CrearItUlt}{\In{l}{lista($\alpha$)}}{itLista($\alpha$)}
-  {$res$ $\igobs$ crearItBi($l$, \secuencia{}) $\land$ alias(SecuSuby($it$) $=$ $l$)}
+  \InterfazFuncion{HaySiguiente?}{\In{it}{itClavesDiccTrie($\sigma$)}}{bool}
+  {$res$ $\igobs$ haySiguiente($it$)}
   [$\Theta(1)$]
-  [crea un iterador bidireccional de la lista, de forma tal que al pedir \NombreFuncion{Anterior} se obtenga el último elemento de $l$.]  
-  [el iterador se invalida si y sólo si se elimina el elemento siguiente del iterador sin utilizar la función \NombreFuncion{EliminarSiguiente}.]
+  [devuelve $true$ si y sólo si en el conjunto quedan elementos para iterar.]  
 
+  \InterfazFuncion{Siguiente}{\In{it}{itClavesDiccTrie($\sigma$)}}{tupla(string,puntero($\sigma$))}
+  [haySiguiente?($it$)]  
+  {alias($res$ $\igobs$ siguiente($it$))}
+  [$\Theta(1)$]
+  [devuelve el elemento apuntado por el iterador.]  
+  [$res$ no es modificable.]
+  
+  \InterfazFuncion{Avanzar}{\Inout{it}{itClavesDiccTrie($\sigma$)}}{}
+  [$it \igobs it_0 \land$ haySiguiente?($it_0$)]  
+  {$it$ $\igobs$ avanzar($it_0$)}
+  [$\Theta(1)$]
+  [avanza a la posición siguiente del iterador.] 
+  
 \end{Interfaz}
 
 \begin{Representacion}

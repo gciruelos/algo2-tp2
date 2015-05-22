@@ -93,7 +93,7 @@
   \begin{Estructura}{red}[estr]
     \begin{Tupla}[estr]
       \tupItem{vecinos}{dicc(id, dicc(id, interfaz))}\\
-      \tupItem{compus}{dicc(id, conj(compu))}%
+      \tupItem{compus}{dicc(id, compu)}%
     \end{Tupla}
 
   \end{Estructura}
@@ -130,19 +130,22 @@ $\land$\\
   \State $res \gets$ (vecinos, interfaces)
   \EndProcedure
 \end{algorithmic}
+\end{algorithm}
 
 
-%\caption{Agregar Computadora}
+\begin{algorithm}
+\caption{Agregar Computadora}
 \begin{algorithmic}[1]
   \Procedure{AgregarComputadora(\textbf{in/out} $r$ : red, \textbf{in} $c$ : compu)}{}
   \State definir(r.vecinos, id($c$), Vacia())
   \State definir(r.interfaces, id($c$), $c$)
  \EndProcedure
 \end{algorithmic}
+\end{algorithm}
 
 
 
-
+\begin{algorithm}
 %\caption{Conectar}
 \begin{algorithmic}[1]
   \Procedure{Conectar(\textbf{in/out} $r$ : red, \textbf{in} $c_1$ : compu, \textbf{in} $c_2$ : compu, \textbf{in} $i_1$ : interfaz, \textbf{in} $i_2$ : interfaz)}{}

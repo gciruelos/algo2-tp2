@@ -22,9 +22,9 @@
   \InterfazFuncion{Definir}{\Inout{d}{diccTrie($\sigma$)}, \In{k}{$string$}, \In{s}{$\sigma$}}{}
   [$d \igobs d_0$]  
   {$d$ \igobs definir($k, s, d_0$)}
-  [$\Theta(|k| + copy(s))$]
+  [$\Theta(|k|$]
   [define la clave $k$ con el sinificado $s$.]
-  [$k$ y $s$ se definen por copia.]
+  [$s$ se define por referencia.]
     
   \InterfazFuncion{Definido?}{\In{d}{diccTrie($\sigma$)}, \In{k}{$string$}}{bool}
   {$res$ \igobs def?($k$, $d$) }
@@ -51,87 +51,34 @@
   
   \section*{Operaciones del iterador}
 
-  \InterfazFuncion{CrearItClaves}{\In{d}{diccTrie($\sigma$)}}{itClavesDiccTrie($\sigma$)}
+  \InterfazFuncion{CrearItClaves}{\In{d}{diccTrie($\sigma$)}}{itDiccTrie($\sigma$)}
   {alias(esPermutación?(SecuSuby($res$), clavesExtendidas($d$))) $\land$ vacia?(Anteriores($res$))}
   [$\Theta(1)$]
-  [crea un iterador sobre el conjunto de las \textit{claves extendidas} (acá vendría una footnote diciendo a que llamo eso)
-  de forma tal que pueda recorrer todos los elementos aplicando iterativamente Siguiente.]
-  [El iterador se invalida si y sólo si se elimina el elemento siguiente del iterador. Además, Siguiente($res$) podría cambiar completamente ante cual operación que modifique $d$.]
+  [crea un iterador del diccionario, de forma que pueda ser recorrido completamente aplicando iterativamente Siguiente.]
   
-  \InterfazFuncion{HaySiguiente?}{\In{it}{itClavesDiccTrie($\sigma$)}}{bool}
+  \InterfazFuncion{HaySiguiente?}{\In{it}{itDiccTrie($\sigma$)}}{bool}
   {$res$ $\igobs$ haySiguiente($it$)}
   [$\Theta(1)$]
-  [devuelve $true$ si y sólo si en el conjunto quedan elementos para iterar.]  
+  [devuelve $true$ si y sólo si quedan elementos para iterar.]  
 
-  \InterfazFuncion{Siguiente}{\In{it}{itClavesDiccTrie($\sigma$)}}{tupla(string,puntero($\sigma$))}
+  \InterfazFuncion{SiguienteClave}{\In{it}{itDiccTrie($\sigma$)}}{string}
   [haySiguiente?($it$)]  
-  {alias($res$ $\igobs$ siguiente($it$))}
+  {alias($res$ $\igobs$ siguiente($it$).clave)}
   [$\Theta(1)$]
-  [devuelve el elemento apuntado por el iterador.]  
+  [devuelve la clave de la entrada del diccionario apuntada por el iterador.]  
   [$res$ no es modificable.]
   
-  \InterfazFuncion{Avanzar}{\Inout{it}{itClavesDiccTrie($\sigma$)}}{}
+  \InterfazFuncion{SiguienteSignificado}{\In{it}{itDiccTrie($\sigma$)}}{$\sigma$}
+  [haySiguiente?($it$)]  
+  {alias($res$ $\igobs$ siguiente($it$).significado)}
+  [$\Theta(1)$]
+  [devuelve el significado de la entrada del diccionario apuntada por el iterador.]  
+  [$res$ no es modificable.]  
+  
+  \InterfazFuncion{Avanzar}{\Inout{it}{itDiccTrie($\sigma$)}}{}
   [$it \igobs it_0 \land$ haySiguiente?($it_0$)]  
   {$it$ $\igobs$ avanzar($it_0$)}
   [$\Theta(1)$]
   [avanza a la posición siguiente del iterador.] 
   
 \end{Interfaz}
-
-\begin{Representacion}
-  
-  \section*{Representación de DiccTrie($\sigma$)}
-
-  \begin{Estructura}{diccTrie($\sigma$)}[estr]
-    \begin{Tupla}[estr]
-      \tupItem{primero}{puntero(nodo)}
-      \tupItem{claves}{conj(tupla(string, puntero($\sigma$)))}
-    \end{Tupla}
-
-    \begin{Tupla}[nodo]
-      \tupItem{caracteres}{arreglo\_estático[256] de puntero(nodo)}
-      \tupItem{significado}{puntero($\sigma$)}
-    \end{Tupla}
-  \end{Estructura}
-
-  \Rep[estr][e]{}\mbox{}
-
-
-  \tadOperacion{Nodo}{lst/l,nat}{puntero(nodo)}{$l$.primero $\neq$ NULL}
-  \tadAxioma{Nodo($l$,$i$)}{\IF $i = 0$ THEN $l$.primero ELSE Nodo(FinLst($l$), $i-1$) FI}
-
-  \AbsFc[estr]{dicc($string, \sigma$)}[e]{}
-
-  \section*{Representación del iterador}
-
-  \begin{Estructura}{itClavesDiccTrie($\sigma$)}[iter]
-    \begin{Tupla}[iter]
-      \tupItem{iterador}{itConj(tupla(string, puntero($\sigma$)))}
-    \end{Tupla}
-  \end{Estructura}
-
-  \Rep[iter][it]{Rep($\ast$($it$.lista)) $\yluego$ ($it$.siguiente $=$ NULL $\oluego$ ($\exists i$: nat)(Nodo($\ast it$.lista, $i$) $=$ $it$.siguiente)}
-
-  ~
-
-  \Abs[iter]{itBi($\alpha$)}[it]{b}{Siguientes($b$) $=$ Abs(Sig($it$.lista, $it$.siguiente)) $\land$\\
-    Anteriores($b$) $=$ Abs(Ant($it$.lista, $it$.siguiente))}
-
-  ~
-
-  \tadOperacion{Sig}{puntero(lst)/l,puntero(nodo)/p}{lst}{Rep($\langle l, p\rangle$)}
-  \tadAxioma{Sig($i, p$)}{Lst($p$, $l$\DRef longitud $-$ Pos($\ast l$, $p$))}
-
-  ~
-
-  \tadOperacion{Ant}{puntero(lst)/l,puntero(nodo)/p}{lst}{Rep($\langle l, p\rangle$)}
-  \tadAxioma{Ant($i, p$)}{Lst(\IF $p$ $=$ $l$\DRef primero THEN NULL ELSE $l$\DRef primero FI, Pos($\ast l$, $p$))}
-
-  ~
-
-  {\small Nota: cuando $p$ $=$ NULL, Pos devuelve la longitud de la lista, lo cual está bien, porque significa que el iterador no tiene siguiente.}
-  \tadOperacion{Pos}{lst/l,puntero(nodo)/p}{puntero(nodo)}{Rep($\langle l, p\rangle$)}
-  \tadAxioma{Pos($l$,$p$)}{\IF $l$.primero $=$ $p$ $\lor$ $l$.longitud $=$ $0$ THEN $0$ ELSE $1$ $+$ Pos(FinLst($l$), $p$) FI}
-
-
-\end{Representacion}

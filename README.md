@@ -8,11 +8,11 @@ Cosas que faltan
 - [ ] invrep y abs dcnet
 - [ ] algoritmos dcnet
 - [ ] interfaz dicc trie
-- [ ] invrep y abs dicc trie
-- [ ] algoritmos dicc trie 
+- [x] invrep y abs dicc trie (no hay que hacerlo)
+- [x] algoritmos dicc trie (no hay que hacerlo)
 - [ ] interfaz iterador dicc trie
-- [ ] invrep y abs iterador dicc trie
-- [ ] algoritmos iterador dicc trie
+- [x] invrep y abs iterador dicc trie (no hay que hacerlo)
+- [x] algoritmos iterador dicc trie (no hay que hacerlo)
 - [ ] interfaz colaprior heap
 - [ ] invrep y abs colaprior heap
 - [ ] algoritmos colaprior heap

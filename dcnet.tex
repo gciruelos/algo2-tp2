@@ -22,7 +22,7 @@
   [$\Theta()$]
   [Agrega el paquete $p$ a la cola de la computadora $p.origen$.]
   
-  \InterfazFuncion{AvanzarSegundo}{\Inout{s}{\tadNombre{dcnet}}}{\tadNombre{dcnet}}
+  \InterfazFuncion{AvanzarSegundo}{\Inout{s}{\tadNombre{dcnet}}}{}
   [$s \igobs s_0$]  
   {$res \igobs avanzarSegundo(s_0)$}
   [$\Theta()$]
@@ -33,7 +33,7 @@
   [$ True $]  
   {$res \igobs red(s_0)$}
   [$\Theta(1)$]
-  [Expresa la red que esta contenida en la DCNet.]}
+  [Expresa la red que esta contenida en la DCNet.]
 
   
   \InterfazFuncion{caminoRecorrido}{\In{s}{\tadNombre{dcnet}}, \In{p}{\tadNombre{paquete}}}{\tadNombre{secu(compu)}}
@@ -69,21 +69,7 @@
   {$res \igobs laQuemasEnvio(s)$}
   [$\Theta(1)$]
   [Devuelve la computadora que mas paquetes envio.]
-
   
-  \section*{Operaciones del iterador}
-
-  \InterfazFuncion{CrearIt}{\In{l}{lista($\alpha$)}}{itLista($\alpha$)}
-  {$res$ $\igobs$ crearItBi(\secuencia{}, $l$) $\land$ alias(SecuSuby($it$) $=$ $l$)}
-  [$\Theta(1)$]
-  [crea un iterador bidireccional de la lista, de forma tal que al pedir \NombreFuncion{Siguiente} se obtenga el primer elemento de $l$.]
-  [el iterador se invalida si y sólo si se elimina el elemento siguiente del iterador sin utilizar la función \NombreFuncion{EliminarSiguiente}.]
-  
-  \InterfazFuncion{CrearItUlt}{\In{l}{lista($\alpha$)}}{itLista($\alpha$)}
-  {$res$ $\igobs$ crearItBi($l$, \secuencia{}) $\land$ alias(SecuSuby($it$) $=$ $l$)}
-  [$\Theta(1)$]
-  [crea un iterador bidireccional de la lista, de forma tal que al pedir \NombreFuncion{Anterior} se obtenga el último elemento de $l$.]  
-  [el iterador se invalida si y sólo si se elimina el elemento siguiente del iterador sin utilizar la función \NombreFuncion{EliminarSiguiente}.]
 
 \end{Interfaz}
 
@@ -91,75 +77,31 @@
   
   \section*{Representación de DCNet}
 
-  \begin{Estructura}{lista$(\alpha)$}[lst]
-    \begin{Tupla}[lst]
-      \tupItem{primero}{puntero(nodo)}%
-      \tupItem{longitud}{nat}%
+  \begin{Estructura}{dcnet}[net]
+    \begin{Tupla}[net]
+      \tupItem{proximaEnCamino}{dicc(id, dicc(id, id))}%
+      \tupItem{\\ paquetes}{diccTrie(id,infoPaquetes)}%
+      \tupItem{\\ caminosRecorridos}{lista(lista(id))}
+      \tupItem{\\ laQueMasEnvio}{tupla($cuantosEnvio$ : nat, $cualCompu$ : id)}
+      \tupItem{\\ red}{red}
     \end{Tupla}
-
-    \begin{Tupla}[nodo]
-      \tupItem{dato}{$\alpha$}%
-      \tupItem{anterior}{puntero(nodo)}%
-      \tupItem{siguiente}{puntero(nodo)}%
+  
+  
+  \begin{Tupla}[infoPaquetes]
+      \tupItem{colas}{colaPrior(tupla($p$ : paq, $camino$ : itLista))}
+      \tupItem{conjPaquetes}{conj(paq)}
+      \tupItem{cantEnviados}{nat}                       
     \end{Tupla}
   \end{Estructura}
+
 
   \Rep[lst][l]{($l$.primero $=$ NULL) $=$ ($l$.longitud $=$ $0$) $\yluego$ ($l$.longitud $\neq$ $0$ \impluego \\
     Nodo($l$, $l$.longitud) $=$ $l$.primero $\land$ \\
     ($\forall i$: nat)(Nodo($l$,$i$)\DRef siguiente $=$ Nodo($l$,$i+1$)\DRef anterior) $\land$ \\
     ($\forall i$: nat)($1 \leq i <$ $l$.longitud $\implies$ Nodo($l$,$i$) $\neq$ $l$.primero)}\mbox{}
 
-  ~      
 
-  \tadOperacion{Nodo}{lst/l,nat}{puntero(nodo)}{$l$.primero $\neq$ NULL}
-  \tadAxioma{Nodo($l$,$i$)}{\IF $i = 0$ THEN $l$.primero ELSE Nodo(FinLst($l$), $i-1$) FI}
-
-  ~
-
-  \tadOperacion{FinLst}{lst}{lst}{}
-  \tadAxioma{FinLst($l$)}{Lst($l$.primero\DRef siguiente, $l$.longitud $-$ $\min$\{$l$.longitud, $1$\})}
-
-  ~
-
-  \tadOperacion{Lst}{puntero(nodo),nat}{lst}{}
-  \tadAxioma{Lst($p,n$)}{$\langle p, n\rangle$}
-
-  ~
- 
   \AbsFc[lst]{secu($\alpha$)}[l]{\IF $l$.longitud $=$ $0$ THEN \secuencia{} ELSE \secuencia{$l$.primero\DRef dato}[Abs(FinLst($l$))] FI}
-
-  \section*{Representación del iterador}
-
-  \begin{Estructura}{itLista($\alpha$)}[iter]
-    \begin{Tupla}[iter]
-      \tupItem{siguiente}{puntero(nodo)}%
-      \tupItem{lista}{puntero(lst)}%
-    \end{Tupla}
-  \end{Estructura}
-
-  \Rep[iter][it]{Rep($\ast$($it$.lista)) $\yluego$ ($it$.siguiente $=$ NULL $\oluego$ ($\exists i$: nat)(Nodo($\ast it$.lista, $i$) $=$ $it$.siguiente)}
-
-  ~
-
-  \Abs[iter]{itBi($\alpha$)}[it]{b}{Siguientes($b$) $=$ Abs(Sig($it$.lista, $it$.siguiente)) $\land$\\
-    Anteriores($b$) $=$ Abs(Ant($it$.lista, $it$.siguiente))}
-
-  ~
-
-  \tadOperacion{Sig}{puntero(lst)/l,puntero(nodo)/p}{lst}{Rep($\langle l, p\rangle$)}
-  \tadAxioma{Sig($i, p$)}{Lst($p$, $l$\DRef longitud $-$ Pos($\ast l$, $p$))}
-
-  ~
-
-  \tadOperacion{Ant}{puntero(lst)/l,puntero(nodo)/p}{lst}{Rep($\langle l, p\rangle$)}
-  \tadAxioma{Ant($i, p$)}{Lst(\IF $p$ $=$ $l$\DRef primero THEN NULL ELSE $l$\DRef primero FI, Pos($\ast l$, $p$))}
-
-  ~
-
-  {\small Nota: cuando $p$ $=$ NULL, Pos devuelve la longitud de la lista, lo cual está bien, porque significa que el iterador no tiene siguiente.}
-  \tadOperacion{Pos}{lst/l,puntero(nodo)/p}{puntero(nodo)}{Rep($\langle l, p\rangle$)}
-  \tadAxioma{Pos($l$,$p$)}{\IF $l$.primero $=$ $p$ $\lor$ $l$.longitud $=$ $0$ THEN $0$ ELSE $1$ $+$ Pos(FinLst($l$), $p$) FI}
-
 
 \end{Representacion}
 
@@ -173,16 +115,42 @@
 
 
 \begin{algorithmic}[1]
-  \Procedure{Iniciar() $\to res$ : dcnet}{}
-  \State Falta agregarlo
+  \Procedure{Iniciar(\textbf{in} $r$ : red) $\to res$ : dcnet}{}
+  \State $red \gets r$  PREGUNTAR COPIA/ALIAS
+  \State $caminosRecorridos \gets$ Vacia()
+  \State $laQueMasEnvio \gets$ (0, NULL)
+  \State conj(compu) $compus \gets$ Computadoras($red$)
+  \State itConj $it \gets$ CrearIt($compus$)
+  \State $proximaEnCamino \gets$ Vacio()
+  \While{HaySiguiente?(it)}
+    \State \tadNombre{itConj} $it2 \gets$ CrearIt($compus$)
+    \State diccTrie(id, puntero(compu)) $diccActual \gets$ Vacio()
+    \While{HaySiguiente?(it2)}
+      \State conj(lista(compu)) $camMinimos \gets$ CaminosMinimos(red, SiguienteClave(it), SiguienteClave(it2))
+      \State itConj $it3 \gets$ CrearIt(camMinimos)
+      \State $caminoMinimo \gets$ siguiente(it3)
+      \State Fin(caminoMinimo)
+      \State puntero(compu) $siguiente \gets$ \& Primero($caminoMinimo$)
+      \State Definir($diccActual$, SiguienteClave(it2), id($siguiente$))
+      \State Avanzar(it3)            
+    \EndWhile
+    \State definir($proximaEnCamino$, id(SiguienteClave($it$), $diccActual$)))
+    \State Avanzar($it2$)
+  \EndWhile
+   
   \EndProcedure
 \end{algorithmic}
 
 
 %\caption{CrearPaquete}
 \begin{algorithmic}[1]
-  \Procedure{CrearPaquete(\textbf{in/out} $s$ : dcnet, \textbf{in} $p$ : paquete) $\to res$ : dcnet}{}
-   \State Falta agregarlo
+  \Procedure{CrearPaquete(\textbf{in/out} $s$ : dcnet, \textbf{in} $p$ : paquete)}{}
+   \State lista(compu) $nuevoCaminoRecorrido \gets$ Vacio()
+   \State AgregarAtras(nuevoCaminoRecorrido, origen(p))
+   \State itLista(lista(compu)) $it \gets$ AgregarAtras(caminosRecorridos, nuevoCaminoRecorrido)
+   \State $losPaquetes \gets $ Obtener($paquetes$, id(p.origen))
+   \State Encolar(losPaquetes.cola, ($p$, $it$))
+   \State Agregar(losPaquetes.conjPaquetes, $p$)
   \EndProcedure
 \end{algorithmic}
 
@@ -190,7 +158,39 @@
 %\caption{AvanzarSegundo}
 \begin{algorithmic}[1]
   \Procedure{AvanzarSegundo(\textbf{in/out} $s$ : dcnet)}{}
-  \State Falta agregarlo
+  
+  \State lista(tupla(paq, itLista(lista(id)))) $paquetesAEnviar \gets$ Vacio()
+  
+  \State itDiccTrie $it \gets$ CrearIt($paquetes$)
+  \While{HaySiguientes?(it)}
+  	\State infoCompu $s \gets$ SiguienteSignificado($it$) 
+  	\If{$\neg$Vacía?($s$.$cola$)}
+  		\State tupla(paquete,itLista(lista(id))) $estePaquete \gets$ Desencolar($s$.$cola$)
+  		%\State tupla(paquete, itLista) $paqEIt \gets$ Obtener($s$.conjPaquetes, $x$)
+  		\State Eliminar($s$.conjPaquetes, $\pi_0(x)$)
+      		
+		%\State tupla(puntero(paquete), itLista) $infoPaquete \gets$ (\& $\pi_0$(paqEIt), $\pi_1$(paqEIt))
+		\State AgregarAtras(paquetesAEnviar($estePaquete$))
+		\State cantEnviados++
+		\If{$s$.cantEnviados > laQueMasEnvio.cuantosEnvio}
+		   \State $laQueMasEnvio.cuantosEnvio \gets$ $s$.cantEnviados
+		   \State $laQueMasEnvio.cualCompu \gets$ ultimo(Siguiente($pi_1$($estePaquete$)))
+		\EndIf
+	\EndIf
+	\State Avanzar($it$)
+  \EndWhile 
+   
+  \State itLista(tupla(paq, itLista(lista(id)))) $it_2 \gets$ CrearIt($paquetesAEnviar$)
+  \While{HaySiguientes?($it_2$)}
+      \State tupla(paq, itLista(lista(id)) $p \gets$ Siguiente($it_2$)
+      \State id $proximaCompu \gets$ Obtener($proximaEnCamino$, $Ultimo(Siguiente(\pi_1(p)))$, destino($p$))
+      \State $paquetesDeProximaCompu \gets$ Obtener($paquetes$, proximaCompu)
+      \State AgregarAtras(Siguiente($\pi_1(p)$), proximaCompu)
+      \State Encolar($paquetesDeProximaCompu$.$cola$, p)
+      \State Agregar($paquetesDeProximacompu$.$conjPaquetes$, $\pi_0$(p))
+      \State Avanzar($it_2$)
+  \EndWhile
+ 
  \EndProcedure
 \end{algorithmic}
 

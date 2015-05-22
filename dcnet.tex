@@ -6,12 +6,13 @@
 
   \section*{Operaciones básicas de DCNet}
 
-  \InterfazFuncion{Iniciar}{\In{r}{red}}{dcnet}
-  {$res \igobs iniciarDCNet(r)$}
+  \InterfazFuncion{IniciarDCNet}{\In{r}{\tadNombre{red}}}{\tadNombre{dcnet}}
+  [ $True$ ]
+  {$ res \igobs IniciarDCNet(r)  $ }
   [$\Theta(1)$]
-  [genera una DCNet con las computadoras y conexiones de la red pasada como parámetro.]
+  [Genera una DCNet con las computadoras y conexiones de la red pasada como parámetro.]
 
-  \InterfazFuncion{CrearPaquete}{\Inout{s}{dcnet}, \In{p}{paquete}}{}
+  \InterfazFuncion{CrearPaquete}{\Inout{s}{\tadNombre{dcnet}}, \In{p}{\tadNombre{paquete}}}{}
   [$s \igobs s_0 \land 
    \neg((\exists p':paquete) (paqueteEnTransito?(s_0,p') \land id(p') \igobs id(p)) \land\\ 
    \hspace*{3em} origen(p) \in computadoras(red(s_0)) \yluego
@@ -19,13 +20,56 @@
    \hspace*{3em} hayCamino?(red(s), origen(p), destino(p))$]
   {$s \igobs crearPaquete(s_0, p)$}
   [$\Theta()$]
-  [agrega el paquete $p$ a la cola de la computadora $p.origen$.]
+  [Agrega el paquete $p$ a la cola de la computadora $p.origen$.]
   
-  \InterfazFuncion{AvanzarSegundo}{\Inout{s}{dcnet}}{dcnet}
+  \InterfazFuncion{AvanzarSegundo}{\Inout{s}{\tadNombre{dcnet}}}{\tadNombre{dcnet}}
   [$s \igobs s_0$]  
   {$res \igobs avanzarSegundo(s_0)$}
   [$\Theta()$]
-  [avanza un segundo; todas las computadoras que tengan paquetes por enviar los envían.]
+  [Avanza un segundo; todas las computadoras que tengan paquetes por enviar los envían.]
+  
+  
+  \InterfazFuncion{red}{\In{s}{\tadNombre{dcnet}}}{\tadNombre{red}}
+  [$ True $]  
+  {$res \igobs red(s_0)$}
+  [$\Theta(1)$]
+  [Expresa la red que esta contenida en la DCNet.]}
+
+  
+  \InterfazFuncion{caminoRecorrido}{\In{s}{\tadNombre{dcnet}}, \In{p}{\tadNombre{paquete}}}{\tadNombre{secu(compu)}}
+  [$ paqueteEnTransito?(s,p) $]
+  {$res \igobs caminoRecorrido(s, p)$}
+  [$\Theta()$]
+  [Expresa el camino de computadoras recorrido por el paquete "p" desde su inicio hasta posicion actual.]
+
+
+  \InterfazFuncion{cantidadEnviados}{\In{s}{\tadNombre{dcnet}}, \In{c}{\tadNombre{compu}}}{\tadNombre{nat}}
+  [$ c \in computadoras(red(s)) $]  
+  {$res \igobs cantidadEnviados(s, c)$}
+  [$\Theta()$]
+  [Expresa la cantidad de mensajes enviados por la compu "c".]
+
+  
+  \InterfazFuncion{enEspera}{\In{s}{\tadNombre{dcnet}}, \In{c}{\tadNombre{compu}}}{\tadNombre{conj(paquete)}}
+  [$ c \in computadoras(red(s)) $]  
+  {$res \igobs enEspera(s, c)$}
+  [$\Theta()$]
+  [Expresa el camino de computadoras recorrido por el paquete "p" desde su inicio hasta posicion actual.]
+
+
+  \InterfazFuncion{PaqueteEnTransito}{\In{s}{\tadNombre{dcnet}}, \In{p}{\tadNombre{paquete}}}{\tadNombre{bool}}
+  [$ True $]  
+  {$res \igobs paqueteEnTransito?(s, p)$}
+  [$\Theta()$]
+  [Expresa si el paquete "p" esta en alguna computadora.]
+  
+  
+  \InterfazFuncion{LaQueMasEnvio}{\In{s}{\tadNombre{dcnet}}}{\tadNombre{compu}}
+  [$ True $]
+  {$res \igobs laQuemasEnvio(s)$}
+  [$\Theta(1)$]
+  [Devuelve la computadora que mas paquetes envio.]
+
   
   \section*{Operaciones del iterador}
 
@@ -118,3 +162,85 @@
 
 
 \end{Representacion}
+
+
+
+\begin{Algoritmos}
+
+
+\begin{algorithm}
+  \caption{Algoritmos de \tadNombre{DCNet}}
+
+
+\begin{algorithmic}[1]
+  \Procedure{Iniciar() $\to res$ : dcnet}{}
+  \State Falta agregarlo
+  \EndProcedure
+\end{algorithmic}
+
+
+%\caption{CrearPaquete}
+\begin{algorithmic}[1]
+  \Procedure{CrearPaquete(\textbf{in/out} $s$ : dcnet, \textbf{in} $p$ : paquete) $\to res$ : dcnet}{}
+   \State Falta agregarlo
+  \EndProcedure
+\end{algorithmic}
+
+
+%\caption{AvanzarSegundo}
+\begin{algorithmic}[1]
+  \Procedure{AvanzarSegundo(\textbf{in/out} $s$ : dcnet)}{}
+  \State Falta agregarlo
+ \EndProcedure
+\end{algorithmic}
+
+%\caption{red}
+\begin{algorithmic}[1]
+  \Procedure{red(\textbf{in} $s$ : dcnet)}{}
+ \State Falta agregarlo
+ \EndProcedure
+\end{algorithmic}
+
+
+%\caption{caminoRecorrido}
+\begin{algorithmic}[1]
+  \Procedure{caminoRecorrido(\textbf{in} $s$ : dcnet, \textbf{in} $p$ : paquete) $\to res$ : secu(compu)}{}
+   \State Falta agregarlo
+  \EndProcedure
+\end{algorithmic}
+
+%\caption{cantidadEnviados}
+\begin{algorithmic}[1]
+  \Procedure{cantidadEnviados(\textbf{in} $s$ : dcnet, \textbf{in} $c$ : compu)  $\to res$ : nat}{}
+   \State Falta agregarlo
+  \EndProcedure
+\end{algorithmic}
+
+%\caption{enEspera}
+\begin{algorithmic}[1]
+  \Procedure{enEspera(\textbf{in} $s$ : dcnet, \textbf{in} $c$ : compu)  $\to res$ : conj(paquete)}{}
+   \State Falta agregarlo
+  \EndProcedure
+\end{algorithmic}
+
+%\caption{paqueteEnTransito}
+\begin{algorithmic}[1]
+  \Procedure{paqueteEnTransito(\textbf{in} $s$ : dcnet, \textbf{in} $p$ : paquete)  $\to res$ : bool}{}
+   \State Falta agregarlo
+  \EndProcedure
+\end{algorithmic}
+
+%\caption{laQueMasEnvio}
+\begin{algorithmic}[1]
+  \Procedure{enEspera(\textbf{in} $s$ : dcnet)  $\to res$ : compu}{}
+   \State Falta agregarlo
+  \EndProcedure
+\end{algorithmic}
+
+
+\end{algorithm}
+
+
+
+\end{Algoritmos}
+

@@ -1,11 +1,10 @@
 Red
 ---
 * 0 -> dicc(compu, conj(tupla (interfaz, interfaz, compu)))
-* 1 -> dicc(compu, dicc(compu, compu)) TRIE
 
 DCNet
 -----
-
+* 1 -> dicc(compu, dicc(compu, compu)) TRIE
 * 2 -> dicc(compu, (tupla(colaPrior(paq),
                           conj(tupla(paq, it_3)),
                           conj(paq),

@@ -5,12 +5,13 @@
 
 \begin{Interfaz}
 
-  \textbf{se explica con}: Cola de Prioridad($\alpha$), Iterador Unidireccional Modificable($\alpha$)
+  \textbf{se explica con}: Cola de Prioridad($\alpha$)
 
   \textbf{usa}: Nat, bool
   
-  \textbf{genero}: colaPrior($\alpha$), itColaPrior($\alpha$)
-  
+  \textbf{genero}: colaPrior($\alpha$)\footnote{En realidad nosotros utilizamos \tadNombre{colaPrior(tupla($\alpha$, $\beta$))}, donde $t_1 < t_2 \iff \pi_0(t_1) < \pi_0(t_2)$, lo escribimos así para hacerlo más general, dado que hacer el cambio a tupla es trivial y solo agrega más complejidad a la lectura.}
+
+
 \subsubsection{Operaciones de Cola de Prioridad}
 
   \InterfazFuncion{Vacia}{}{colaPrior($\alpha$)}
@@ -43,12 +44,11 @@
 \subsection{Representación de la cola de prioridad}
 \begin{Representacion}
   
-  \begin{Estructura}{colaPrior($\alpha$)}[estr]
+  \begin{Estructura}{colaPrior($\alpha$)}[heap]
 
-  \begin{Tupla}[estr]
+  \begin{Tupla}[heap]
     \tupItem{tam}{nat}%
-    \tupItem{\\ cabeza}{puntero(nodo)}%
-    \tupItem{\\ ultimo}{puntero(nodo)}%
+    \tupItem{\\ cabeza}{puntero(nodo)}% 
   \end{Tupla}
 
   ~
@@ -76,6 +76,176 @@ FALTA INVREP Y ABS
 
 
 \begin{Algoritmos}
+
+
+
+\begin{algorithm}
+\caption{Vacia}
+\begin{algorithmic}[1]
+  \Procedure{iVacia}{\ } $\to res$ : \texttt{heap}
+  \State $tam \gets$ 0
+  \State $cabeza \gets$ NULL
+  \State $res \gets$ ($tam$,$cabeza$)
+ \EndProcedure
+\end{algorithmic}
+\end{algorithm}
+
+
+\begin{algorithm}
+\caption{Vacia?}
+\begin{algorithmic}[1]
+  \Procedure{iVacia?}{\texttt{in} h : \texttt{heap}} $\to res$ : \texttt{heap}
+  \State $tam \gets$ 0
+  \State $cabeza \gets$ NULL
+  \State $res \gets$ ($tam$,$cabeza$)
+ \EndProcedure
+\end{algorithmic}
+\end{algorithm}
+
+
+
+\begin{algorithm}
+\caption{Desencolar}
+\begin{algorithmic}[1]
+  \Procedure{iDesencolar}{\texttt{in/out} h : \texttt{heap}} $\to res$ : $\alpha$
+  \State $res \gets$ h.cabeza$\to$ dato
+
+  \If{$tam$ = 1}
+    \State delete($cabeza$)
+    \State $cabeza \gets$ NULL
+  \Else
+    \State lista($nat$) $recorridoHastaUltimo \gets$ Vacia()
+    \State $x \gets h.tam$
+    \While{x > 1}
+      \State agregarAdelante($recorridoHastaUltimo$, $x$\% 2)
+      \State $x \gets \frac{x}{2}$
+    \EndWhile
+    \State puntero(nodo) $ultimo \gets h.cabeza$
+    \State itLista($nat$) $i \gets$ crearIt(recorridoHastaUltimo)
+    \While{haySiguiente?($i$)}
+      \If {Siguiente(i) = 0} \ $p \gets p.izq$
+      \Else \  $p \gets p.izq$
+      \EndIf
+      \State $i \gets$ Avanzar($i$)
+    \EndWhile
+    
+    \If{($p \to padre)\to der$ = $p$} 
+      \State $p \to padre \to der \gets$ NULL
+    \Else
+      \State $p \to padre \to izq \gets$ NULL
+    \EndIf
+  
+    \State $p \to der \gets cabeza \to der$
+    \State $p \to izq \gets cabeza \to izq$
+    \State $p \to padre \gets$ NULL
+  
+    \State puntero(nodo) $nodoActual \gets p$
+    \While{$(nodoActual \to izq \neq$ NULL $\land$ $nodoActual \to dato$ > $nodoActual \to izq)$ $\lor$ $(nodoActual \to der \neq$ NULL $\land$ $nodoActual \to dato$ > $nodoActual \to der)$}
+      \If{$nodoActual \to der$ = NULL}
+        \If{$nodoActual \to izq \to dato$ < $nodoActual \to dato$}
+          \State Intercambiar($h$, $nodoActual$, $nodoActual \to izq$)
+        \Else 
+          \If{$nodoActual \to izq \to dato < nodoActual \to dato \land nodoActual \to izq \to dato < nodoActual \to der \to dato$}
+            \State Intercambiar($h$, $nodoActual$, $nodoActual \to izq$)
+          \Else
+             \State Intercambiar($h$, $nodoActual$, $nodoActual \to der$)
+          \EndIf
+        \EndIf
+      \EndIf
+    \EndWhile
+   \EndIf
+  \State $tam--$
+ \EndProcedure
+\end{algorithmic}
+\end{algorithm}
+
+
+
+
+\begin{algorithm}
+\caption{Encolar}
+\begin{algorithmic}[1]
+  \Procedure{iEncolar}{\texttt{in/out} $h$ : \texttt{heap}, \texttt{in} $a$ : $\alpha$} $\to res$ : $\alpha$
+  \State $nuevoNodo \gets$ Nodo(NULL, NULL, NULL, $a$)
+
+  \If{$tam$ = 0}
+    \State $cabeza \gets p$
+  \Else
+
+    \State lista($nat$) $recorridoHastaUltimo \gets$ Vacia()
+    \State $x \gets h.tam+1$
+    \While{x > 1}
+      \State agregarAdelante($recorridoHastaUltimo$, $x$\% 2)
+      \State $x \gets \frac{x}{2}$
+    \EndWhile
+    \State puntero(nodo) $padreNuevo \gets h.cabeza$
+    \State itLista($nat$) $i \gets$ crearIt(recorridoHastaUltimo)
+    
+    \Repeat
+      \If {Siguiente(i) = 0} \ $padreNuevo \gets padreNuevo.izq$
+      \Else \  $padreNuevo \gets padreNuevo.izq$
+      \EndIf
+      \State $i \gets$ Avanzar($i$)
+    \Until{Siguiente?($i$) $\neq$ ultimo(recorridoHastaUltimo)}
+    
+    \State $nuevo \to padre \gets padreNuevo$
+
+    \If{ultimo(recorridoHastaUltimo) = 0}
+      \State $padreNuevo \to izq \gets nuevoNodo$
+    \Else
+       \State $padreNuevo \to der \gets nuevoNodo$
+    \EndIf
+
+    \State puntero(nodo) $nodoActual \gets nuevoNodo$
+
+    \While{$(nodoActual \to padre \neq NULL \land nodoActual \to padre \to dato > nodoActual \to dato$}
+
+    Intercambiar($h$, $nodoActual \to padre$, $nodoActual$)
+    \EndWhile
+   \EndIf
+  \State $tam++$
+ \EndProcedure
+\end{algorithmic}
+\end{algorithm}
+
+
+
+
+
+\begin{algorithm}
+\caption{Intercambiar}
+\begin{algorithmic}[1]
+  \Procedure{iIntercambiar}{\texttt{in/out} $h$ : \texttt{heap}, \texttt{in/out} $padre$ : \texttt{puntero(nodo)}, \texttt{in/out} $hijo$ : \texttt{puntero(nodo)}}
+  \If{$hijo$ = $padre \to izq$}
+    \State puntero(nodo) $derechoPadre \gets padre \to der$
+    \State $padre \to der \gets hijo \to der$
+    \State $padre \to izq \gets hijo \to izq$
+    \State $hijo \to izq \gets padre$
+    \State $hijo \to der \gets derechoPadre$
+  \Else
+    \State puntero(nodo) $izquierdoPadre \gets padre \to izq$
+    \State $padre \to izq \gets hijo \to izq$
+    \State $padre \to der \gets hijo \to der$
+    \State $hijo \to der \gets padre$
+    \State $hijo \to izq \gets izquierdoPadre$
+  \EndIf
+
+  \State $hijo \to padre \gets padre \to padre$
+  \State $padre \to padre \gets hijo$
+  
+  \If{$hijo \to padre$ = NULL}
+    \State$h$.cabeza $\gets hijo$
+  \EndIf 
+
+
+ \EndProcedure
+\end{algorithmic}
+\end{algorithm}
+
+
+
+
+
 
 
 

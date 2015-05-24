@@ -1,18 +1,18 @@
 
 
 
-\section{Módulo Cola de Prioridad($\alpha$)}
+
 
 \begin{Interfaz}
 
-  \textbf{se explica con}: Cola de Prioridad($\alpha$)
+  \textbf{se explica con}: colaPrior($\alpha$)
 
   \textbf{usa}: Nat, bool
   
   \textbf{genero}: colaPrior($\alpha$)
 
 
-\subsubsection{Operaciones de Cola de Prioridad}
+  \subsubsection{Operaciones de Cola de Prioridad \footnote{asumimos que la complejidad de comparar $\alpha$ con $<_\alpha$ es $\Ogr(1)$ para no sobrecargar de notación, la complejidad expresada en su totalidad está en la parte de algoritmos}}
 
   \InterfazFuncion{Vacia}{}{colaPrior($\alpha$)}
   [true]
@@ -105,10 +105,12 @@
 \caption{Vacia}
 \begin{algorithmic}[1]
   \Procedure{iVacia}{\ } $\to res$ : \texttt{ab($\alpha$)}
-  \State $tam \gets$ 0
-  \State $cabeza \gets$ NULL
-  \State $res \gets$ ($tam$,$cabeza$)
+  \State $tam \gets$ 0 \Comment $\Ogr(1)$
+  \State $cabeza \gets$ NULL \Comment $\Ogr(1)$
+  \State $res \gets$ ($tam$,$cabeza$) \Comment $\Ogr(1)$
  \EndProcedure
+ \underline{Complejidad:} $\Ogr(1)$
+ \underline{Justificación:} $\Ogr(1)+\Ogr(1)+\Ogr(1) = \Ogr(1)$
 \end{algorithmic}
 \end{algorithm}
 
@@ -117,9 +119,9 @@
 \caption{Vacia?}
 \begin{algorithmic}[1]
   \Procedure{iVacia?}{\texttt{in} h : \texttt{ab($\alpha$)}} $\to res$ : \texttt{heap}
-
-  \State $res \gets$ $h.cabeza$ = NULL
+  \State $res \gets$ $h.cabeza$ = NULL \Comment $\Ogr(1)$ 
  \EndProcedure
+ \underline{Complejidad:} $\Ogr(1)$
 \end{algorithmic}
 \end{algorithm}
 
@@ -128,8 +130,9 @@
 \caption{Proximo}
 \begin{algorithmic}[1]
   \Procedure{Proximo}{\texttt{in} h : \texttt{ab($\alpha$)}} $\to res$ : $\alpha$
-  \State $res \gets$ $h.cabeza \to dato$
+  \State $res \gets$ $h.cabeza \to dato$ \Comment $\Ogr(1)$ 
  \EndProcedure
+ \underline{Complejidad:} $\Ogr(1)$
 \end{algorithmic}
 \end{algorithm}
 
@@ -141,52 +144,54 @@
   \Procedure{iDesencolar}{\texttt{in/out} h : \texttt{ab($\alpha$)}} $\to res$ : $\alpha$
   \State $res \gets$ h.cabeza$\to$ dato
 
-  \If{$tam$ = 1}
-    \State delete($cabeza$)
-    \State $cabeza \gets$ NULL
+  \If{$tam$ = 1} \Comment $\Ogr(1)$
+    \State delete($cabeza$) \Comment $\Ogr(1)$
+    \State $cabeza \gets$ NULL \Comment $\Ogr(1)$
   \Else
-    \State lista($nat$) $recorridoHastaUltimo \gets$ Vacia()
-    \State $x \gets h.tam$
-    \While{x > 1}
-      \State agregarAdelante($recorridoHastaUltimo$, $x$\% 2)
-      \State $x \gets \frac{x}{2}$
+    \State lista($nat$) $recorridoHastaUltimo \gets$ Vacia() \Comment $\Ogr(1)$
+    \State $x \gets h.tam$ \Comment $\Ogr(1)$
+    \While{x > 1} \Comment Se repite $\Ogr(log(x)) = \Ogr(log(tam))$ veces
+      \State agregarAdelante($recorridoHastaUltimo$, $x$\% 2) \Comment $\Ogr(copy(\alpha))$
+      \State $x \gets \frac{x}{2}$ \Comment $\Ogr(1)$
     \EndWhile
-    \State puntero(nodo) $ultimo \gets h.cabeza$
-    \State itLista($nat$) $i \gets$ crearIt(recorridoHastaUltimo)
-    \While{haySiguiente?($i$)}
-      \If {Siguiente(i) = 0} \ $p \gets p.izq$
-      \Else \  $p \gets p.izq$
+    \State puntero(nodo) $ultimo \gets h.cabeza$ \Comment $\Ogr(1)$
+    \State itLista($nat$) $i \gets$ crearIt(recorridoHastaUltimo) \Comment $\Ogr(1)$
+    \While{haySiguiente?($i$)}  \Comment Se repite $\Ogr(|recorridoHastaUltimo|) = \Ogr(log(tam))$ veces
+      \If {Siguiente(i) = 0} \ $p \gets p.izq$ \Comment $\Ogr(1)$
+      \Else \  $p \gets p.izq$ \Comment $\Ogr(1)$
       \EndIf
-      \State $i \gets$ Avanzar($i$)
+      \State $i \gets$ Avanzar($i$) \Comment $\Ogr(1)$
     \EndWhile
     
-    \If{($p \to padre)\to der$ = $p$} 
-      \State $p \to padre \to der \gets$ NULL
+    \If{($p \to padre)\to der$ = $p$} \Comment $\Ogr(1)$
+      \State $p \to padre \to der \gets$ NULL \Comment $\Ogr(1)$
     \Else
-      \State $p \to padre \to izq \gets$ NULL
+      \State $p \to padre \to izq \gets$ NULL \Comment $\Ogr(1)$
     \EndIf
   
-    \State $p \to der \gets cabeza \to der$
-    \State $p \to izq \gets cabeza \to izq$
-    \State $p \to padre \gets$ NULL
+    \State $p \to der \gets cabeza \to der$ \Comment $\Ogr(1)$
+    \State $p \to izq \gets cabeza \to izq$ \Comment $\Ogr(1)$
+    \State $p \to padre \gets$ NULL \Comment $\Ogr(1)$
   
     \State puntero(nodo) $nodoActual \gets p$
-    \While{$(nodoActual \to izq \neq$ NULL $\land$ $nodoActual \to dato$ > $nodoActual \to izq)$ $\lor$ $(nodoActual \to der \neq$ NULL $\land$ $nodoActual \to dato$ > $nodoActual \to der)$}
-      \If{$nodoActual \to der$ = NULL}
-        \If{$nodoActual \to izq \to dato$ < $nodoActual \to dato$}
-          \State Intercambiar($h$, $nodoActual$, $nodoActual \to izq$)
+    \While{$(nodoActual \to izq \neq$ NULL $\land$ $nodoActual \to dato$ > $nodoActual \to izq)$ $\lor$ $(nodoActual \to der \neq$ NULL $\land$ $nodoActual \to dato$ > $nodoActual \to der)$}  \Comment Se repite $\Ogr(log(tam))$ veces.
+    \If{$nodoActual \to der$ = NULL} \Comment $\Ogr(1)$
+        \If{$nodoActual \to izq \to dato$ < $nodoActual \to dato$} \Comment $\Ogr(comparar(\alpha, <_\alpha))$
+          \State Intercambiar($h$, $nodoActual$, $nodoActual \to izq$) \Comment $\Ogr(1)$
         \Else 
-          \If{$nodoActual \to izq \to dato < nodoActual \to dato \land nodoActual \to izq \to dato < nodoActual \to der \to dato$}
-            \State Intercambiar($h$, $nodoActual$, $nodoActual \to izq$)
+          \If{$nodoActual \to izq \to dato < nodoActual \to dato \land nodoActual \to izq \to dato < nodoActual \to der \to dato$}  \Comment $\Ogr(comparar(\alpha, <_\alpha))$ 
+            \State Intercambiar($h$, $nodoActual$, $nodoActual \to izq$) \Comment $\Ogr(1)$
           \Else
-             \State Intercambiar($h$, $nodoActual$, $nodoActual \to der$)
+             \State Intercambiar($h$, $nodoActual$, $nodoActual \to der$) \Comment $\Ogr(1)$
           \EndIf
         \EndIf
       \EndIf
     \EndWhile
    \EndIf
-  \State $tam--$
+  \State $tam--$ \Comment $\Ogr(1)$
  \EndProcedure
+ \underline{Complejidad:} $\Ogr(log(tam) \cdot max\{copy(\alpha), comparar(\alpha, <_\alpha)\})$
+ \underline{Justificación:} $\Ogr(log(tam)) \cdot \Ogr(copy(\alpha)) + 3\Ogr(1) + \Ogr(log(tam)) \cdot \Ogr(1) + \Ogr(log(tam)) \cdot (6\Ogr(1) + \Ogr(comparar(\alpha, <_\alpha)) = \Ogr(log(tam)) \cdot \Ogr(copy(\alpha)) + \Ogr(log(tam)) \cdot \Ogr(comparar(\alpha, <_\alpha) = \Ogr(log(tam)) \cdot (\Ogr(copy(\alpha)) + \Ogr(comparar(\alpha, <_\alpha)) = \Ogr(log(tam) \cdot max\{copy(\alpha), comparar(\alpha, <_\alpha)\}) $.
 \end{algorithmic}
 \end{algorithm}
 
@@ -247,29 +252,31 @@
 \caption{Intercambiar}
 \begin{algorithmic}[1]
   \Procedure{iIntercambiar}{\texttt{in/out} $h$ : \texttt{ab($\alpha$)}, \texttt{in/out} $padre$ : \texttt{puntero(nodo($\alpha$))}, \texttt{in/out} $hijo$ : \texttt{puntero(nodo($\alpha$))}}
-  \If{$hijo$ = $padre \to izq$}
-    \State puntero(nodo) $derechoPadre \gets padre \to der$
-    \State $padre \to der \gets hijo \to der$
-    \State $padre \to izq \gets hijo \to izq$
-    \State $hijo \to izq \gets padre$
-    \State $hijo \to der \gets derechoPadre$
+  \If{$hijo$ = $padre \to izq$} \Comment $\Ogr(1)$
+    \State puntero(nodo) $derechoPadre \gets padre \to der$ \Comment $\Ogr(1)$
+    \State $padre \to der \gets hijo \to der$ \Comment $\Ogr(1)$
+    \State $padre \to izq \gets hijo \to izq$ \Comment $\Ogr(1)$
+    \State $hijo \to izq \gets padre$ \Comment $\Ogr(1)$
+    \State $hijo \to der \gets derechoPadre$ \Comment $\Ogr(1)$
   \Else
-    \State puntero(nodo) $izquierdoPadre \gets padre \to izq$
-    \State $padre \to izq \gets hijo \to izq$
-    \State $padre \to der \gets hijo \to der$
-    \State $hijo \to der \gets padre$
-    \State $hijo \to izq \gets izquierdoPadre$
+    \State puntero(nodo) $izquierdoPadre \gets padre \to izq$ \Comment $\Ogr(1)$
+    \State $padre \to izq \gets hijo \to izq$ \Comment $\Ogr(1)$
+    \State $padre \to der \gets hijo \to der$ \Comment $\Ogr(1)$
+    \State $hijo \to der \gets padre$ \Comment $\Ogr(1)$
+    \State $hijo \to izq \gets izquierdoPadre$ \Comment $\Ogr(1)$
   \EndIf
 
-  \State $hijo \to padre \gets padre \to padre$
-  \State $padre \to padre \gets hijo$
+  \State $hijo \to padre \gets padre \to padre$ \Comment $\Ogr(1)$
+  \State $padre \to padre \gets hijo$ \Comment $\Ogr(1)$
   
-  \If{$hijo \to padre$ = NULL}
-    \State$h$.cabeza $\gets hijo$
+  \If{$hijo \to padre$ = NULL} \Comment $\Ogr(1)$
+    \State$h$.cabeza $\gets hijo$ \Comment $\Ogr(1)$
   \EndIf 
 
 
  \EndProcedure
+ \underline{Complejidad:} $\Ogr(1)$
+ \underline{Justificación:} Queda claro que se producen siempre a lo sumo 8 operaciones que con costo $\Ogr(1)$.
 \end{algorithmic}
 \end{algorithm}
 

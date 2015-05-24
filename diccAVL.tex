@@ -65,8 +65,8 @@
 
   \Rep[puntero(AVL)][a]{$a$ = NULL \oluego \\
   					   \hspace*{4em}($\exists n:$nat) finaliza($a$, $n$) \yluego \\
-  					   \hspace*{4em}$a\rightarrow altura$\footnote{La notación $a\rightarrow campo$, donde $a$ es un puntero a una tupla y $campo$ algun campo de esa tupla, equivale a decir ($*a$).$campo$.} = alto($a$) \yluego \\
-  					   \hspace*{4em}max(diferenciaDeAlturas($a\rightarrow izq$, $a\rightarrow der$)$\leq$ 1 \yluego \\
+  					   \hspace*{4em}$a\rightarrow altura$\footnote{La notación $a\rightarrow campo$, donde $a$ es un puntero a una tupla y $campo$ algun campo de esa tupla, equivale a decir ($*a$).$campo$.} = alto($a$) $\land$ \\
+  					   \hspace*{4em}diferenciaDeAlturas($a\rightarrow izq$, $a\rightarrow der$)$\leq$ 1 $\land$ \\
   					   \hspace*{4em}($\forall c:\kappa$) ($c\in$ ClavesDelAvl($a\rightarrow izq$) $\Rightarrow a\rightarrow clave \leq c)$ $\land $\\
   					   \hspace*{4em}($\forall c:\kappa$) ($c\in$ ClavesDelAvl($a\rightarrow der$) $\Rightarrow a\rightarrow clave \leq c)$ $\land $\\
   					   \hspace*{4em}Rep($a \rightarrow izq$) $\land$ Rep($a \rightarrow der$)}

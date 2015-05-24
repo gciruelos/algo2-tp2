@@ -17,31 +17,31 @@
   \InterfazFuncion{Vacia}{}{colaPrior($\alpha$)}
   [true]
   {$res$ $\igobs$ vacia}
-  [O(1)]
+  [$\Ogr(1)$]
   [Crea una cola de prioridad]\\ 
   
   \InterfazFuncion{Vacia?}{\In{c}{colaPrior($\alpha$)}}{bool}
   [true]
   {$res$ $\igobs$ vacia?(c)}
-  [O(1)]
+  [$\Ogr(1)$]
   [Dice si la cola no tiene ningun elemento]\\ 
 
   \InterfazFuncion{Proximo}{\In{c}{colaPrior($\alpha$)}}{$\alpha$}
   [$\neg$vacia?($c$)]
   {$res$ $\igobs$ proximo($c_0$)}
-  [O(1)]
+  [$\Ogr(1)$]
   [Devuelve el elemento mas prioritario]\\   
   
   \InterfazFuncion{Desencolar}{\Inout{c}{colaPrior($\alpha$)}}{$\alpha$}
   [$\neg$vacia?($c$) $\land$ $c$ $\igobs$ $c_0$]
   {$res$ $\igobs$ proximo($c_0$) $\land$ $c$ $\igobs$ desencolar($c_0$)}
-  [O(log(tamano(c)))]
+  [$\Ogr(log(tamano(c)) \cdot copy(\alpha))$]
   [Quita el elemento mas prioritario]\\   
   
   \InterfazFuncion{Encolar}{\Inout{c}{colaPrior($\alpha$)}, \In{a}{$\alpha$}}{}
   [$c$ $\igobs$ $c_0$ $\land$ $\neg$esta($a$, $c$)] %agregar el esta
   {$c$ $\igobs$ encolar(a,$c_0$)}
-  [O(log(tamano(c)))]
+  [$\Ogr(log(tamano(c)) \cdot copy(\alpha))$]
   [Agrega al elemento a a la cola de prioridad]
   [El iterador se invalida si, y solo si se elimina el elemento siguiente del iterador sin llamar a la funcion Eliminar del mismo]\\ 
 
@@ -202,45 +202,49 @@
 \caption{Encolar}
 \begin{algorithmic}[1]
   \Procedure{iEncolar}{\texttt{in/out} $h$ : \texttt{ab($\alpha$)}, \texttt{in} $a$ : $\alpha$} $\to res$ : $\alpha$
-  \State $nuevoNodo \gets$ Nodo(NULL, NULL, NULL, $a$)
+  \State puntero(nodo) $nuevoNodo \gets$ Nodo(NULL, NULL, NULL, $a$) \Comment $\Ogr(1)$
 
-  \If{$tam$ = 0}
-    \State $cabeza \gets p$
+  \If{$tam$ = 0} \Comment $\Ogr(1)$
+    \State $cabeza \gets p$ \Comment $\Ogr(1)$
   \Else
 
-    \State lista($nat$) $recorridoHastaUltimo \gets$ Vacia()
-    \State $x \gets h.tam+1$
-    \While{x > 1}
-      \State agregarAdelante($recorridoHastaUltimo$, $x$\% 2)
-      \State $x \gets \frac{x}{2}$
+    \State lista($nat$) $recorridoHastaUltimo \gets$ Vacia() \Comment $\Ogr(1)$
+    \State $x \gets h.tam+1$ \Comment $\Ogr(1)$
+    \While{x > 1}  \Comment Se repite $\Ogr(log(x)) = \Ogr(log(tam))$ veces 
+      \State agregarAdelante($recorridoHastaUltimo$, $x$\% 2) \Comment $\Ogr(copy(\alpha))$
+      \State $x \gets \frac{x}{2}$ \Comment $\Ogr(1)$
     \EndWhile
-    \State puntero(nodo) $padreNuevo \gets h.cabeza$
-    \State itLista($nat$) $i \gets$ crearIt(recorridoHastaUltimo)
+    \State puntero(nodo) $padreNuevo \gets h.cabeza$ \Comment $\Ogr(1)$
+    \State itLista($nat$) $i \gets$ crearIt(recorridoHastaUltimo) \Comment $\Ogr(1)$
     
     \Repeat
-      \If {Siguiente(i) = 0} \ $padreNuevo \gets padreNuevo.izq$
-      \Else \  $padreNuevo \gets padreNuevo.izq$
+      \If {Siguiente(i) = 0} \ $padreNuevo \gets padreNuevo.izq$ \Comment $\Ogr(1)$
+      \Else \  $padreNuevo \gets padreNuevo.izq$ \Comment $\Ogr(1)$
       \EndIf
-      \State $i \gets$ Avanzar($i$)
-    \Until{Siguiente?($i$) $\neq$ ultimo(recorridoHastaUltimo)}
+      \State $i \gets$ Avanzar($i$) \Comment $\Ogr(1)$
+    \Until{Siguiente?($i$) $\neq$ ultimo(recorridoHastaUltimo)}  \Comment Se repite $\Ogr(log(tam))$ veces
     
-    \State $nuevo \to padre \gets padreNuevo$
+    \State $nuevo \to padre \gets padreNuevo$ \Comment $\Ogr(1)$
 
-    \If{ultimo(recorridoHastaUltimo) = 0}
-      \State $padreNuevo \to izq \gets nuevoNodo$
+    \If{ultimo(recorridoHastaUltimo) = 0} \Comment $\Ogr(1)$
+      \State $padreNuevo \to izq \gets nuevoNodo$ \Comment $\Ogr(1)$
     \Else
-       \State $padreNuevo \to der \gets nuevoNodo$
+       \State $padreNuevo \to der \gets nuevoNodo$ \Comment $\Ogr(1)$
     \EndIf
 
-    \State puntero(nodo) $nodoActual \gets nuevoNodo$
+    \State puntero(nodo) $nodoActual \gets nuevoNodo$ \Comment $\Ogr(1)$
 
-    \While{$(nodoActual \to padre \neq NULL \land nodoActual \to padre \to dato > nodoActual \to dato$}
+    \While{$(nodoActual \to padre \neq NULL \land nodoActual \to padre \to dato > nodoActual \to dato$}  \Comment Se repite $\Ogr(log(tam))$ veces
 
-    Intercambiar($h$, $nodoActual \to padre$, $nodoActual$)
+      \State Intercambiar($h$, $nodoActual \to padre$, $nodoActual$) \Comment $\Ogr(1)$
     \EndWhile
    \EndIf
-  \State $tam++$
+  \State $tam++$ \Comment $\Ogr(1)$
  \EndProcedure
+
+
+ \underline{Complejidad:} $\Ogr(log(tam) \cdot max\{copy(\alpha), comparar(\alpha, <_\alpha)\})$
+ \underline{Justificación:} $\Ogr(log(tam)) \cdot \Ogr(copy(\alpha)) + 3\Ogr(1) + \Ogr(log(tam)) \cdot \Ogr(1) + \Ogr(log(tam)) \cdot (6\Ogr(1) + \Ogr(comparar(\alpha, <_\alpha)) = \Ogr(log(tam)) \cdot \Ogr(copy(\alpha)) + \Ogr(log(tam)) \cdot \Ogr(comparar(\alpha, <_\alpha) = \Ogr(log(tam)) \cdot (\Ogr(copy(\alpha)) + \Ogr(comparar(\alpha, <_\alpha)) = \Ogr(log(tam) \cdot max\{copy(\alpha), comparar(\alpha, <_\alpha)\}) $.
 \end{algorithmic}
 \end{algorithm}
 

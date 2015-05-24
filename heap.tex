@@ -9,7 +9,7 @@
 
   \textbf{usa}: Nat, bool
   
-  \textbf{genero}: colaPrior($\alpha$)\footnote{En realidad nosotros utilizamos \tadNombre{colaPrior(tupla($\alpha$, $\beta$))}, donde $t_1 < t_2 \iff \pi_0(t_1) < \pi_0(t_2)$, lo escribimos así para hacerlo más general, dado que hacer el cambio a tupla es trivial y solo agrega más complejidad a la lectura.}
+  \textbf{genero}: colaPrior($\alpha$)
 
 
 \subsubsection{Operaciones de Cola de Prioridad}
@@ -26,6 +26,12 @@
   [O(1)]
   [Dice si la cola no tiene ningun elemento]\\ 
 
+  \InterfazFuncion{Proximo}{\In{c}{colaPrior($\alpha$)}}{$\alpha$}
+  [$\neg$vacia?($c$)]
+  {$res$ $\igobs$ proximo($c_0$)}
+  [O(1)]
+  [Devuelve el elemento mas prioritario]\\   
+  
   \InterfazFuncion{Desencolar}{\Inout{c}{colaPrior($\alpha$)}}{$\alpha$}
   [$\neg$vacia?($c$) $\land$ $c$ $\igobs$ $c_0$]
   {$res$ $\igobs$ proximo($c_0$) $\land$ $c$ $\igobs$ desencolar($c_0$)}
@@ -38,33 +44,49 @@
   [O(log(tamano(c)))]
   [Agrega al elemento a a la cola de prioridad]
   [El iterador se invalida si, y solo si se elimina el elemento siguiente del iterador sin llamar a la funcion Eliminar del mismo]\\ 
+
 \end{Interfaz}
 
 
 \subsection{Representación de la cola de prioridad}
 \begin{Representacion}
   
-  \begin{Estructura}{colaPrior($\alpha$)}[heap]
+  \begin{Estructura}{colaPrior($\alpha$)}[ab($\alpha$)]
 
-  \begin{Tupla}[heap]
+  \begin{Tupla}[ab($\alpha$)]
     \tupItem{tam}{nat}%
-    \tupItem{\\ cabeza}{puntero(nodo)}% 
+    \tupItem{\\ cabeza}{puntero(nodo($\alpha$))}% 
   \end{Tupla}
 
   ~
 
-  \begin{Tupla}[nodo]
-    \tupItem{padre}{puntero(nodo)}%
-    \tupItem{\\ izq}{puntero(nodo)}%
-    \tupItem{\\ der}{puntero(nodo)}%
+  \begin{Tupla}[nodo($\alpha$)]
+    \tupItem{padre}{puntero(nodo($\alpha$))}%
+    \tupItem{\\ izq}{puntero(nodo($\alpha$))}%
+    \tupItem{\\ der}{puntero(nodo($\alpha$))}%
     \tupItem{\\ dato}{puntero($\alpha$)}%
   \end{Tupla}
 
   \end{Estructura}
 
 
+
+  \Rep[ab($\alpha$)][h]{$tam$ = tamano($cabeza$) $\land$ propiedadMinab($cabeza$)}\mbox{}
   
-FALTA INVREP Y ABS
+
+  \tadOperacion{tamano}{puntero(nodo($\alpha$))}{nat}{}
+  \tadAxioma{tamano(NULL)}{0}
+  \tadAxioma{tamano(\& $x$)}{1 + tamano($x$.izq) + tamano($x$.der)}
+
+  \tadOperacion{propiedadMinHeap)}{puntero(nodo($\alpha$))}{bool}{}
+  \tadAxioma{propiedadMinHeap(NULL)}{true}
+  \tadAxioma{propiedadMinHeap(\& $x$)}{$x.dato < x.izq \to dato \land x.dato < x.der \to dato \land$ \\ propiedadMinHeap($x$.izq) $\land$ propiedadMinHeap($x$.der)}
+   
+  \AbsFc[ab($\alpha$)]{colaPrior($\alpha$)}[h]{
+    $c$ : colaPrior($\alpha$) / vacia?($c$) = ($h.cabeza$ = NULL) $\land$\\ 
+    $\neg$ vacia?($c$) $\Rightarrow$ proximo($c$) = $h.cabeza \to dato$ $\land$\\ 
+  desencolar($c$) = eliminar($h$, proximo($c$))}
+
 
 
 
@@ -82,7 +104,7 @@ FALTA INVREP Y ABS
 \begin{algorithm}
 \caption{Vacia}
 \begin{algorithmic}[1]
-  \Procedure{iVacia}{\ } $\to res$ : \texttt{heap}
+  \Procedure{iVacia}{\ } $\to res$ : \texttt{ab($\alpha$)}
   \State $tam \gets$ 0
   \State $cabeza \gets$ NULL
   \State $res \gets$ ($tam$,$cabeza$)
@@ -94,10 +116,19 @@ FALTA INVREP Y ABS
 \begin{algorithm}
 \caption{Vacia?}
 \begin{algorithmic}[1]
-  \Procedure{iVacia?}{\texttt{in} h : \texttt{heap}} $\to res$ : \texttt{heap}
-  \State $tam \gets$ 0
-  \State $cabeza \gets$ NULL
-  \State $res \gets$ ($tam$,$cabeza$)
+  \Procedure{iVacia?}{\texttt{in} h : \texttt{ab($\alpha$)}} $\to res$ : \texttt{heap}
+
+  \State $res \gets$ $h.cabeza$ = NULL
+ \EndProcedure
+\end{algorithmic}
+\end{algorithm}
+
+
+\begin{algorithm}
+\caption{Proximo}
+\begin{algorithmic}[1]
+  \Procedure{Proximo}{\texttt{in} h : \texttt{ab($\alpha$)}} $\to res$ : $\alpha$
+  \State $res \gets$ $h.cabeza \to dato$
  \EndProcedure
 \end{algorithmic}
 \end{algorithm}
@@ -107,7 +138,7 @@ FALTA INVREP Y ABS
 \begin{algorithm}
 \caption{Desencolar}
 \begin{algorithmic}[1]
-  \Procedure{iDesencolar}{\texttt{in/out} h : \texttt{heap}} $\to res$ : $\alpha$
+  \Procedure{iDesencolar}{\texttt{in/out} h : \texttt{ab($\alpha$)}} $\to res$ : $\alpha$
   \State $res \gets$ h.cabeza$\to$ dato
 
   \If{$tam$ = 1}
@@ -165,7 +196,7 @@ FALTA INVREP Y ABS
 \begin{algorithm}
 \caption{Encolar}
 \begin{algorithmic}[1]
-  \Procedure{iEncolar}{\texttt{in/out} $h$ : \texttt{heap}, \texttt{in} $a$ : $\alpha$} $\to res$ : $\alpha$
+  \Procedure{iEncolar}{\texttt{in/out} $h$ : \texttt{ab($\alpha$)}, \texttt{in} $a$ : $\alpha$} $\to res$ : $\alpha$
   \State $nuevoNodo \gets$ Nodo(NULL, NULL, NULL, $a$)
 
   \If{$tam$ = 0}
@@ -215,7 +246,7 @@ FALTA INVREP Y ABS
 \begin{algorithm}
 \caption{Intercambiar}
 \begin{algorithmic}[1]
-  \Procedure{iIntercambiar}{\texttt{in/out} $h$ : \texttt{heap}, \texttt{in/out} $padre$ : \texttt{puntero(nodo)}, \texttt{in/out} $hijo$ : \texttt{puntero(nodo)}}
+  \Procedure{iIntercambiar}{\texttt{in/out} $h$ : \texttt{ab($\alpha$)}, \texttt{in/out} $padre$ : \texttt{puntero(nodo($\alpha$))}, \texttt{in/out} $hijo$ : \texttt{puntero(nodo($\alpha$))}}
   \If{$hijo$ = $padre \to izq$}
     \State puntero(nodo) $derechoPadre \gets padre \to der$
     \State $padre \to der \gets hijo \to der$

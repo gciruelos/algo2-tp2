@@ -40,28 +40,28 @@
   [$ paqueteEnTransito?(s,p) $]
   {$res \igobs caminoRecorrido(s, p)$}
   [$\Theta()$]
-  [Expresa el camino de computadoras recorrido por el paquete "p" desde su inicio hasta posicion actual.]
+  [Expresa el camino de computadoras recorrido por el paquete $p$ desde su inicio hasta posicion actual.]
 
 
   \InterfazFuncion{cantidadEnviados}{\In{s}{\tadNombre{dcnet}}, \In{c}{\tadNombre{compu}}}{\tadNombre{nat}}
   [$ c \in computadoras(red(s)) $]  
   {$res \igobs cantidadEnviados(s, c)$}
   [$\Theta()$]
-  [Expresa la cantidad de mensajes enviados por la compu "c".]
+  [Expresa la cantidad de mensajes enviados por la compu $c$.]
 
   
   \InterfazFuncion{enEspera}{\In{s}{\tadNombre{dcnet}}, \In{c}{\tadNombre{compu}}}{\tadNombre{conj(paquete)}}
   [$ c \in computadoras(red(s)) $]  
   {$res \igobs enEspera(s, c)$}
   [$\Theta()$]
-  [Expresa el camino de computadoras recorrido por el paquete "p" desde su inicio hasta posicion actual.]
+  [Expresa el camino de computadoras recorrido por el paquete $p$ desde su inicio hasta posicion actual.]
 
 
   \InterfazFuncion{PaqueteEnTransito}{\In{s}{\tadNombre{dcnet}}, \In{p}{\tadNombre{paquete}}}{\tadNombre{bool}}
   [$ True $]  
   {$res \igobs paqueteEnTransito?(s, p)$}
   [$\Theta()$]
-  [Expresa si el paquete "p" esta en alguna computadora.]
+  [Expresa si el paquete $p$ esta en alguna computadora.]
   
   
   \InterfazFuncion{LaQueMasEnvio}{\In{s}{\tadNombre{dcnet}}}{\tadNombre{compu}}
@@ -79,29 +79,27 @@
 
   \begin{Estructura}{dcnet}[net]
     \begin{Tupla}[net]
-      \tupItem{proximaEnCamino}{dicc(id, dicc(id, id))}%
-      \tupItem{\\ paquetes}{diccTrie(id,infoPaquetes)}%
-      \tupItem{\\ caminosRecorridos}{lista(lista(id))}
-      \tupItem{\\ laQueMasEnvio}{tupla($cuantosEnvio$ : nat, $cualCompu$ : id)}
+      \tupItem{proximaEnCamino}{dicc(compu, dicc(compu, compu))}%
+      \tupItem{\\ paquetes}{diccTrie(compu,infoPaquetes)}%
+      \tupItem{\\ caminosRecorridos}{lista(lista(compu))}
+      \tupItem{\\ laQueMasEnvio}{tupla($cuantosEnvio$ : nat, $cualCompu$ : compu)}
       \tupItem{\\ red}{red}
     \end{Tupla}
   
   
   \begin{Tupla}[infoPaquetes]
-      \tupItem{colas}{colaPrior(tupla($p$ : paq, $camino$ : itLista))}
+      \tupItem{colas}{colaPrior($p$ : paq)}
+      \tupItem{diccPaqCamino}{diccAVL($p$ : paq, $camino$ : itLista )}
       \tupItem{conjPaquetes}{conj(paq)}
       \tupItem{cantEnviados}{nat}                       
     \end{Tupla}
   \end{Estructura}
 
 
-  \Rep[lst][l]{($l$.primero $=$ NULL) $=$ ($l$.longitud $=$ $0$) $\yluego$ ($l$.longitud $\neq$ $0$ \impluego \\
-    Nodo($l$, $l$.longitud) $=$ $l$.primero $\land$ \\
-    ($\forall i$: nat)(Nodo($l$,$i$)\DRef siguiente $=$ Nodo($l$,$i+1$)\DRef anterior) $\land$ \\
-    ($\forall i$: nat)($1 \leq i <$ $l$.longitud $\implies$ Nodo($l$,$i$) $\neq$ $l$.primero)}\mbox{}
+  \Rep[net][n]{}\mbox{}
 
 
-  \AbsFc[lst]{secu($\alpha$)}[l]{\IF $l$.longitud $=$ $0$ THEN \secuencia{} ELSE \secuencia{$l$.primero\DRef dato}[Abs(FinLst($l$))] FI}
+  \AbsFc[net]{dcnet}[n]{red(dnt) = n.red $\land$ ((\forall p : paquete) (paqueteEnTransito?(dnt,p) $\then$ (($\exist$ c : compu) p \in $\pi_2$(definicion(n, c))) $\yluego$ ($\forall$ p : paquete) ($\exist$ c : compu) c in computadoras(dnt) $\then$ siguiente(definicion($\pi_2$(definicion(n.paquetes,c)),p) = caminorecorrido(c,p)  $\yluego$ ($\forall$ c : compu) (c $\in$ computadoras(red(dcn)) $\then$ (cantidadEnviados(dcn, c) = $\pi_3$(definicion(n.paquetes, c) $\yluego$ ($\forall$ c : compu) c $\in computadoras(dnt) $\then$ enEspera(dnt, c) = $\pi_2$(definicion(n.paquetes,c))}
 
 \end{Representacion}
 
@@ -115,24 +113,25 @@
 
 
 \begin{algorithmic}[1]
-  \Procedure{Iniciar(\textbf{in} $r$ : red) $\to res$ : dcnet}{}
-  \State $red \gets r$  PREGUNTAR COPIA/ALIAS
-  \State $caminosRecorridos \gets$ Vacia()
-  \State $laQueMasEnvio \gets$ (0, NULL)
-  \State conj(compu) $compus \gets$ Computadoras($red$)
-  \State itConj $it \gets$ CrearIt($compus$)
-  \State $proximaEnCamino \gets$ Vacio()
-  \While{HaySiguiente?(it)}
-    \State \tadNombre{itConj} $it2 \gets$ CrearIt($compus$)
-    \State diccTrie(id, puntero(compu)) $diccActual \gets$ Vacio()
-    \While{HaySiguiente?(it2)}
-      \State conj(lista(compu)) $camMinimos \gets$ CaminosMinimos(red, SiguienteClave(it), SiguienteClave(it2))
-      \State itConj $it3 \gets$ CrearIt(camMinimos)
+  \Procedure{IniciarDCNet(\textbf{in} $r$ : red) $\to res$ : dcnet}{}
+  \State $red \gets r$ \Comment $\Ogr(1)$
+  \State $caminosRecorridos \gets$ Vacia() \Comment $\Ogr(1)$ 
+  \State $laQueMasEnvio \gets$ (0, NULL) \Comment $\Ogr(1)$
+  \State conj(compu) $compus \gets$ Computadoras($red$) \Comment $\Ogr(1)$
+   \State itConj $it \gets$ CrearIt($compus$) \Comment $\Ogr(1)$
+  \State $proximaEnCamino \gets$ Vacio() \Comment $\Ogr(1)$
+  \While{HaySiguiente?(it)} \Comment $\Ogr(1)$
+    \State \tadNombre{itConj} $it2 \gets$ CrearIt($compus$) \Comment $\Ogr(1)$
+    \State diccTrie(compu, puntero(compu)) $diccActual \gets$ Vacio() \Comment $\Ogr(1)$
+	\State definir(paquetes, siguiente(it), tupla(vacio(), vacio(), vacio(), 0)) \Comment $\Ogr(log \ n)$
+    \While{HaySiguiente?(it2)} \Comment $\Ogr(n)$
+      \State conj(lista(compu)) $camMinimos \gets$ CaminosMinimos(red, SiguienteClave(it), SiguienteClave(it2)) \Comment $\Ogr(1)$
+      \State itConj $it3 \gets$ CrearIt(camMinimos) \Comment $\Ogr(1)$
       \State $caminoMinimo \gets$ siguiente(it3)
       \State Fin(caminoMinimo)
       \State puntero(compu) $siguiente \gets$ \& Primero($caminoMinimo$)
       \State Definir($diccActual$, SiguienteClave(it2), id($siguiente$))
-      \State Avanzar($it2$)            
+      \State Avanzar(it2)            
     \EndWhile
     \State definir($proximaEnCamino$, id(SiguienteClave($it$), $diccActual$)))
     \State Avanzar($it$)
@@ -148,10 +147,11 @@
    \State lista(compu) $nuevoCaminoRecorrido \gets$ Vacio()
    \State AgregarAtras(nuevoCaminoRecorrido, origen(p))
    \State itLista(lista(compu)) $it \gets$ AgregarAtras(caminosRecorridos, nuevoCaminoRecorrido)
-   \State $losPaquetes \gets $ Obtener($paquetes$, id(p.origen))
-   \State Encolar(losPaquetes.cola, ($p$, $it$))
+   \State $losPaquetes \gets $ Obtener($paquetes$, p.origen)
+   \State Encolar(losPaquetes.cola, $p$)
    \State Agregar(losPaquetes.conjPaquetes, $p$)
-  \EndProcedure
+   \State Definir(diccPaqCamino, $p$, it)
+   \EndProcedure
 \end{algorithmic}
 
 
@@ -162,17 +162,15 @@
   \State lista(tupla(paq, itLista(lista(id)))) $paquetesAEnviar \gets$ Vacio()
   
   \State itDiccTrie $it \gets$ CrearIt($paquetes$)
-  \While{HaySiguientes?(it)}
+  \While{HaySiguientes?(it)} \Comment $\Ogr(n)$
   	\State infoCompu $s \gets$ SiguienteSignificado($it$) 
   	\If{$\neg$Vacía?($s$.$cola$)}
-  		\State tupla(paquete,itLista(lista(id))) $estePaquete \gets$ Desencolar($s$.$cola$)
-  		%\State tupla(paquete, itLista) $paqEIt \gets$ Obtener($s$.conjPaquetes, $x$)
-  		\State Eliminar($s$.conjPaquetes, $\pi_0(x)$)
-      		
-		%\State tupla(puntero(paquete), itLista) $infoPaquete \gets$ (\& $\pi_0$(paqEIt), $\pi_1$(paqEIt))
-		\State AgregarAtras(paquetesAEnviar($estePaquete$))
+  		\State paquete $estePaquete \gets$ Desencolar($s$.$cola$)
+  		\State Eliminar($s$.conjPaquetes, $estepaquete$)
+		\State AgregarAtras(paquetesAEnviar(tupla($estePaquete$, definicion(s.diccPaqCamino, $estePaquete$))))
+		\State Eliminar(s.diccPaqCamino, $estePaquete$) 
 		\State cantEnviados++
-		\If{$s$.cantEnviados > laQueMasEnvio.cuantosEnvio}
+		\If{cantEnviados > $s$.laQueMasEnvio.cuantosEnvio}
 		   \State $laQueMasEnvio.cuantosEnvio \gets$ $s$.cantEnviados
 		   \State $laQueMasEnvio.cualCompu \gets$ ultimo(Siguiente($pi_1$($estePaquete$)))
 		\EndIf
@@ -180,67 +178,87 @@
 	\State Avanzar($it$)
   \EndWhile 
    
-  \State itLista(tupla(paq, itLista(lista(id)))) $it_2 \gets$ CrearIt($paquetesAEnviar$)
+  \State itLista(tupla(paq, itLista(lista(compu)))) $it_2 \gets$ CrearIt($paquetesAEnviar$)
   \While{HaySiguientes?($it_2$)}
-      \State tupla(paq, itLista(lista(id)) $p \gets$ Siguiente($it_2$)
-      \State id $proximaCompu \gets$ Obtener($proximaEnCamino$, $Ultimo(Siguiente(\pi_1(p)))$, destino($p$))
+      \State tupla(paq, itLista(lista(compu)) $p \gets$ Siguiente($it_2$)
+      \State compu $proximaCompu \gets$ Obtener(Obtener($proximaEnCamino$, $Ultimo(Siguiente(\pi_1(p)))$), destino($p$))
       \State $paquetesDeProximaCompu \gets$ Obtener($paquetes$, proximaCompu)
       \State AgregarAtras(Siguiente($\pi_1(p)$), proximaCompu)
-      \State Encolar($paquetesDeProximaCompu$.$cola$, p)
+      \State Encolar($paquetesDeProximaCompu$.$cola$, $\pi_0(p)$)
       \State Agregar($paquetesDeProximacompu$.$conjPaquetes$, $\pi_0$(p))
+	  \State Definir($paquetesDeProximacompu.diccPaqCamino$,$\pi_0$(p),$\pi_1$(p))      
       \State Avanzar($it_2$)
   \EndWhile
  
  \EndProcedure
 \end{algorithmic}
 
+
+\end{algorithm}
+
+\begin{algorithm}
+
 %\caption{red}
 \begin{algorithmic}[1]
-  \Procedure{red(\textbf{in} $s$ : dcnet)}{}
- \State Falta agregarlo
+ \Procedure{red(\textbf{in} $s$ : dcnet)}{}
+ \State res $\gets$ red
  \EndProcedure
 \end{algorithmic}
-
 
 %\caption{caminoRecorrido}
 \begin{algorithmic}[1]
   \Procedure{caminoRecorrido(\textbf{in} $s$ : dcnet, \textbf{in} $p$ : paquete) $\to res$ : secu(compu)}{}
-   \State Falta agregarlo
+   \State itDiccTrie $it$ $\gets$ CrearIt(paquetes)
+   \While{$\neg$($p \in$ enEspera(siguiente(it)))} 
+   \State avanzar(it)
+   \EndWhile
+   \State res $\gets$ siguiente(Obtener($\pi_1$(Obtener(paquetes,siguiente(it)),p))
   \EndProcedure
 \end{algorithmic}
 
 %\caption{cantidadEnviados}
 \begin{algorithmic}[1]
   \Procedure{cantidadEnviados(\textbf{in} $s$ : dcnet, \textbf{in} $c$ : compu)  $\to res$ : nat}{}
-   \State Falta agregarlo
+   \State res $\gets$ $\pi_3$(Obtener(paquetes, c))
+  \EndProcedure
+\end{algorithmic}
+
+
+%\caption{paqueteEnTransito}
+\begin{algorithmic}[1]
+  \Procedure{paqueteEnTransito(\textbf{in} $s$ : dcnet, \textbf{in} $p$ : paquete)  $\to res$ : bool}{}
+   \State itDiccTrie $it$ $\gets$ CrearIt(paquetes)
+   \While{HaySiguiente?(it) $\yluego$ $\neg$($p \in$ enEspera(siguiente(it)))} 
+   \State avanzar(it)
+	\EndWhile
+	\If {HaySiguiente?(it)}
+	\State res $\gets$   True
+	\Else 
+	\State res $\gets$ False
+	\EndIf 
   \EndProcedure
 \end{algorithmic}
 
 %\caption{enEspera}
 \begin{algorithmic}[1]
-  \Procedure{enEspera(\textbf{in} $s$ : dcnet, \textbf{in} $c$ : compu)  $\to res$ : conj(paquete)}{}
-   \State Falta agregarlo
+  \Procedure{enEspera(\textbf{in} $s$ : dcnet, \textbf{in} $c$ : compu)  $\to res$ : conj(compu)}{}
+    \State res $\gets$ $\pi_2(Obtener(\pi_1(net),c))$ \Comment $\Ogr(1)+\Ogr(1)+\Ogr(L)+\Ogr(1)$
   \EndProcedure
-\end{algorithmic}
+  \underline{Complejidad:} $\Ogr(L)$
+ \underline{Justificación:} $\Ogr(1)+\Ogr(1)+\Ogr(L)+\Ogr(1) = \Ogr(L)$
 
-%\caption{paqueteEnTransito}
-\begin{algorithmic}[1]
-  \Procedure{paqueteEnTransito(\textbf{in} $s$ : dcnet, \textbf{in} $p$ : paquete)  $\to res$ : bool}{}
-   \State Falta agregarlo
-  \EndProcedure
 \end{algorithmic}
 
 %\caption{laQueMasEnvio}
 \begin{algorithmic}[1]
-  \Procedure{enEspera(\textbf{in} $s$ : dcnet)  $\to res$ : compu}{}
-   \State Falta agregarlo
+  \Procedure{laQueMasEnvio(\textbf{in} $s$ : dcnet)  $\to res$ : compu}{}     
+   \State res $\gets$   $\pi_1(\pi_3(net))$ \Comment $\Ogr(1)$
   \EndProcedure
+  \underline{Complejidad:} $\Ogr(1)$
 \end{algorithmic}
 
 
 \end{algorithm}
-
-
 
 \end{Algoritmos}
 

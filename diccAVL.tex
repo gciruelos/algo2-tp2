@@ -1,0 +1,105 @@
+\begin{Interfaz}
+  \textbf{parámetros formales}\hangindent=2\parindent\\
+  \parbox{1.7cm}{\textbf{géneros}} $\sigma$\\
+  \parbox[t]{1.7cm}{\textbf{función}}\parbox[t]{\textwidth-2\parindent-1.7cm}{    	
+    \InterfazFuncion{Copiar}{\In{s}{$\sigma$}}{$\sigma$}
+    {$res \igobs s$}
+    [$\Theta(copy(s))$]
+    [función de copia de $\sigma$]
+    }
+      
+  \textbf{se explica con}: \tadNombre{diccionario($\kappa, \sigma$)}.
+
+  \textbf{géneros}: \TipoVariable{diccAVL($\kappa, \sigma$)}.
+
+  \section*{Operaciones básicas DiccAVL($\kappa, \sigma$)}
+
+  \InterfazFuncion{Vacío}{}{diccAVL($\kappa, \sigma$)}
+  {$res$ \igobs vacío()}
+  [$\Theta(1)$]
+  [genera un diccionario vacío.]
+
+  \InterfazFuncion{Definir}{\Inout{d}{diccAVL($\kappa, \sigma$)}, \In{k}{$\kappa$}, \In{s}{$\sigma$}}{}
+  [$d \igobs d_0$]  
+  {$d$ \igobs definir($k, s, d_0$)}
+  [$\Theta(log(n))$\footnote{Dentro de este módulo, n es la cantidad de entradas del diccionario.}]
+  [define la clave $k$ con el sinificado $s$.]
+  [$k$ y $s$ se definen por referencia.]
+    
+  \InterfazFuncion{Definido?}{\In{d}{diccAVL($\kappa, \sigma$)}, \In{k}{$\kappa$}}{bool}
+  {$res$ \igobs def?($k$, $d$) }
+  [$\Theta(log(n))$]
+  [devuelve $true$ si la clave $k$ está definida en el diccionario.]
+  
+  \InterfazFuncion{Obtener}{\In{d}{diccAVL($\kappa, \sigma$)}, \In{k}{$\kappa$}}{$\sigma$}
+  [def?($k$, $d$)]  
+  {alias($res$ \igobs obtener($k$, $d$))}
+  [$\Theta(log(n))$,]
+  [devuelve el significado de la clave $k$ en $d$.]
+  [$res$ es modificable si y sólo si $d$ lo es]
+  
+  \InterfazFuncion{Borrar}{\In{d}{diccAVL($\kappa, \sigma$)}, \In{k}{$\kappa$}}{}
+  [$d$ \igobs $d_0 \land$ def?($k$, $d_0$) ]
+  {$d \igobs$ borrar($k$, $d_0$)}
+  [$\Theta(log(n))$]
+  [elimina la entrada $k$ del diccionario.] 
+  
+\end{Interfaz}
+
+\begin{Representacion}
+  
+  
+  
+  \section*{Representación de DiccAVL($\kappa, \sigma$)}
+
+  \begin{Estructura}{diccAVL($\kappa, \sigma$)}[puntero(AVL)]
+    \begin{Tupla}[AVL]
+      \tupItem{clave}{$\kappa$}
+      \tupItem{\\significado}{$\sigma$}
+      \tupItem{\\izq}{puntero(AVL)}
+      \tupItem{\\der}{puntero(AVL)}
+      \tupItem{\\altura}{nat}
+    \end{Tupla}
+
+  \end{Estructura}
+
+  \Rep[puntero(AVL)][a]{$a$ = NULL \oluego \\
+  					   \hspace*{4em}($\exists n:$nat) finaliza($a$, $n$) \yluego \\
+  					   \hspace*{4em}$a\rightarrow altura$\footnote{La notación $a\rightarrow campo$, donde $a$ es un puntero a una tupla y $campo$ algun campo de esa tupla, equivale a decir ($*a$).$campo$.} = alto($a$) \yluego \\
+  					   \hspace*{4em}max(diferenciaDeAlturas($a\rightarrow izq$, $a\rightarrow der$)$\leq$ 1 \yluego \\
+  					   \hspace*{4em}($\forall c:\kappa$) ($c\in$ ClavesDelAvl($a\rightarrow izq$) $\Rightarrow a\rightarrow clave \leq c)$ $\land $\\
+  					   \hspace*{4em}($\forall c:\kappa$) ($c\in$ ClavesDelAvl($a\rightarrow der$) $\Rightarrow a\rightarrow clave \leq c)$ $\land $\\
+  					   \hspace*{4em}Rep($a \rightarrow izq$) $\land$ Rep($a \rightarrow der$)}
+  					   
+  
+  \AbsFc[puntero(AVL)]{dicc($\kappa, \sigma$)}[a]{
+	$d$:dicc($\kappa, \sigma$) |
+	($\forall c:\kappa$) (def?($c, d$) $\Leftrightarrow$ $c \in$ clavesDelAvl($a$)) \yluego\\
+	\hspace*{5.9em}($\forall c:\kappa$) (def?($c, d$) \impluego obtener($c, d$) = darSignificado($a, c$))
+  }  
+  
+  \tadOperacion{finaliza}{puntero(AVL), nat}{bool}{}
+	\tadAxioma{finaliza($a,n$)}{$n > 0$ \yluego ($a$ = NULL \oluego (finaliza($a\rightarrow izq$, $n-1$) $\land$ finaliza($a\rightarrow der$, $n-1$)))}
+
+  \tadOperacion{alto}{puntero(AVL)}{nat}{}
+	\tadAxioma{alto($a$)}{\IF $a = $NULL THEN 0 ELSE $1 + $max(alto($a\rightarrow izq$), alto($a\rightarrow der$))FI}
+ 
+  \tadOperacion{diferenciaDeAlturas}{puntero(AVL) , puntero(AVL)}{nat}{}
+	\tadAxioma{diferenciaDeAlturas($a, a'$)}{\IF $a\rightarrow altura \leq a'\rightarrow altura$
+											THEN $(a'\rightarrow altura) - (a\rightarrow altura)$
+											ELSE $(a\rightarrow altura) - (a'\rightarrow altura)$
+											FI} 
+ 
+  \tadOperacion{clavesDelAvl}{puntero(AVL)}{conj($\kappa$)}{}
+	\tadAxioma{clavesDelAvl($a$)}{\IF $a = $NULL THEN $\emptyset$ ELSE Ag($a\rightarrow clave$, clavesDelAvl($a\rightarrow izq$) $\cup$ clavesDelAvl($a\rightarrow der$))FI} 
+    
+   
+  \tadOperacion{darSignificado}{puntero(AVL)/a , $\kappa$/c}{$\sigma$}{$c \in$ clavesDelAvl($a$)}
+	\tadAxioma{darSignificado($a, c$)}{\IF $a\rightarrow clave$ = $c$ THEN $a\rightarrow significado$ ELSE 
+											{\IF $c\in$ clavesDelAvl($a\rightarrow izq$)
+											THEN darSignificado($a\rightarrow izq$, $c$)
+											ELSE darSignificado($a\rightarrow der$, $c$)
+											FI}
+										FI} 
+
+\end{Representacion}

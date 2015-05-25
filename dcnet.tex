@@ -89,9 +89,9 @@
   
   \begin{Tupla}[infoPaquetes]
       \tupItem{colas}{colaPrior($p$ : paq)}
-      \tupItem{diccPaqCamino}{diccAVL($p$ : paq, $camino$ : itLista )}
-      \tupItem{conjPaquetes}{conj(paq)}
-      \tupItem{cantEnviados}{nat}                       
+      \tupItem{\\ diccPaqCamino}{diccAVL($p$ : paq, $camino$ : itLista )}
+      \tupItem{\\ conjPaquetes}{conj(paq)}
+      \tupItem{\\ cantEnviados}{nat}                       
     \end{Tupla}
   \end{Estructura}
 
@@ -112,9 +112,7 @@
 
 
 \begin{algorithm}
-  \caption{Algoritmos de \tadNombre{DCNet}}
-
-
+\caption{Iniciar DCNet}
 \begin{algorithmic}[1]
   \Procedure{IniciarDCNet(\textbf{in} $r$ : red) $\to res$ : dcnet}{}
   \State $red \gets r$ \Comment $\Ogr(1)$
@@ -142,9 +140,11 @@
    
   \EndProcedure
 \end{algorithmic}
+\end{algorithm}
 
 
-%\caption{CrearPaquete}
+\begin{algorithm}
+\caption{Crear Paquete}
 \begin{algorithmic}[1]
   \Procedure{CrearPaquete(\textbf{in/out} $s$ : dcnet, \textbf{in} $p$ : paquete)}{}
    \State lista(compu) $nuevoCaminoRecorrido \gets$ Vacio()
@@ -156,9 +156,11 @@
    \State Definir(diccPaqCamino, $p$, it)
    \EndProcedure
 \end{algorithmic}
+\end{algorithm}
 
 
-%\caption{AvanzarSegundo}
+\begin{algorithm}
+\caption{Avanzar Segundo}
 \begin{algorithmic}[1]
   \Procedure{AvanzarSegundo(\textbf{in/out} $s$ : dcnet)}{}
   
@@ -195,20 +197,21 @@
  
  \EndProcedure
 \end{algorithmic}
-
-
 \end{algorithm}
 
-\begin{algorithm}
 
-%\caption{red}
+
+\begin{algorithm}
+\caption{Red}
 \begin{algorithmic}[1]
  \Procedure{red(\textbf{in} $s$ : dcnet)}{}
  \State res $\gets$ red
  \EndProcedure
 \end{algorithmic}
+\end{algorithm}
 
-%\caption{caminoRecorrido}
+\begin{algorithm}
+\caption{Camino Recorrido}
 \begin{algorithmic}[1]
   \Procedure{caminoRecorrido(\textbf{in} $s$ : dcnet, \textbf{in} $p$ : paquete) $\to res$ : secu(compu)}{}
    \State itDiccTrie $it$ $\gets$ CrearIt(paquetes)
@@ -218,16 +221,21 @@
    \State res $\gets$ siguiente(Obtener($\pi_1$(Obtener(paquetes,siguiente(it)),p))
   \EndProcedure
 \end{algorithmic}
+\end{algorithm}
 
-%\caption{cantidadEnviados}
+
+\begin{algorithm}
+\caption{Cantidad Enviados}
 \begin{algorithmic}[1]
   \Procedure{cantidadEnviados(\textbf{in} $s$ : dcnet, \textbf{in} $c$ : compu)  $\to res$ : nat}{}
    \State res $\gets$ $\pi_3$(Obtener(paquetes, c))
   \EndProcedure
 \end{algorithmic}
+\end{algorithm}
 
 
-%\caption{paqueteEnTransito}
+\begin{algorithm}
+\caption{Paquete En Transito}
 \begin{algorithmic}[1]
   \Procedure{paqueteEnTransito(\textbf{in} $s$ : dcnet, \textbf{in} $p$ : paquete)  $\to res$ : bool}{}
    \State itDiccTrie $it$ $\gets$ CrearIt(paquetes)
@@ -241,8 +249,13 @@
 	\EndIf 
   \EndProcedure
 \end{algorithmic}
+\end{algorithm}
 
-%\caption{enEspera}
+
+
+
+\begin{algorithm}
+\caption{En Espera}
 \begin{algorithmic}[1]
   \Procedure{enEspera(\textbf{in} $s$ : dcnet, \textbf{in} $c$ : compu)  $\to res$ : conj(compu)}{}
     \State res $\gets$ $\pi_2(Obtener(\pi_1(net),c))$ \Comment $\Ogr(1)+\Ogr(1)+\Ogr(L)+\Ogr(1)$
@@ -251,17 +264,20 @@
  \underline{Justificación:} $\Ogr(1)+\Ogr(1)+\Ogr(L)+\Ogr(1) = \Ogr(L)$
 
 \end{algorithmic}
+\end{algorithm}
 
-%\caption{laQueMasEnvio}
+
+\begin{algorithm}
+\caption{La Que Más Envio}
 \begin{algorithmic}[1]
   \Procedure{laQueMasEnvio(\textbf{in} $s$ : dcnet)  $\to res$ : compu}{}     
    \State res $\gets$   $\pi_1(\pi_3(net))$ \Comment $\Ogr(1)$
   \EndProcedure
   \underline{Complejidad:} $\Ogr(1)$
 \end{algorithmic}
-
-
 \end{algorithm}
+
+
 
 \end{Algoritmos}
 

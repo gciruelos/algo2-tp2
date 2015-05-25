@@ -10,7 +10,7 @@
   [$\Theta()$]
   [genera la red vacía]
 
-  \InterfazFuncion{AgregarComputadora}{\Inout{r}{\tadNombre{Red}}, \In{c}{\tadNombre{Compu}}}{}
+  \InterfazFuncion{AgregarComputadora}{\Inout{r}{\tadNombre{Red}}, \In{c}{\tadNombre{Compu}}, \In{is}{\tadNombre{Compu}}}{}
   [$r \igobs r_0 \land (\forall c' : compu) (c' \in computadoras(r) \impluego ip(c) \neq ip(c'))$] 
   {$computadoras(r) = Ag(c, computadoras(r_0)) \yluego \\
      (\forall c_1, c_2 : compu) (c_1 \in computadoras(r_0) \land c_2 \in computadoras(r_0) \impluego \\ 

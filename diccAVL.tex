@@ -47,9 +47,7 @@
 \end{Interfaz}
 
 \begin{Representacion}
-  
-  
-  
+    
   \section*{Representación de DiccAVL($\kappa, \sigma$)}
 
   \begin{Estructura}{diccAVL($\kappa, \sigma$)}[puntero(puntero(nodo))]
@@ -74,7 +72,7 @@
   					   \hspace*{4em}Rep($(*a) \rightarrow izq$) $\land$ Rep($(*a) \rightarrow der$)}
   					   
   
-  \AbsFc[puntero(puntero(nodo))]{dicc($\kappa, \sigma$)}[a]{
+  \AbsFc[puntero(puntero(nodo))]{diccAVL($\kappa, \sigma$)}[a]{
 	$d$:dicc($\kappa, \sigma$) |
 	($\forall c:\kappa$) (def?($c, d$) $\Leftrightarrow$ $c \in$ clavesDelAvl($*a$)) \yluego\\
 	\hspace*{5.9em}($\forall c:\kappa$) (def?($c, d$) \impluego obtener($c, d$) = darSignificado($*a, c$))
@@ -276,15 +274,19 @@
 					\State $aux \gets *d$
 					\State $*d\gets (*d\to der)$
 					\State delete($aux$)
+					\State $aux \gets$ NULL
 				\Else
 					\If{$*d\to der =$ NULL}
 						\Comment subárbol derecho vacío
 						\State $aux \gets *d$
 						\State $*d\gets (*d\to izq)$
 						\State delete($aux$)
+						\State $aux \gets$ NULL
 					\Else
 						\Comment el árbol tiene dos hijos
-						
+						\State tupla($\kappa, \sigma)$ $min$ $\gets$ borrarMin($\&(*d\to der)$)
+						\State($*d\to clave) \gets \pi_1(min)$
+						\State($*d\to significado) \gets \pi_2(min)$
 					\EndIf
 				\EndIf
 			\EndIf 
@@ -292,6 +294,30 @@
 	\EndIf
 	\State balancear($d$)
 	\State actualizarAltura($*d$)
+\EndProcedure
+\end{algorithmic}
+\end{algorithm}
+
+\begin{algorithm}
+\caption{borrarMin}
+\begin{algorithmic}[1]
+\Procedure{borrarMin}{\texttt{in/out} $d$ : \texttt{puntero(puntero(nodo))}}$\to res$ : \texttt{tupla($\kappa, \sigma$)}
+	\Comment $Pre: *d \neq NULL$
+	\If{$*d\to izq \neq$ NULL}
+		\State tupla($\kappa, \sigma$) $x\gets$ borrarMin($\&(*d\to izq)$)
+		\State balancear($d$)
+		\State actualizarAltura($*d$)
+		\State $res \gets x$
+	\Else
+		\State puntero(nodo) $aux \gets *d$
+		\State tupla($\kappa, \sigma) x \gets (aux\to clave, aux\to significado$)
+		\State $*d\gets (*d\to der)$
+		\State delete($aux$)
+		\State $aux \gets$ NULL
+		\State balancear($d$)
+		\State actualizarAltura($*d$)
+		\State $res \gets x$
+	\EndIf
 \EndProcedure
 \end{algorithmic}
 \end{algorithm}

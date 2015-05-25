@@ -99,7 +99,10 @@
   \Rep[net][n]{}\mbox{}
 
 
-  \AbsFc[net]{dcnet}[n]{red(dnt) = n.red $\land$ ((\forall p : paquete) (paqueteEnTransito?(dnt,p) $\then$ (($\exist$ c : compu) p \in $\pi_2$(definicion(n, c))) $\yluego$ ($\forall$ p : paquete) ($\exist$ c : compu) c in computadoras(dnt) $\then$ siguiente(definicion($\pi_2$(definicion(n.paquetes,c)),p) = caminorecorrido(c,p)  $\yluego$ ($\forall$ c : compu) (c $\in$ computadoras(red(dcn)) $\then$ (cantidadEnviados(dcn, c) = $\pi_3$(definicion(n.paquetes, c) $\yluego$ ($\forall$ c : compu) c $\in computadoras(dnt) $\then$ enEspera(dnt, c) = $\pi_2$(definicion(n.paquetes,c))}
+  \AbsFc[net]{dcnet}[n]{red(dnt) = n.red  $\land$ (($\forall$ p : paquete) (paqueteEnTransito?(dnt,p) $\Rightarrow$ (($\exists$ c : compu) p $\in$ $\pi_2$(definicion(n, c))) $\yluego$
+ ($\forall$ p : paquete) ($\exists$ c : compu) c in computadoras(dnt) $\Rightarrow$ siguiente(definicion($\pi_2$(definicion(n.paquetes,c)),p) = caminorecorrido(c,p)  $\yluego$
+($\forall$ c : compu) (c $\in$ computadoras(red(dcn)) $\Rightarrow$ (cantidadEnviados(dcn, c) = $\pi_3$(definicion(n.paquetes, c) $\yluego$ 
+($\forall$ c : compu) c $\in$ computadoras(dnt) $\Rightarrow$ enEspera(dnt, c) = $\pi_2$(definicion(n.paquetes,c))}
 
 \end{Representacion}
 

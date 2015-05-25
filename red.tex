@@ -125,10 +125,11 @@ $\land$\\
   \caption{Algoritmos de \tadNombre{RED}}
 \begin{algorithmic}[1]
   \Procedure{iIniciarRed}{\ } $\to$ $res$ : \texttt{redEstr}
-  \State vecinos $\gets$ Vacia()
-  \State interfaces $\gets$ Vacia()
-  \State $res \gets$ (vecinos, interfaces)
+  \State vecinos $\gets$ Vacia() \Comment $\Ogr(1)$
+  \State interfaces $\gets$ Vacia() \Comment $\Ogr(1)$
+  \State $res \gets$ (vecinos, interfaces) \Comment $\Ogr(1)$
   \EndProcedure
+  \underline{Complejidad:} $\Ogr(1)$
 \end{algorithmic}
 \end{algorithm}
 
@@ -137,9 +138,10 @@ $\land$\\
 \caption{Agregar Computadora}
 \begin{algorithmic}[1]
   \Procedure{iAgregarComputadora}{\texttt{in/out} $r$ : \texttt{redEstr}, \texttt{in} $c$ : \texttt{compu}}
-  \State definir(r.vecinos, id($c$), Vacia())
-  \State definir(r.interfaces, id($c$), $c$)
+  \State definir(r.vecinos, id($c$), Vacia()) \Comment $\Ogr(L)$
+  \State definir(r.interfaces, id($c$), $c$) \Comment $\Ogr(L)$
  \EndProcedure
+ \underline{Complejidad:} $\Ogr(L)$
 \end{algorithmic}
 \end{algorithm}
 
@@ -148,11 +150,12 @@ $\land$\\
 \caption{Conectar}
 \begin{algorithmic}[1]
   \Procedure{iConectar}{\texttt{in/out} $r$ : \texttt{redEstr}, \texttt{in} $c_1$ : \texttt{compu}, \texttt{in} $c_2$ :  \texttt{compu}, \texttt{in} $i_1$ : \texttt{interfaz}, \texttt{in} $i_2$ : \texttt{interfaz}}{}
-  \State $x \gets$ obtener(r.vecinos, $c_1$)
-  \State definir($x$, id($c_2$), $i_1$)
-  \State $x \gets$ obtener(r.vecinos, $c_2$)
-  \State definir($x$, id($c_1$), $i_2$)
+  \State $x \gets$ obtener(r.vecinos, $c_1$) \Comment $\Ogr(L)$
+  \State definir($x$, id($c_2$), $i_1$) \Comment $\Ogr(L)$
+  \State $x \gets$ obtener(r.vecinos, $c_2$) \Comment $\Ogr(L)$
+  \State definir($x$, id($c_1$), $i_2$) \Comment $\Ogr(L)$
  \EndProcedure
+ \underline{Complejidad:} $\Ogr(L)$
 \end{algorithmic}
 \end{algorithm}
 
@@ -162,9 +165,9 @@ $\land$\\
 \caption{Computadoras}
 \begin{algorithmic}[1]
   \Procedure{iComputadoras}{\texttt{in} $r$ : \texttt{redEstr}} $\to res$ : \texttt{conj(compu)}
-  \State $i :\tadNombre{itdicc} \gets$ NuevoIterador($r$.vecinos)
-  \State $res :\tadNombre{conj(compu)} \gets$ Vacio()
-  \While{haySiguiente($i$)}
+  \State $i :\tadNombre{itdicc} \gets$ NuevoIterador($r$.vecinos) \Comment $\Ogr(n)$
+  \State $res :\tadNombre{conj(compu)} \gets$ Vacio() \Comment $\Ogr(1)$
+  \While{haySiguiente($i$)} 
     \State Agregar($res$, Obtener(Siguiente($i$), $r$.vecinos))
     \State Avanzar($i$)
   \EndWhile
@@ -177,9 +180,10 @@ $\land$\\
 \caption{Conectadas?}
 \begin{algorithmic}[1]
   \Procedure{iConectadas?}{\texttt{in} $r$ : \texttt{redEstr}, \texttt{in} $c_1$ : \texttt{compu}, \texttt{in} $c_2$ : \texttt{compu}}  $\to res$ : \texttt{bool}
-  \State $x \gets$ Obtener(id($c_1$), $r$.vecinos)
-  \State $res \gets$ def?(id($c_2$), $x$)
+  \State $x \gets$ Obtener(id($c_1$), $r$.vecinos) \Comment $\Ogr(L)$
+  \State $res \gets$ def?(id($c_2$), $x$) \Comment $\Ogr(L)$
  \EndProcedure
+ \underline{Complejidad:} $\Ogr(L)$
 \end{algorithmic}
 \end{algorithm}
 
@@ -188,9 +192,10 @@ $\land$\\
 \caption{Interfaz Usada}
 \begin{algorithmic}[1]
   \Procedure{iInterfazUsada}{\texttt{in} $r$ : \texttt{redEstr}, \texttt{in} $c_1$ : \texttt{compu}, \texttt{in} $c_2$ : \texttt{compu}} $\to res$ : \texttt{interfaz}
-  \State $x \gets$ Obtener(id($c_1$), $r$.vecinos)
-  \State $res \gets$ Obtener(id($c_2$), $x$)
+  \State $x \gets$ Obtener(id($c_1$), $r$.vecinos) \Comment $\Ogr(L)$
+  \State $res \gets$ Obtener(id($c_2$), $x$) \Comment $\Ogr(L)$
  \EndProcedure
+ \underline{Complejidad:} $\Ogr(L)$
 \end{algorithmic}
 \end{algorithm}
 
@@ -199,9 +204,10 @@ $\land$\\
 \caption{Vecinos}
 \begin{algorithmic}[1]
   \Procedure{iVecinos}{\texttt{in} $r$ : \texttt{redEstr}, \texttt{in} $c$ :\texttt{compu}}  $\to res$ : \texttt{conj(compu)}
-  \State $x \gets$ Obtener(id($c$), $r$.vecinos)
-  \State $res \gets$ Claves($x$)
+  \State $x \gets$ Obtener(id($c$), $r$.vecinos) \Comment $\Ogr(L)$
+  \State $res \gets$ Claves($x$) \Comment $\Ogr(n)$
  \EndProcedure
+ \underline{Complejidad:} $\Ogr(n+L)$
 \end{algorithmic}
 \end{algorithm}
 

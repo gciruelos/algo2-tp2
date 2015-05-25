@@ -1,1 +1,85 @@
-c
+\begin{Interfaz}
+
+  \textbf{se explica con}: \tadNombre{conj($\alpha$)}.
+
+  \textbf{géneros}: \TipoVariable{conjAVL($\alpha$)}.
+
+  \section*{Operaciones básicas ConjAVL($\alpha$)}
+
+  \InterfazFuncion{Vacio}{}{conjAVL($\alpha$)}
+  {$res \igobs \emptyset$}
+  [$\Theta(1)$]
+  [genera un conjunto vacío.]
+
+  \InterfazFuncion{Agregar}{\Inout{c}{conjAVL($\alpha$)}, \In{a}{$\alpha$}}{}
+  [$c \igobs c_0$]  
+  {$c$ \igobs Ag($a,c_0$)}
+  [$\Theta(log(n))$\footnote{Dentro de este módulo, n es la cantidad de elementos del conjunto.}]
+  [agrega el elemento $a$ al conjunto $c$.]
+  [$a$ se agrega por referencia.]
+    
+  \InterfazFuncion{Pertenece?}{\In{c}{conjAVL($\alpha$)}, \In{a}{$\alpha$}}{bool}
+  {$res$ \igobs ($a\in c$) }
+  [$\Theta(log(n))$]
+  [devuelve $true$ si y sólo si el elemento $a$ pertenece al conjunto.]
+  
+  \InterfazFuncion{Eliminar}{\In{c}{conjAVL($\alpha$)}, \In{a}{$\alpha$}}{}
+  [$c$ \igobs $c_0 \land a \in c$ ]
+  {$c \igobs (c_0 - \{a\})$}
+  [$\Theta(log(n))$]
+  [elimina el elemento $a$ del conjunto.] 
+  
+\end{Interfaz}
+
+\begin{Representacion}
+    
+  \section*{Representación de ConjAVL($\alpha$)}
+
+  \begin{Estructura}{conjAVL($\alpha$)}[diccAVL($\alpha$, nat)]
+  \end{Estructura}
+  
+  \Rep[diccAVL($\alpha${,} nat)][d]{true}
+  
+  \AbsFc[diccAVL($\alpha${,} nat)]{conjAVL($\alpha$)}[d]{
+	$c$ : conj($\alpha$) | ($\forall a: \alpha$) ($a\in c \Leftrightarrow a\in claves(d)$)}
+\end{Representacion}
+
+
+\begin{Algoritmos}
+
+\begin{algorithm}
+\caption{Vacio}
+\begin{algorithmic}[1]
+\Procedure{iVacio}{}$\to res$ : \texttt{diccAVL($\alpha$, nat)}
+	\State $res \gets$ Vacio()
+\EndProcedure
+\end{algorithmic}
+\end{algorithm}
+
+\begin{algorithm}
+\caption{Agregar}
+\begin{algorithmic}[1]
+\Procedure{iAgregar}{\texttt{in/out} $c$ : \texttt{diccAVL($\alpha$, nat)}, \texttt{in} $a$ : \texttt{$\alpha$}}
+	\State Definir($c, a, 0$)
+\EndProcedure
+\end{algorithmic}
+\end{algorithm}
+
+\begin{algorithm}
+\caption{Pertenece?}
+\begin{algorithmic}[1]
+\Procedure{iPertenece?}{\texttt{in/out} $c$ : \texttt{diccAVL($\alpha$, nat)}, \texttt{in} $a$ : \texttt{$\alpha$}}$\to res$ : \texttt{bool}
+	\State $res \gets$ Definido?($c, a$)
+\EndProcedure
+\end{algorithmic}
+\end{algorithm}
+
+\begin{algorithm}
+\caption{Eliminar}
+\begin{algorithmic}[1]
+\Procedure{iEliminar}{\texttt{in/out} $c$ : \texttt{diccAVL($\alpha$, nat)}, \texttt{in} $a$ : \texttt{$\alpha$}}
+	\State Borrar($c, a$)
+\EndProcedure
+\end{algorithmic}
+\end{algorithm}
+\end{Algoritmos}

@@ -16,69 +16,64 @@
 
   \InterfazFuncion{Vacío}{}{diccTrie($\sigma$)}
   {$res$ \igobs vacío()}
-  [$\Theta(1)$]
+  [$\Ogr(1)$]
   [genera un diccionario vacío.]
 
   \InterfazFuncion{Definir}{\Inout{d}{diccTrie($\sigma$)}, \In{k}{$string$}, \In{s}{$\sigma$}}{}
   [$d \igobs d_0$]  
   {$d$ \igobs definir($k, s, d_0$)}
-  [$\Theta(|k|$]
+  [$\Ogr(|k|)$]
   [define la clave $k$ con el sinificado $s$.]
   [$s$ se define por referencia.]
     
   \InterfazFuncion{Definido?}{\In{d}{diccTrie($\sigma$)}, \In{k}{$string$}}{bool}
   {$res$ \igobs def?($k$, $d$) }
-  [$\Theta(|k|)$]
+  [$\Ogr(|k|)$]
   [devuelve $true$ si la clave $k$ está definida en el diccionario.]
   
   \InterfazFuncion{Obtener}{\In{d}{diccTrie($\sigma$)}, \In{k}{$string$}}{$\sigma$}
   [def?($k$, $d$)]  
   {alias($res$ \igobs obtener($k$, $d$))}
-  [$\Theta(|k|)$,]
+  [$\Ogr(|k|)$,]
   [devuelve el significado de la clave $k$ en $d$.]
   [$res$ es modificable si y sólo si $d$ lo es]
-  
-  \InterfazFuncion{Claves}{\In{d}{diccTrie($\sigma$)}}{conj(string)}
-  {$res$ \igobs claves($d$)}
-  [$\Theta()$]
-  [devuelve un conjunto con todas las claves del diccionario.] 
   
   \InterfazFuncion{Borrar}{\In{d}{diccTrie($\sigma$)}, \In{k}{$string$}}{}
   [$d$ \igobs $d_0 \land$ def?($k$, $d_0$) ]
   {$d \igobs$ borrar($k$, $d_0$)}
-  [$\Theta(|k|)$]
+  [$\Ogr(|k|)$]
   [elimina la entrada $k$ del diccionario.] 
   
   \section*{Operaciones del iterador}
 
   \InterfazFuncion{CrearItClaves}{\In{d}{diccTrie($\sigma$)}}{itDiccTrie($\sigma$)}
   {alias(esPermutación?(SecuSuby($res$), clavesExtendidas($d$))) $\land$ vacia?(Anteriores($res$))}
-  [$\Theta(1)$]
+  [$\Ogr(n)$]
   [crea un iterador del diccionario, de forma que pueda ser recorrido completamente aplicando iterativamente Siguiente.]
   
   \InterfazFuncion{HaySiguiente?}{\In{it}{itDiccTrie($\sigma$)}}{bool}
   {$res$ $\igobs$ haySiguiente($it$)}
-  [$\Theta(1)$]
+  [$\Ogr(1)$]
   [devuelve $true$ si y sólo si quedan elementos para iterar.]  
 
   \InterfazFuncion{SiguienteClave}{\In{it}{itDiccTrie($\sigma$)}}{string}
   [haySiguiente?($it$)]  
   {alias($res$ $\igobs$ siguiente($it$).clave)}
-  [$\Theta(1)$]
+  [$\Ogr(1)$]
   [devuelve la clave de la entrada del diccionario apuntada por el iterador.]  
   [$res$ no es modificable.]
   
   \InterfazFuncion{SiguienteSignificado}{\In{it}{itDiccTrie($\sigma$)}}{$\sigma$}
   [haySiguiente?($it$)]  
   {alias($res$ $\igobs$ siguiente($it$).significado)}
-  [$\Theta(1)$]
+  [$\Ogr(1)$]
   [devuelve el significado de la entrada del diccionario apuntada por el iterador.]  
   [$res$ no es modificable.]  
   
   \InterfazFuncion{Avanzar}{\Inout{it}{itDiccTrie($\sigma$)}}{}
   [$it \igobs it_0 \land$ haySiguiente?($it_0$)]  
   {$it$ $\igobs$ avanzar($it_0$)}
-  [$\Theta(1)$]
+  [$\Ogr(1)$]
   [avanza a la posición siguiente del iterador.] 
   
 \end{Interfaz}

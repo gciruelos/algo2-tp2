@@ -96,10 +96,10 @@
   \end{Estructura}
 
 
-  \Rep[net][n]{}\mbox{}
+  \Rep[net][n]{($\forall$ c : compu) ((c $\in$ claves(paquetes) $\rightarrow$ (($\forall$ p : paquete) p $\in$ definicion(paquetes, c).conjPaquetes $\rightarrow$ p $\in$ definicion(paquetes,c).colas $\land$ p $\in$ claves(diccPaqCamino) y tienen el mismo tamaño los tres (falta definir $\in$ para colas de prioridad \\ proximaEnCamino relacionado con red, para cualquier par de compus conectadas la proximaEnCamino es igual a al  primer elemento de alguna secuencia de caminosMinimos(n.red, c1, c2), si dos compus no estan conectadas no se define el camino | el numero de la que mas envio corresponde al de cantEnviados en infopaquete de cualCompu en laQueMasEnvio y no existe otra con una cantEnviados mayor | colaprior y conjPaquetes tienen los mismos elementos y diccpaqcamino tambien pero aparte tiene un iterador que te lleva a una secu de compus que contiene algun caminoMinimo que va desde el origan hasta la posicion actual del paquete |  }\mbox{}
 
-
-  \AbsFc[net]{dcnet}[n]{red(dnt) = n.red  $\land$ (($\forall$ p : paquete) (paqueteEnTransito?(dnt,p) $\Rightarrow$ (($\exists$ c : compu) p $\in$ $\pi_2$(definicion(n, c))) $\yluego$
+ 
+  \AbsFc[net]{dcnet}[n]{dnt: dcnet | red(dnt) = n.red  $\land$ (($\forall$ p : paquete) (paqueteEnTransito?(dnt,p) $\Rightarrow$ (($\exists$ c : compu) p $\in$ $\pi_2$(definicion(n, c))) $\yluego$
  ($\forall$ p : paquete) ($\exists$ c : compu) c in computadoras(dnt) $\Rightarrow$ siguiente(definicion($\pi_2$(definicion(n.paquetes,c)),p) = caminorecorrido(c,p)  $\yluego$
 ($\forall$ c : compu) (c $\in$ computadoras(red(dcn)) $\Rightarrow$ (cantidadEnviados(dcn, c) = $\pi_3$(definicion(n.paquetes, c) $\yluego$ 
 ($\forall$ c : compu) c $\in$ computadoras(dnt) $\Rightarrow$ enEspera(dnt, c) = $\pi_2$(definicion(n.paquetes,c))}
@@ -147,6 +147,7 @@
 \caption{Crear Paquete}
 \begin{algorithmic}[1]
   \Procedure{CrearPaquete(\textbf{in/out} $s$ : dcnet, \textbf{in} $p$ : paquete)}{}
+   \If {p.origen != p.destino}
    \State lista(compu) $nuevoCaminoRecorrido \gets$ Vacio()
    \State AgregarAtras(nuevoCaminoRecorrido, origen(p))
    \State itLista(lista(compu)) $it \gets$ AgregarAtras(caminosRecorridos, nuevoCaminoRecorrido)
@@ -154,6 +155,7 @@
    \State Encolar(losPaquetes.cola, $p$)
    \State Agregar(losPaquetes.conjPaquetes, $p$)
    \State Definir(diccPaqCamino, $p$, it)
+   \EndIf
    \EndProcedure
 \end{algorithmic}
 \end{algorithm}
@@ -187,11 +189,13 @@
   \While{HaySiguientes?($it_2$)}
       \State tupla(paq, itLista(lista(compu)) $p \gets$ Siguiente($it_2$)
       \State compu $proximaCompu \gets$ Obtener(Obtener($proximaEnCamino$, $Ultimo(Siguiente(\pi_1(p)))$), destino($p$))
-      \State $paquetesDeProximaCompu \gets$ Obtener($paquetes$, proximaCompu)
-      \State AgregarAtras(Siguiente($\pi_1(p)$), proximaCompu)
-      \State Encolar($paquetesDeProximaCompu$.$cola$, $\pi_0(p)$)
-      \State Agregar($paquetesDeProximacompu$.$conjPaquetes$, $\pi_0$(p))
-	  \State Definir($paquetesDeProximacompu.diccPaqCamino$,$\pi_0$(p),$\pi_1$(p))      
+      \If {proximaCompu != $\pi_0(p)$}
+	\State $paquetesDeProximaCompu \gets$ Obtener($paquetes$, proximaCompu)
+      	\State AgregarAtras(Siguiente($\pi_1(p)$), proximaCompu)
+      	\State Encolar($paquetesDeProximaCompu$.$cola$, $\pi_0(p)$)
+      	\State Agregar($paquetesDeProximacompu$.$conjPaquetes$, $\pi_0$(p))
+	\State Definir($paquetesDeProximacompu.diccPaqCamino$,$\pi_0$(p),$\pi_1$(p))      
+      \EndIf
       \State Avanzar($it_2$)
   \EndWhile
  

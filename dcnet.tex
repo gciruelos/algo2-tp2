@@ -147,6 +147,7 @@
 \caption{Crear Paquete}
 \begin{algorithmic}[1]
   \Procedure{CrearPaquete(\textbf{in/out} $s$ : dcnet, \textbf{in} $p$ : paquete)}{}
+   \If {p.origen != p.destino}
    \State lista(compu) $nuevoCaminoRecorrido \gets$ Vacio()
    \State AgregarAtras(nuevoCaminoRecorrido, origen(p))
    \State itLista(lista(compu)) $it \gets$ AgregarAtras(caminosRecorridos, nuevoCaminoRecorrido)
@@ -154,6 +155,7 @@
    \State Encolar(losPaquetes.cola, $p$)
    \State Agregar(losPaquetes.conjPaquetes, $p$)
    \State Definir(diccPaqCamino, $p$, it)
+   \EndIf
    \EndProcedure
 \end{algorithmic}
 \end{algorithm}
@@ -187,11 +189,13 @@
   \While{HaySiguientes?($it_2$)}
       \State tupla(paq, itLista(lista(compu)) $p \gets$ Siguiente($it_2$)
       \State compu $proximaCompu \gets$ Obtener(Obtener($proximaEnCamino$, $Ultimo(Siguiente(\pi_1(p)))$), destino($p$))
-      \State $paquetesDeProximaCompu \gets$ Obtener($paquetes$, proximaCompu)
-      \State AgregarAtras(Siguiente($\pi_1(p)$), proximaCompu)
-      \State Encolar($paquetesDeProximaCompu$.$cola$, $\pi_0(p)$)
-      \State Agregar($paquetesDeProximacompu$.$conjPaquetes$, $\pi_0$(p))
-	  \State Definir($paquetesDeProximacompu.diccPaqCamino$,$\pi_0$(p),$\pi_1$(p))      
+      \If {proximaCompu != $\pi_0(p)$}
+	\State $paquetesDeProximaCompu \gets$ Obtener($paquetes$, proximaCompu)
+      	\State AgregarAtras(Siguiente($\pi_1(p)$), proximaCompu)
+      	\State Encolar($paquetesDeProximaCompu$.$cola$, $\pi_0(p)$)
+      	\State Agregar($paquetesDeProximacompu$.$conjPaquetes$, $\pi_0$(p))
+	\State Definir($paquetesDeProximacompu.diccPaqCamino$,$\pi_0$(p),$\pi_1$(p))      
+      \EndIf
       \State Avanzar($it_2$)
   \EndWhile
  

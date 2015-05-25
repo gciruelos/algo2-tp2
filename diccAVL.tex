@@ -22,28 +22,30 @@
   \InterfazFuncion{Definir}{\Inout{d}{diccAVL($\kappa, \sigma$)}, \In{k}{$\kappa$}, \In{s}{$\sigma$}}{}
   [$d \igobs d_0$]  
   {$d$ \igobs definir($k, s, d_0$)}
-  [$\Ogr(log(n) \times comp(\kappa))$\footnote{Dentro de este módulo, $n$ es la cantidad de entradas del diccionario.}]
+  [$\Ogr(log(n) \times comp_{\kappa}(k, k'))$\footnote{Dentro de este módulo, $n$ es la cantidad de entradas del diccionario.}]
   [define la clave $k$ con el sinificado $s$.]
   [$k$ y $s$ se definen por referencia.]
     
   \InterfazFuncion{Definido?}{\In{d}{diccAVL($\kappa, \sigma$)}, \In{k}{$\kappa$}}{bool}
   {$res$ \igobs def?($k$, $d$) }
-  [$\Ogr(log(n) \times comp(\kappa))$]
+  [$\Ogr(log(n) \times (equal_{\kappa}(k, k') + comp_{\kappa}(k, k'))$]
   [devuelve $true$ si la clave $k$ está definida en el diccionario.]
   
   \InterfazFuncion{Obtener}{\In{d}{diccAVL($\kappa, \sigma$)}, \In{k}{$\kappa$}}{$\sigma$}
   [def?($k$, $d$)]  
   {alias($res$ \igobs obtener($k$, $d$))}
-  [$\Ogr(log(n) \times comp(\kappa))$]
+  [$\Ogr(log(n) \times (equal_{\kappa}(k, k') + comp_{\kappa}(k, k')) + equal_{\kappa}(k, k'))$]
   [devuelve el significado de la clave $k$ en $d$.]
   [$res$ es modificable si y sólo si $d$ lo es]
   
   \InterfazFuncion{Borrar}{\In{d}{diccAVL($\kappa, \sigma$)}, \In{k}{$\kappa$}}{}
   [$d$ \igobs $d_0 \land$ def?($k$, $d_0$) ]
   {$d \igobs$ borrar($k$, $d_0$)}
-  [$\Ogr(log(n) \times comp(\kappa))$]
+  [$\Ogr(log(n) \times comp_{\kappa}(k, k'))$]
   [elimina la entrada $k$ del diccionario.] 
   
+  Notar que en el caso en que $equal_{\kappa}(k, k')$ y $comp_{\kappa}(k, k')$ sean $\Ogr(1)$, todas las funciones del diccionario, salvo Vacio, son $\Ogr(log(n))$
+  \clearpage
 \end{Interfaz}
 
 \begin{Representacion}
@@ -241,7 +243,7 @@
     \Comment $\Ogr(1)$
   \Else
 		\If{$k < *d\to clave$}
-		\Comment $\Ogr(comp(\kappa))$
+		\Comment $\Ogr(comp_{\kappa}(k, k'))$
 			\State Definir($\&(*d\to izq), k, s$)
 			\Comment $\Ogr(T(n/2))$
 		\Else
@@ -255,12 +257,14 @@
   \Comment $\Ogr(1)$
 \EndProcedure
 \end{algorithmic}
-\underline{Complejidad:} $\Ogr(log(n) \times comp(\kappa))$ \\
-\underline{Justificación:} Sea T($m$) la función costo de ejecutar Definir, donde $m$ es la cantidad de nodos ($n$) del árbol que recibe como parámetro más 1 (esto es por cuestiones prácticas a la hora de definir el caso base), definida de la siguiente forma:
+\underline{Complejidad:} $\Ogr(log(n) \times comp_{\kappa}(k, k'))$ \\
+\underline{Justificación:} Sea T($m$) la función costo de ejecutar Definir, con $m = n + 1$, donde $n$ cantidad de nodos del árbol que se pasa como parámetro (el +1 es por cuestiones prácticas a la hora de definir el caso base), definida de la siguiente forma:
 
-T(1) = 4, T($m$) = T($m/2$) + $comp(\kappa) + 2$ si $m > 1$
+T(1) = 4, T($m$) = T($m/2$) + $comp_{\kappa}(k, k') + 2$ si $m > 1$
 
-Si el árbol es de altura $h$, el peor caso es que tenga $n = 2^{h}$ nodos, es decir que tenga todos sus niveles completos, pues habrá que recorrer una rama de largo $h = log_2(n)$ para agregar el nuevo elemento. Luego, T se puede escribir como T($m$) = $log_2(n + 1) \times (comp(\kappa) + 2) + 4$. Tomando $\Ogr$, nos queda $\Ogr(T) = \Ogr(max(log_2(n + 1) \times (comp(\kappa) + 2), 1)) = \Ogr(log_2(n + 1) \times (comp(\kappa) + 2)) = \Ogr(log_2(n + 1) \times comp(\kappa)) = \Ogr(log(n + 1) \times comp(\kappa))$, por álgebra de órdenes. Y como el análisis es asintótico, $\Ogr(log(n + 1) \times comp(\kappa)) = \Ogr(log(n) \times comp(\kappa))$.
+Notar que como el AVL está casi perfectamente balanceado, no está mal suponer que cada recursión toma como parámetro aproximadamente la mitad de la cantidad de los elementos del árbol.
+
+Si el árbol es de altura $h$, el peor caso es que tenga $n = 2^{h}$ nodos, es decir que tenga todos sus niveles completos, pues habrá que recorrer una rama de largo $h = log_2(n)$ para agregar el nuevo elemento. Luego, T se puede escribir como T($m$) = $log_2(n + 1) \times (comp_{\kappa}(k, k') + 2) + 4$. Tomando $\Ogr$, nos queda $\Ogr(T) = \Ogr(max(log_2(n + 1) \times (comp_{\kappa}(k, k') + 2), 1)) = \Ogr(log_2(n + 1) \times (comp_{\kappa}(k, k') + 2)) = \Ogr(log_2(n + 1) \times comp_{\kappa}(k, k')) = \Ogr(log(n + 1) \times comp_{\kappa}(k, k'))$, por álgebra de órdenes. Y como el análisis es asintótico, $\Ogr(log(n + 1) \times comp_{\kappa}(k, k')) = \Ogr(log(n) \times comp_{\kappa}(k, k'))$.
 
 \end{algorithm}
 
@@ -274,12 +278,12 @@ Si el árbol es de altura $h$, el peor caso es que tenga $n = 2^{h}$ nodos, es d
 	 \Comment $\Ogr(1)$
 	 \Else	
 		\If{$k = *d\to clave$}
-		\Comment $\Ogr(=_{\kappa})$
+		\Comment $\Ogr(equal_{\kappa}(k, k'))$
 			\State $res\gets true$
 			\Comment $\Ogr(1)$
 		\Else
 			\If{$k < *d\to clave$}	
-			\Comment $\Ogr(<_{\kappa})$
+			\Comment $\Ogr(comp_{\kappa}(k, k'))$
 				\State Definido?($\&(*d\to izq), k$)	
 				\Comment $T(n/2)$	
 			\Else
@@ -290,6 +294,10 @@ Si el árbol es de altura $h$, el peor caso es que tenga $n = 2^{h}$ nodos, es d
 	\EndIf
 \EndProcedure
 \end{algorithmic}
+\underline{Complejidad:} $\Ogr(log(n) \times (equal_{\kappa}(k, k') +comp_{\kappa}(k, k')))$ \\
+\underline{Justificación:} Dado que los que nos importa es la complejidad en el peor caso podemos asumir que el elemento buscado no está. Sea T($m$) la función de costo de ejecutar Definido?, con $m = n + 1$, donde $n$ cantidad de nodos del árbol que se pasa como parámetro, dada por: T(1) = 2, T($m$) = T($m/2$) + $equal_{\kappa}(k, k') + comp_{\kappa}(k, k') + 1$ si $m > 1$.
+
+Por un argumento análogo al usado en Definir podemos llegar a que, en el peor caso, T($m$) = $log_2(n + 1) \times (equal_{\kappa}(k, k') + comp_{\kappa}(k, k') + 1) + 2$. Álgebra de órdenes mediante, llegamos a que $\Ogr(T) = \Ogr(log(n) \times (equal_{\kappa}(k, k') + comp_{\kappa}(k, k')))$
 \end{algorithm}
 
 \begin{algorithm}
@@ -313,6 +321,10 @@ Si el árbol es de altura $h$, el peor caso es que tenga $n = 2^{h}$ nodos, es d
 
 \EndProcedure
 \end{algorithmic}
+\underline{Complejidad:} $\Ogr$, $\Ogr(T) = \Ogr(log(n) \times (equal_{\kappa}(k, k') + comp_{\kappa}(k, k')) + equal_{\kappa}(k, k'))$ \\
+\underline{Justificación:} Sea T($n$) la función costo de ejecutar Obtener para un árbol de tamaño $n$, dada por: T(1) = $equal_{\kappa}(k, k') + 1$ , T($n$) = T($n/2) + equal_{\kappa}(k, k') + comp_{\kappa}(k, k')$. Como nos importa el peor caso, vamos a asumir que el nodo buscado es una hoja y que el árbol está balanceado por lo que la hoja está a distancia $log_2(n)$ de la raíz. Luego, en este caso, T($n$) = $log_2(n) \times (equal_{\kappa}(k, k') + comp_{\kappa}(k, k')) + equal_{\kappa}(k, k') + 1$. 
+
+Aplicando $\Ogr$, $\Ogr(T) = \Ogr(log(n) \times (equal_{\kappa}(k, k') + comp_{\kappa}(k, k')) + equal_{\kappa}(k, k'))$.
 \end{algorithm}
 
 \begin{algorithm}
@@ -362,7 +374,7 @@ Si el árbol es de altura $h$, el peor caso es que tenga $n = 2^{h}$ nodos, es d
 					\Else
 						\Comment el árbol tiene dos hijos
 						\State tupla($\kappa, \sigma)$ $min$ $\gets$ borrarMin($\&(*d\to der)$)
-						\Comment $\Ogr(1)$
+						\Comment $\Ogr(log(n))$
 						\State($*d\to clave) \gets \pi_1(min)$
 						\Comment $\Ogr(1)$
 						\State($*d\to significado) \gets \pi_2(min)$

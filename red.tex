@@ -31,32 +31,32 @@
 
 
   \InterfazFuncion{computadoras}{\In{r}{\tadNombre{Red}}}{\tadNombre{conj(compu)}}
-  {$res = computadoras(r)$}
+  {$alias(res \igobs computadoras(r))$}
   [$\Ogr(n)$]
   [devuelve un conjunto con todas las computadoras de la red $r$.]
-  [?]
+  [$res$ no es modificable.]
 
 
   \InterfazFuncion{conectadas?}{\In{r}{\tadNombre{Red}}, \In{c_1}{\tadNombre{Compu}}, \In{c_2}{\tadNombre{Compu}}}{\tadNombre{bool}}
   [$c_1 \in computadoras(r) \land c_2 \in computadoras(r)$]
-  {$res = conectadas?(r,c_1,c_2)$}
+  {$res \igobs conectadas?(r,c_1,c_2)$}
   [$\Ogr(L)$]
   [dice si las computadoras $c_1$ y $c_2$ están conectadas en la red $r$]
 
 
   \InterfazFuncion{interfazUsada}{\In{r}{\tadNombre{Red}}, \In{c_1}{\tadNombre{Compu}}, \In{c_2}{\tadNombre{Compu}}}{\tadNombre{bool}}
   [$conectadas?(r,c_1,c_2)$]
-  {$res = interfazUsada(r,c_1,c_2)$}
+  {$res \igobs interfazUsada(r,c_1,c_2)$}
   [$\Ogr(L)$]
   [devuelve la interfaz mediante la cual $c_1$ se conecta a $c_2$  en la red $r$.]
 
 
   \InterfazFuncion{vecinos}{\In{r}{\tadNombre{Red}}, \In{c}{\tadNombre{Compu}}}{\tadNombre{conj(compu)}}
   [$c \in computadoras(r)$]
-  {$res = vecinos(r,c)$}
+  {$alias(res \igobs vecinos(r,c))$}
   [$\Ogr(n+L)$]
   [devuelve las computadoras conectadas a $c$ en la red $r$.]
-  [?]
+  [$res$ no es modificable.]
 
 
   \InterfazFuncion{usaInterfaz?}{\In{r}{\tadNombre{Red}}, \In{c}{\tadNombre{Compu}}, \In{i}{\tadNombre{Interfaz}}}{\tadNombre{bool}}
@@ -92,8 +92,8 @@
 
   \begin{Estructura}{red}[redEstr]
     \begin{Tupla}[topo]
-      \tupItem{vecinos}{dicc(compu, dicc(compu, interfaz))}\\
-      \tupItem{interfaces}{dicc(compu, conj(interfaces))}%
+      \tupItem{vecinos}{diccTrie(compu, diccTrie(compu, interfaz))}
+      \tupItem{\\ interfaces}{diccTrie(compu, conj(interfaces))}%
     \end{Tupla}
 
   \end{Estructura}
@@ -224,7 +224,7 @@ $\land$\\
   \EndWhile
  \EndProcedure
  \underline{Complejidad:} $\Ogr(nL)$
- \underline{Justificación:} $\Ogr(L) + \Ogr(n) + \Ogr(1) + \Ogr(n)(\Ogr(L) + \Ogr(1) = \Ogr(n)\Ogr(L) = \Ogr(nL)$
+ \underline{Justificación:} $\Ogr(L) + \Ogr(n) + \Ogr(1) + \Ogr(n)(\Ogr(L) + \Ogr(1)) = \Ogr(n)\Ogr(L) = \Ogr(nL)$
 \end{algorithmic}
 \end{algorithm}
 
@@ -235,14 +235,14 @@ $\land$\\
   \Procedure{iCaminosMinimos}{\texttt{in} $r$ : \texttt{redEstr}, \textbf{in} $c_1$ : \texttt{compu},  \texttt{in} $c_2$ : \texttt{compu}} $\to res$ : \texttt{conj(secu(compu))}  
    \State $k \gets$ 1 \Comment $\Ogr(1)$
    \State $n \gets$ Cardinal(Computadoras($r$))  \Comment $\Ogr(n)$
-   \While{$k<n$ $\land$ esVacio?(CaminosDeLargoN($r$, $c_1$, $c_2$, k))} \Comment Se repite $\Ogr(n)$ veces y cuesta  $\Ogr(n^2!)$
+   \While{$k<n$ $\land$ esVacio?(CaminosDeLargoN($r$, $c_1$, $c_2$, k))} \Comment Se repite $\Ogr(n)$ veces y cuesta  $\Ogr(n(L + n^2!))$
      \State k++ \Comment $\Ogr(1)$
    \EndWhile
-   \State $res \gets$ CaminosDeLargoN($r$, $c_1$, $c_2$, k) \Comment $\Ogr(n^2!)$
+   \State $res \gets$ CaminosDeLargoN($r$, $c_1$, $c_2$, k) \Comment $\Ogr(n(L + n^2!))$
 \EndProcedure
-\underline{Complejidad:} $\Ogr(n \cdot n^2!)$
-\underline{Justificacion:} $\Ogr(1) + \Ogr(n) + \Ogr(n)\Ogr(n^2!) + \Ogr(n^2!) = \Ogr(n)\Ogr(n^2!) = \Ogr(n \cdot n^2!)$
 \end{algorithmic}
+\underline{Complejidad:} $\Ogr(n^2 (L + n^2!))$ \\ 
+\underline{Justificacion:} $\Ogr(1) + \Ogr(n) + \Ogr(n)\Ogr(n(L + n^2!)) + \Ogr(n(L + n^2!)) = \Ogr(n)\Ogr(n(L + n^2!)) = \Ogr(n^2(L + n^2!))$
 \end{algorithm}
 
 
@@ -250,9 +250,9 @@ $\land$\\
 \caption{Hay Camino?}
 \begin{algorithmic}[1]
   \Procedure{iHayCamino?}{\texttt{in} $r$ : \texttt{redEstr}, \texttt{in} $c_1$ : \texttt{compu},  \texttt{in} $c_2$ : \texttt{compu}} $\to res$ : \texttt{bool} 
-   \State $res \gets$ $\neg$ esVacio?(CaminosMinimos($r$,$c_1$, $c_2$)) \Comment  $\Ogr(n \cdot n^2!)$
+   \State $res \gets$ $\neg$ esVacio?(CaminosMinimos($r$,$c_1$, $c_2$)) \Comment  $\Ogr(n^2 (L + n^2!))$ 
 \EndProcedure
-\underline{Complejidad:} $\Ogr(n \cdot n^2!)$
+\underline{Complejidad:} $\Ogr(n^2 (L + n^2!))$ 
 \end{algorithmic}
 \end{algorithm}
 
@@ -294,9 +294,11 @@ $\land$\\
     \State $res \gets caminos$ \Comment $\Ogr(1)$
 
  \EndProcedure
- \underline{Complejidad:} $\Ogr(n^2!)$
- \underline{Justificación:} $T(0) = \Ogr(1), T(n) = \Ogr(n+L) + \Ogr(n) \cdot T(n-1) + \Ogr(n^2!) + \Ogr(n)$ \hspace{3cm}  Por lo tanto, $T(n) =  \Ogr(n)T(n-1) + \Ogr(n^2!) = \Ogr(n)(\Ogr(n-1)T(n-1) + \Ogr((n-1)^2!)) + \Ogr(n^2!)) = \Ogr(n)\Ogr(n-1) T(n-2) + \Ogr((n-1)^2!)\Ogr(n) + \Ogr(n^2!) = \Ogr(n)\Ogr(n-1) T(n-2) + \Ogr(n^2!) = ... = \Ogr(n)\cdot ... \cdot \Ogr(1) + \Ogr(n^2!) = \Ogr(n!) + \Ogr(n^2!) = \Ogr(n^2!)$
 \end{algorithmic}
+\underline{Complejidad:} $\Ogr(n(L + n^2!))$ \\
+\underline{Justificación:} $T(0) = \Ogr(1), T(n) = \Ogr(n+L) + \Ogr(n) \cdot (T(n-1) + \Ogr(n^2!)) + \Ogr(n)$ \\
+Por lo tanto, $T(n) = \Ogr(n+L) + \Ogr(n)T(n-1) +  \Ogr(n \cdot n^2!)$ \\
+Entonces, $T(n) =  \Ogr(n+L) + \Ogr(n)(\Ogr(n-1+L) + \Ogr(n-1)T(n-2) +  \Ogr((n-1) \cdot (n-1)^2!)) +  \Ogr(n \cdot n^2!) = \Ogr(n+L) + \Ogr(n(n-1)+nL) + \Ogr(n(n-1))T(n-2) +  \Ogr(n \cdot (n-1) \cdot (n-1)^2!) +  \Ogr(n \cdot n^2!) = \Ogr(nL) + \Ogr(n(n-1))T(n-2) +  \Ogr(n \cdot n^2!) = ... = \Ogr(nL) + \Ogr(n(n-1)(n-2) \cdot ... \cdot 1)T(0) +  \Ogr(n \cdot n^2!) = \Ogr(n(L + n^2!)) $
 \end{algorithm}
 
 

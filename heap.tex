@@ -1,9 +1,19 @@
-
-
-
-
-
 \begin{Interfaz}
+		\textbf{parámetros formales}\hangindent=2\parindent\\
+ 	  \parbox{1.7cm}{\textbf{géneros}} $\alpha$\\	  
+	  \parbox[t]{1.7cm}{\textbf{función}}\parbox[t]{\textwidth-2\parindent-1.7cm}{    	
+    \InterfazFuncion{$\bullet <_{\alpha} \bullet$}{\In{a}{$\alpha$}, \In{a'}{$\alpha$}}{$bool$}
+    {$res \igobs (a <_{\alpha} a')$}
+    [$\Ogr(comp_{\alpha}(a, a'))$]
+    [relación de orden total de $\alpha$]
+    }
+    
+    	\parbox[t]{1.7cm}{\textbf{función}}\parbox[t]{\textwidth-2\parindent-1.7cm}{    	
+    \InterfazFuncion{copiar}{\In{a}{$\alpha$}}{$\alpha$}
+    {$res \igobs$ Copiar($a$)}
+    [$\Ogr(copy(a, a'))$]
+    [relación de orden total de $\alpha$]
+    }
 
   \textbf{se explica con}: colaPrior($\alpha$)
 
@@ -38,6 +48,7 @@
   [$\Ogr(log(tamano(c)) \cdot copy(\alpha))$]
   [Quita el elemento mas prioritario]\\   
   
+	\newpage  
   \InterfazFuncion{Encolar}{\Inout{c}{colaPrior($\alpha$)}, \In{a}{$\alpha$}}{}
   [$c$ $\igobs$ $c_0$ $\land$ $\neg$esta($a$, $c$)] %agregar el esta
   {$c$ $\igobs$ encolar(a,$c_0$)}
@@ -71,7 +82,7 @@
 
 
 
-  \Rep[ab($\alpha$)][h]{$tam$ = tamano($cabeza$) $\land$ propiedadMinab($cabeza$)}\mbox{}
+  \Rep[ab($\alpha$)][h]{$tam$ = tamano($cabeza$) $\land$ propiedadMinHeap($cabeza$)}\mbox{}
   
 
   \tadOperacion{tamano}{puntero(nodo($\alpha$))}{nat}{}
@@ -92,14 +103,8 @@
 
 \end{Representacion}
 
-
-
-
-
-
+\newpage
 \begin{Algoritmos}
-
-
 
 \begin{algorithm}
 \caption{Vacia}
@@ -256,6 +261,7 @@
 \caption{Intercambiar}
 \begin{algorithmic}[1]
   \Procedure{iIntercambiar}{\texttt{in/out} $h$ : \texttt{ab($\alpha$)}, \texttt{in/out} $padre$ : \texttt{puntero(nodo($\alpha$))}, \texttt{in/out} $hijo$ : \texttt{puntero(nodo($\alpha$))}}
+	\State \Comment $Pre: padre \neq NULL \land hijo \neq NULL \yluego (hijo = padre \to izq \lor hijo = padre \to der)$  
   \If{$hijo$ = $padre \to izq$} \Comment $\Ogr(1)$
     \State puntero(nodo) $derechoPadre \gets padre \to der$ \Comment $\Ogr(1)$
     \State $padre \to der \gets hijo \to der$ \Comment $\Ogr(1)$

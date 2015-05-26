@@ -80,7 +80,10 @@
     Además nos dijeron que cambios deberíamos hacerle al TAD DCNet para que sea consistente con estos cambios. Los cambios que deberían hacerse son simples, solo debería devolverse la ip de las computadoras, por ejemplo, en \texttt{recorridoPaquete}, en la que se devuelve una secuencia de computadoras, debería devolverse una secuencia de ip.
     
     Para hacer la lectura más fácil, decidimos usar intercambiablemente las palabras \texttt{compu} e \texttt{id}, y ambas deben ser intepretadas como el string hostname de la computadora (su ip).
-
+    
+    \item Al trabajar con $p$:\texttt{puntero($tupla(campo_1$, $\dots$, $campo_n$))}, usamos la notación $p\to campo_i$ que equivale a decir $(*p).campo_i$. 
+    \item Al calcular complejidades de operaciones que tienen condicionales, siempre hacemos la rama que tiene mayor complejidad, pues lo que nos ineteresa es la complejidad en el peor caso. 
+	\item Cuando ingresamos un paquete, este ya viene con su id, en lugar de generarlo nosotros (como sí pasaba en un ejercicio visto en clase). Esta es una decisión que tomamos para respetar lo más posible el tad. 
 
 \end{enumerate}
 

@@ -1,6 +1,12 @@
 \begin{Interfaz}
   \textbf{parámetros formales}\hangindent=2\parindent\\
-  \parbox{1.7cm}{\textbf{géneros}} $\alpha$\\	
+  \parbox{1.7cm}{\textbf{géneros}} $\alpha$\\
+    \parbox[t]{1.7cm}{\textbf{función}}\parbox[t]{\textwidth-2\parindent-1.7cm}{    	
+    \InterfazFuncion{$\bullet <_{\alpha} \bullet$}{\In{a}{$\alpha$}, \In{a'}{$\alpha$}}{$bool$}
+    {$res \igobs (a <_{\alpha} a')$}
+    [$\Ogr(comp_{\alpha}(a, a'))$]
+    [relación de orden total de $\alpha$]
+    }	
 	
   \textbf{se explica con}: \tadNombre{conj($\alpha$)}.
 

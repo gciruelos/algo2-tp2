@@ -1,13 +1,20 @@
 \begin{Interfaz}
   \textbf{parámetros formales}\hangindent=2\parindent\\
-  \parbox{1.7cm}{\textbf{géneros}} $\sigma$\\
+  \parbox{1.7cm}{\textbf{géneros}} $\kappa, \sigma$\\
   \parbox[t]{1.7cm}{\textbf{función}}\parbox[t]{\textwidth-2\parindent-1.7cm}{    	
-    \InterfazFuncion{Copiar}{\In{s}{$\sigma$}}{$\sigma$}
-    {$res \igobs s$}
-    [$\Theta(copy(s))$]
-    [función de copia de $\sigma$]
+    \InterfazFuncion{$\bullet <_{\kappa} \bullet$}{\In{k}{$\kappa$}, \In{k'}{$\kappa$}}{$bool$}
+    {$res \igobs (k <_{\kappa} k')$}
+    [$\Ogr(comp_{\kappa}(k, k'))$]
+    [relación de orden total de $\kappa$]
     }
-      
+        
+   \parbox[t]{1.7cm}{\textbf{función}}\parbox[t]{\textwidth-2\parindent-1.7cm}{    	
+    \InterfazFuncion{$\bullet =_{\kappa} \bullet$}{\In{k}{$\kappa$}, \In{k'}{$\kappa$}}{$bool$}
+    {$res \igobs (k =_{\kappa} k')$}
+    [$\Ogr(equal_{\kappa}(k, k'))$]
+    [igualdad de $\kappa$]
+    }
+    
   \textbf{se explica con}: \tadNombre{diccionario($\kappa, \sigma$)}.
 
   \textbf{géneros}: \TipoVariable{diccAVL($\kappa, \sigma$)}.
@@ -67,10 +74,10 @@
   					   $a \neq $NULL \yluego \\
   					   \hspace*{4em}$*a$ = NULL \oluego \\
   					   \hspace*{4em}($\exists n:$nat) finaliza($*a$, $n$) \yluego \\
-  					   \hspace*{4em}$(*a)\rightarrow altura$\footnote{La notación $p\rightarrow campo$, donde $p$ es un puntero a una tupla y $campo$ algun campo de esa tupla, equivale a decir ($*p$).$campo$.} = alto($*a$) $\land$ \\
+  					   \hspace*{4em}$(*a)\rightarrow altura$ = alto($*a$) $\land$ \\
   					   \hspace*{4em}diferenciaDeAlturas($(*a)\rightarrow izq$, $(*a)\rightarrow der$)$\leq$ 1 $\land$ \\
-  					   \hspace*{4em}($\forall c:\kappa$) ($c\in$ ClavesDelAvl($(*a)\rightarrow izq$) $\Rightarrow (*a)\rightarrow clave \leq c)$ $\land $\\
-  					   \hspace*{4em}($\forall c:\kappa$) ($c\in$ ClavesDelAvl($(*a)\rightarrow der$) $\Rightarrow (*a)\rightarrow clave \leq c)$ $\land $\\
+  					   \hspace*{4em}($\forall c:\kappa$) ($c\in$ ClavesDelAvl($(*a)\rightarrow izq$) $\Rightarrow (*a)\rightarrow clave < c)$ $\land $\\
+  					   \hspace*{4em}($\forall c:\kappa$) ($c\in$ ClavesDelAvl($(*a)\rightarrow der$) $\Rightarrow (*a)\rightarrow clave > c)$ $\land $\\
   					   \hspace*{4em}Rep($(*a) \rightarrow izq$) $\land$ Rep($(*a) \rightarrow der$)}
   					   
   
@@ -305,7 +312,7 @@ Por un argumento análogo al usado en Definir podemos llegar a que, en el peor c
 \begin{algorithmic}[1]
 \Procedure{iObtener}{\texttt{in} $d$ : \texttt{puntero(puntero(nodo))}, \texttt{in} $k$ : \texttt{$\kappa$}}$\to res$ : \texttt{$\sigma$}	
 	\If{$k = *d\to clave$}
-	\Comment $\Ogr(=_{\kappa})$
+	\Comment $\Ogr(equal_{\kappa}(k, k'))$
 		\State $res\gets (*d\to significado)$
 		\Comment $\Ogr(1)$
 	\Else
@@ -406,7 +413,7 @@ Luego, $\Ogr(log(n)) \times comp_{\kappa}(k, k')) + \Ogr(log(n)) + \Ogr(log(n)) 
 \caption{borrarMin}
 \begin{algorithmic}[1]
 \Procedure{borrarMin}{\texttt{in/out} $d$ : \texttt{puntero(puntero(nodo))}}$\to res$ : \texttt{tupla($\kappa, \sigma$)}
-	\Comment $Pre: *d \neq NULL$
+	\State \Comment $Pre: d \neq NULL \yluego *d \neq NULL$
 	\If{$*d\to izq \neq$ NULL}
 	\Comment $\Ogr(1)$
 		\State tupla($\kappa, \sigma$) $x\gets$ borrarMin($\&(*d\to izq)$)

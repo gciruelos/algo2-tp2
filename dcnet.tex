@@ -141,6 +141,8 @@
   \EndWhile
    
   \EndProcedure
+     \underline{Complejidad:} $\Ogr()$
+ \underline{Justificación:} $\Ogr()+\Ogr()+\Ogr()+\Ogr() = \Ogr()$
 \end{algorithmic}
 \end{algorithm}
 
@@ -159,7 +161,8 @@
    \State Definir(diccPaqCamino, $p$, it) \Comment $\Ogr(log \ k)$
    \EndIf
    \EndProcedure
-\end{algorithmic}
+     \underline{Complejidad:} $\Ogr()$
+ \underline{Justificación:} $\Ogr()+\Ogr()+\Ogr()+\Ogr() = \Ogr()$\end{algorithmic}
 \end{algorithm}
 
 
@@ -201,7 +204,9 @@
   \EndWhile
  
  \EndProcedure
-\end{algorithmic}
+     \underline{Complejidad:} $\Ogr()$
+ \underline{Justificación:} $\Ogr()+\Ogr()+\Ogr()+\Ogr() = \Ogr()$
+ \end{algorithmic}
 \end{algorithm}
 
 
@@ -238,9 +243,7 @@
   \Procedure{cantidadEnviados(\textbf{in} $s$ : dcnet, \textbf{in} $c$ : compu)  $\to res$ : nat}{}
    \State res $\gets$ (Obtener(s.paquetes, c)).cantEnviados \Comment $\Ogr(L)$
   \EndProcedure
-   \underline{Complejidad:} $\Ogr(1)$
- \underline{Justificación:} $\Ogr(1)+\Ogr(n.log \ k)+\Ogr(1)+\Ogr(log \ k) = \Ogr(n.log \ k)$
-
+   \underline{Complejidad:} $\Ogr(L)$
 \end{algorithmic}
 \end{algorithm}
 
@@ -250,7 +253,7 @@
 \begin{algorithmic}[1]
   \Procedure{paqueteEnTransito(\textbf{in} $s$ : dcnet, \textbf{in} $p$ : paquete)  $\to res$ : bool}{}
    \State itDiccTrie $it$ $\gets$ CrearIt(paquetes) \Comment $\Ogr(1)$
-   \While{HaySiguiente?(it) $\yluego$ $\neg$($p \in$ enEspera(siguienteDefinicion(it).conjPaquetes))} \Comment Se repite n veces $\Ogr(log \ k)$ 
+   \While{HaySiguiente?(it) $\yluego$ $\neg$($p \in$ siguienteDefinicion(it).conjPaquetes)} \Comment Se repite n veces $\Ogr(log \ k)$ 
    \State avanzar(it) \Comment $\Ogr(1)$
 	\EndWhile  
 	\If {HaySiguiente?(it)} \Comment $\Ogr(1)$
@@ -259,6 +262,8 @@
 	\State res $\gets$ False \Comment $\Ogr(1)$
 	\EndIf 
   \EndProcedure
+    \underline{Complejidad:} $\Ogr(n.log \ k)$
+ \underline{Justificación:} $\Ogr(1)+\Ogr(n.log \ k )+\Ogr(1)+\Ogr(1) = \Ogr(n.log \ k)$
 \end{algorithmic}
 \end{algorithm}
 

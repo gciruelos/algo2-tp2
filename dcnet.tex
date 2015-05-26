@@ -14,7 +14,7 @@
 
   \InterfazFuncion{CrearPaquete}{\Inout{s}{\tadNombre{dcnet}}, \In{p}{\tadNombre{paquete}}}{}
   [$s \igobs s_0 \land 
-   \neg((\exists p':paquete) (paqueteEnTransito?(s_0,p') \land id(p') \igobs id(p))) \land\\ 
+   \neg((\exists p':paquete) (paqueteEnTransito?(s_0,p') \land id(p') \igobs id(p)) \land\\ 
    \hspace*{3em} origen(p) \in computadoras(red(s_0)) \yluego
    destino(p) \in computadoras(red(s_0)) \yluego\\
    \hspace*{3em} hayCamino?(red(s), origen(p), destino(p))$]
@@ -58,7 +58,8 @@
   [$\Ogr(L)$]
   [Expresa el camino de computadoras recorrido por el paquete $p$ desde su inicio hasta posicion actual.]
 	[$res$ no es modificable]
-
+	
+	\newpage
   \InterfazFuncion{PaqueteEnTransito}{\In{s}{\tadNombre{dcnet}}, \In{p}{\tadNombre{paquete}}}{\tadNombre{bool}}
   [$ True $]  
   {$alias(res \igobs paqueteEnTransito?(s, p))$}
@@ -108,11 +109,12 @@
   6) En la que mas envio esta una computadora que esta en la dcnet y que tiene efectivamente una cantidad mayor o igual de paquetes enviados que cualquier otra. $\newline$
   7) No hay colas con paquetes repetidos $\newline$
   8) No hay paquetes con la misma id en distintas computadoras $\newline$
-  
+
+\newpage 
   \Rep[net][n]{computadoras(n.red) = claves(n.paquetes) $\yluego$ \\
-  									($\forall$ c : compu) [((c $\in$ claves(n.paquetes) $\Rightarrow$  definicion(n.paquetes, c).conjPaquetes = elementos(definicion(n.paquetes,c).colas) $\land$ definicion(n.paquetes, c).conjPaquetes) = claves(definicion(paquetes, c).diccPaqCamino) $\land$  \\
-  									\hspace*{2em}(($\forall$ p : paquete) (p $\in$ claves(definicion(paquetes, c).diccPaqCamino))  $\rightarrow$ siguiente(definicion(definicion(n.paquetes,c).diccPaqCamino,p).camino) $\in$ caminosMinimos(n.red, p.origen, c)))] $\land$ \\
-  									($\forall$ c : compu) [ c $\in$ claves(n.paquetes) $\rightarrow$ ($\forall$ p1, p2 : paquete) (id(p1) = id(p2) $\rightarrow$ $\neg$(p2 $in$ (elementos(definicion(n.paquetes,c).colas) - {p1}))) ] \\ 
+  									($\forall$ c : compu) [((c $\in$ claves(n.paquetes) $\Rightarrow$  definicion(n.paquetes, c).conjPaquetes) = elementos(definicion(n.paquetes,c).colas) $\land$ definicion(n.paquetes, c).conjPaquetes) = claves(definicion(paquetes, c).diccPaqCamino)) $\land$  \\
+  									\hspace*{2em}(($\forall$ p : paquete) (p $\in$ claves(definicion(paquetes, c).diccPaqCamino))  $\rightarrow$ siguiente(definicion(definicion(n.paquetes,c).diccPaqCamino,p).camino) $\in$ caminosMinimos(n.red, p.origen, c))] $\land$ \\
+  									($\forall$ c : compu) [ c $\in$ claves(n.paquetes) $\rightarrow$ ($\forall$ p1, p2 : paquete) (id(p1) = id(p2) $\rightarrow$ $\neg$(p2 $in$ (elementos(definicion(n.paquetes,c).colas) - {p1}) \\ 
   									($\forall$ c1, c2 : compu) (estanConectadas(n.red, c1,c2) $\Rightarrow$ \\
   									 \hspace*{2em} estaDefinida?(n.proximaEnCamino, c1) $\yluego$ \\
   									 \hspace* {2em} estaDefinida?(definicion(n.proximaEnCamino, c1),c2) $\yluego$ \\
@@ -132,7 +134,7 @@
 \end{Representacion}
 
 
-
+\newpage
 \begin{Algoritmos}
 
 
@@ -245,8 +247,8 @@
  \Procedure{red(\textbf{in} $s$ : dcnet)}{}
  \State res $\gets$ red \Comment $\Ogr(1)$
  \EndProcedure
-   \underline{Complejidad:} $\Ogr(1)$
 \end{algorithmic}
+   \underline{Complejidad:} $\Ogr(1)$
 \end{algorithm}
 
 \begin{algorithm}
@@ -259,9 +261,9 @@
    \EndWhile
    \State res $\gets$ siguiente(Obtener(siguienteDefinicion(it).diccPaqCamino,p)) \Comment $\Ogr(log \ k)$
   \EndProcedure
-   \underline{Complejidad:} $\Ogr(n.log \ k)$
- \underline{Justificación:} $\Ogr(1)+\Ogr(n.log \ k)+\Ogr(1)+\Ogr(log \ k) = \Ogr(n.log \ k)$
 \end{algorithmic}
+ \underline{Complejidad:} $\Ogr(n.log \ k)$\\
+ \underline{Justificación:} $\Ogr(1)+\Ogr(n.log \ k)+\Ogr(1)+\Ogr(log \ k) = \Ogr(n.log \ k)$
 \end{algorithm}
 
 
@@ -271,8 +273,8 @@
   \Procedure{cantidadEnviados(\textbf{in} $s$ : dcnet, \textbf{in} $c$ : compu)  $\to res$ : nat}{}
    \State res $\gets$ (Obtener(s.paquetes, c)).cantEnviados \Comment $\Ogr(L)$
   \EndProcedure
-   \underline{Complejidad:} $\Ogr(L)$
 \end{algorithmic}
+\underline{Complejidad:} $\Ogr(L)$
 \end{algorithm}
 
 
@@ -290,13 +292,10 @@
 	\State res $\gets$ False \Comment $\Ogr(1)$
 	\EndIf 
   \EndProcedure
-    \underline{Complejidad:} $\Ogr(n.log \ k)$
- \underline{Justificación:} $\Ogr(1)+\Ogr(n.log \ k )+\Ogr(1)+\Ogr(1) = \Ogr(n.log \ k)$
 \end{algorithmic}
+ \underline{Complejidad:} $\Ogr(n.log \ k)$\\
+ \underline{Justificación:} $\Ogr(1)+\Ogr(n.log \ k )+\Ogr(1)+\Ogr(1) = \Ogr(n.log \ k)$
 \end{algorithm}
-
-
-
 
 \begin{algorithm}
 \caption{En Espera}
@@ -304,10 +303,9 @@
   \Procedure{enEspera(\textbf{in} $s$ : dcnet, \textbf{in} $c$ : compu)  $\to res$ : conj(compu)}{}
     \State res $\gets$ $(Obtener(s.paquetes,c)).conjPaquetes$ \Comment $\Ogr(1)+\Ogr(1)+\Ogr(L)+\Ogr(1)$
   \EndProcedure
-  \underline{Complejidad:} $\Ogr(L)$
- \underline{Justificación:} $\Ogr(1)+\Ogr(1)+\Ogr(L)+\Ogr(1) = \Ogr(L)$
-
 \end{algorithmic}
+ \underline{Complejidad:} $\Ogr(L)$\\
+ \underline{Justificación:} $\Ogr(1)+\Ogr(1)+\Ogr(L)+\Ogr(1) = \Ogr(L)$
 \end{algorithm}
 
 
@@ -317,8 +315,8 @@
   \Procedure{laQueMasEnvio(\textbf{in} $s$ : dcnet)  $\to res$ : compu}{}     
    \State res $\gets$   ($s$.laQueMasEnvio).cualCompu \Comment $\Ogr(1)$
   \EndProcedure
-  \underline{Complejidad:} $\Ogr(1)$
 \end{algorithmic}
+  \underline{Complejidad:} $\Ogr(1)$
 \end{algorithm}
 
 

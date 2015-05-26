@@ -4,7 +4,7 @@
 	  \parbox[t]{1.7cm}{\textbf{función}}\parbox[t]{\textwidth-2\parindent-1.7cm}{    	
     \InterfazFuncion{$\bullet <_{\alpha} \bullet$}{\In{a}{$\alpha$}, \In{a'}{$\alpha$}}{$bool$}
     {$res \igobs (a <_{\alpha} a')$}
-    [$\Ogr(comp_{\alpha}(a, a'))$]
+    [$\Ogr(comparar(\alpha, <_\alpha))$]
     [relación de orden total de $\alpha$]
     }
     
@@ -89,7 +89,7 @@
   \tadAxioma{tamano(NULL)}{0}
   \tadAxioma{tamano(\& $x$)}{1 + tamano($x$.izq) + tamano($x$.der)}
 
-  \tadOperacion{propiedadMinHeap}{puntero(nodo($\alpha$))}{bool}{}
+  \tadOperacion{propiedadMinHeap)}{puntero(nodo($\alpha$))}{bool}{}
   \tadAxioma{propiedadMinHeap(NULL)}{true}
   \tadAxioma{propiedadMinHeap(\& $x$)}{$x.dato < x.izq \to dato \land x.dato < x.der \to dato \land$ \\ propiedadMinHeap($x$.izq) $\land$ propiedadMinHeap($x$.der)}
    
@@ -114,9 +114,9 @@
   \State $cabeza \gets$ NULL \Comment $\Ogr(1)$
   \State $res \gets$ ($tam$,$cabeza$) \Comment $\Ogr(1)$
  \EndProcedure
- \underline{Complejidad:} $\Ogr(1)$
- \underline{Justificación:} $\Ogr(1)+\Ogr(1)+\Ogr(1) = \Ogr(1)$
 \end{algorithmic}
+ \underline{Complejidad:} $\Ogr(1)$\\
+ \underline{Justificación:} $\Ogr(1)+\Ogr(1)+\Ogr(1) = \Ogr(1)$
 \end{algorithm}
 
 
@@ -126,8 +126,8 @@
   \Procedure{iVacia?}{\texttt{in} h : \texttt{ab($\alpha$)}} $\to res$ : \texttt{heap}
   \State $res \gets$ $h.cabeza$ = NULL \Comment $\Ogr(1)$ 
  \EndProcedure
- \underline{Complejidad:} $\Ogr(1)$
 \end{algorithmic}
+ \underline{Complejidad:} $\Ogr(1)$
 \end{algorithm}
 
 
@@ -137,8 +137,8 @@
   \Procedure{Proximo}{\texttt{in} h : \texttt{ab($\alpha$)}} $\to res$ : $\alpha$
   \State $res \gets$ $h.cabeza \to dato$ \Comment $\Ogr(1)$ 
  \EndProcedure
- \underline{Complejidad:} $\Ogr(1)$
 \end{algorithmic}
+ \underline{Complejidad:} $\Ogr(1)$
 \end{algorithm}
 
 
@@ -195,13 +195,10 @@
    \EndIf
   \State $tam--$ \Comment $\Ogr(1)$
  \EndProcedure
- \underline{Complejidad:} $\Ogr(log(tam) \cdot max\{copy(\alpha), comparar(\alpha, <_\alpha)\})$
- \underline{Justificación:} $\Ogr(log(tam)) \cdot \Ogr(copy(\alpha)) + 3\Ogr(1) + \Ogr(log(tam)) \cdot \Ogr(1) + \Ogr(log(tam)) \cdot (6\Ogr(1) + \Ogr(comparar(\alpha, <_\alpha))) = \Ogr(log(tam)) \cdot \Ogr(copy(\alpha)) + \Ogr(log(tam)) \cdot \Ogr(comparar(\alpha, <_\alpha)) = \Ogr(log(tam)) \cdot (\Ogr(copy(\alpha)) + \Ogr(comparar(\alpha, <_\alpha))) = \Ogr(log(tam) \cdot max\{copy(\alpha), comparar(\alpha, <_\alpha)\}) $.
 \end{algorithmic}
+ \underline{Complejidad:} $\Ogr(log(tam) \cdot max\{copy(\alpha), comparar(\alpha, <_\alpha)\})$\\
+ \underline{Justificación:} $\Ogr(log(tam)) \cdot \Ogr(copy(\alpha)) + 3\Ogr(1) + \Ogr(log(tam)) \cdot \Ogr(1) + \Ogr(log(tam)) \cdot (6\Ogr(1) + \Ogr(comparar(\alpha, <_\alpha)) = \Ogr(log(tam)) \cdot \Ogr(copy(\alpha)) + \Ogr(log(tam)) \cdot \Ogr(comparar(\alpha, <_\alpha) = \Ogr(log(tam)) \cdot (\Ogr(copy(\alpha)) + \Ogr(comparar(\alpha, <_\alpha)) = \Ogr(log(tam) \cdot max\{copy(\alpha), comparar(\alpha, <_\alpha)\}) $.
 \end{algorithm}
-
-
-
 
 \begin{algorithm}
 \caption{Encolar}
@@ -239,7 +236,7 @@
 
     \State puntero(nodo) $nodoActual \gets nuevoNodo$ \Comment $\Ogr(1)$
 
-    \While{$(nodoActual \to padre \neq NULL \land nodoActual \to padre \to dato > nodoActual \to dato)$}  \Comment Se repite $\Ogr(log(tam))$ veces
+    \While{$(nodoActual \to padre \neq NULL \land nodoActual \to padre \to dato > nodoActual \to dato$}  \Comment Se repite $\Ogr(log(tam))$ veces
 
       \State Intercambiar($h$, $nodoActual \to padre$, $nodoActual$) \Comment $\Ogr(1)$
     \EndWhile
@@ -247,14 +244,10 @@
   \State $tam++$ \Comment $\Ogr(1)$
  \EndProcedure
 
-
- \underline{Complejidad:} $\Ogr(log(tam) \cdot max\{copy(\alpha), comparar(\alpha, <_\alpha)\})$
- \underline{Justificación:} $\Ogr(log(tam)) \cdot \Ogr(copy(\alpha)) + 3\Ogr(1) + \Ogr(log(tam)) \cdot \Ogr(1) + \Ogr(log(tam)) \cdot (6\Ogr(1) + \Ogr(comparar(\alpha, <_\alpha))) = \Ogr(log(tam)) \cdot \Ogr(copy(\alpha)) + \Ogr(log(tam)) \cdot \Ogr(comparar(\alpha, <_\alpha)) = \Ogr(log(tam)) \cdot (\Ogr(copy(\alpha)) + \Ogr(comparar(\alpha, <_\alpha))) = \Ogr(log(tam) \cdot max\{copy(\alpha), comparar(\alpha, <_\alpha)\}) $.
 \end{algorithmic}
+ \underline{Complejidad:} $\Ogr(log(tam) \cdot max\{copy(\alpha), comparar(\alpha, <_\alpha)\})$ \\
+ \underline{Justificación:} $\Ogr(log(tam)) \cdot \Ogr(copy(\alpha)) + 3\Ogr(1) + \Ogr(log(tam)) \cdot \Ogr(1) + \Ogr(log(tam)) \cdot (6\Ogr(1) + \Ogr(comparar(\alpha, <_\alpha)) = \Ogr(log(tam)) \cdot \Ogr(copy(\alpha)) + \Ogr(log(tam)) \cdot \Ogr(comparar(\alpha, <_\alpha) = \Ogr(log(tam)) \cdot (\Ogr(copy(\alpha)) + \Ogr(comparar(\alpha, <_\alpha)) = \Ogr(log(tam) \cdot max\{copy(\alpha), comparar(\alpha, <_\alpha)\}) $.
 \end{algorithm}
-
-
-
 
 
 \begin{algorithm}
@@ -282,22 +275,11 @@
   \If{$hijo \to padre$ = NULL} \Comment $\Ogr(1)$
     \State$h$.cabeza $\gets hijo$ \Comment $\Ogr(1)$
   \EndIf 
-
-
  \EndProcedure
- \underline{Complejidad:} $\Ogr(1)$
- \underline{Justificación:} Queda claro que se producen siempre a lo sumo 8 operaciones que con costo $\Ogr(1)$.
 \end{algorithmic}
+ \underline{Complejidad:} $\Ogr(1)$\\
+ \underline{Justificación:} Queda claro que se producen siempre a lo sumo 8 operaciones que con costo $\Ogr(1)$.
 \end{algorithm}
-
-
-
-
-
-
-
-
-
 
 \end{Algoritmos}
 

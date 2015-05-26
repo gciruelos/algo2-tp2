@@ -2,6 +2,7 @@
   
   \textbf{se explica con}: \tadNombre{Red}.
 
+  \textbf{géneros}: \TipoVariable{red}.
   
   \section*{Operaciones básicas de \tadNombre{Red}}
 
@@ -50,7 +51,7 @@
   [$\Ogr(L)$]
   [devuelve la interfaz mediante la cual $c_1$ se conecta a $c_2$  en la red $r$.]
 
-
+	\newpage
   \InterfazFuncion{vecinos}{\In{r}{\tadNombre{Red}}, \In{c}{\tadNombre{Compu}}}{\tadNombre{conj(compu)}}
   [$c \in computadoras(r)$]
   {$alias(res \igobs vecinos(r,c))$}
@@ -116,7 +117,7 @@ $\land$\\
 
 \end{Representacion}
 
-
+\newpage
 
 \begin{Algoritmos}
 
@@ -129,8 +130,8 @@ $\land$\\
   \State interfaces $\gets$ Vacia() \Comment $\Ogr(1)$
   \State $res \gets$ (vecinos, interfaces) \Comment $\Ogr(1)$
   \EndProcedure
-  \underline{Complejidad:} $\Ogr(1)$
 \end{algorithmic}
+  \underline{Complejidad:} $\Ogr(1)$
 \end{algorithm}
 
 
@@ -141,8 +142,8 @@ $\land$\\
   \State definir(r.vecinos, $c$, Vacia()) \Comment $\Ogr(L)$
   \State definir(r.interfaces, $c$, $is$) \Comment $\Ogr(L)$
  \EndProcedure
- \underline{Complejidad:} $\Ogr(L)$
 \end{algorithmic}
+	\underline{Complejidad:} $\Ogr(L)$
 \end{algorithm}
 
 
@@ -155,8 +156,8 @@ $\land$\\
   \State $x \gets$ obtener(r.vecinos, $c_2$) \Comment $\Ogr(L)$
   \State definir($x$, $c_1$, $i_2$) \Comment $\Ogr(L)$
  \EndProcedure
- \underline{Complejidad:} $\Ogr(L)$
 \end{algorithmic}
+ \underline{Complejidad:} $\Ogr(L)$
 \end{algorithm}
 
 
@@ -167,8 +168,8 @@ $\land$\\
   \Procedure{iComputadoras}{\texttt{in} $r$ : \texttt{redEstr}} $\to res$ : \texttt{conj(compu)} 
   \State $res \gets$ Claves($interfaces$) \Comment $\Ogr(n)$
  \EndProcedure
-\underline{Complejidad:} $\Ogr(n)$
 \end{algorithmic}
+	\underline{Complejidad:} $\Ogr(n)$
 \end{algorithm}
 
 
@@ -179,8 +180,8 @@ $\land$\\
   \State $x \gets$ Obtener($c_1$, $r$.vecinos) \Comment $\Ogr(L)$
   \State $res \gets$ def?($c_2$, $x$) \Comment $\Ogr(L)$
  \EndProcedure
- \underline{Complejidad:} $\Ogr(L)$
 \end{algorithmic}
+	 \underline{Complejidad:} $\Ogr(L)$
 \end{algorithm}
 
 
@@ -191,8 +192,8 @@ $\land$\\
   \State $x \gets$ Obtener($c_1$, $r$.vecinos) \Comment $\Ogr(L)$
   \State $res \gets$ Obtener($c_2$, $x$) \Comment $\Ogr(L)$
  \EndProcedure
- \underline{Complejidad:} $\Ogr(L)$
 \end{algorithmic}
+ \underline{Complejidad:} $\Ogr(L)$
 \end{algorithm}
 
 
@@ -203,8 +204,8 @@ $\land$\\
   \State $x \gets$ Obtener($c$, $r$.vecinos) \Comment $\Ogr(L)$
   \State $res \gets$ Claves($x$) \Comment $\Ogr(n)$
  \EndProcedure
- \underline{Complejidad:} $\Ogr(n+L)$
 \end{algorithmic}
+ \underline{Complejidad:} $\Ogr(n+L)$
 \end{algorithm}
 
 
@@ -223,9 +224,9 @@ $\land$\\
     \State Avanzar($i$) \Comment $\Ogr(1)$
   \EndWhile
  \EndProcedure
- \underline{Complejidad:} $\Ogr(nL)$
- \underline{Justificación:} $\Ogr(L) + \Ogr(n) + \Ogr(1) + \Ogr(n)(\Ogr(L) + \Ogr(1)) = \Ogr(n)\Ogr(L) = \Ogr(nL)$
 \end{algorithmic}
+ \underline{Complejidad:} $\Ogr(nL)$\\
+ \underline{Justificación:} $\Ogr(L) + \Ogr(n) + \Ogr(1) + \Ogr(n)(\Ogr(L) + \Ogr(1)) = \Ogr(n)\Ogr(L) = \Ogr(nL)$
 \end{algorithm}
 
 
@@ -252,8 +253,8 @@ $\land$\\
   \Procedure{iHayCamino?}{\texttt{in} $r$ : \texttt{redEstr}, \texttt{in} $c_1$ : \texttt{compu},  \texttt{in} $c_2$ : \texttt{compu}} $\to res$ : \texttt{bool} 
    \State $res \gets$ $\neg$ esVacio?(CaminosMinimos($r$,$c_1$, $c_2$)) \Comment  $\Ogr(n^2 (L + n^2!))$ 
 \EndProcedure
-\underline{Complejidad:} $\Ogr(n^2 (L + n^2!))$ 
 \end{algorithmic}
+\underline{Complejidad:} $\Ogr(n^2 (L + n^2!))$
 \end{algorithm}
 
 \begin{algorithm}

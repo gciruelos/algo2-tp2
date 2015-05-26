@@ -10,7 +10,7 @@
   [$\Ogr(1)$]
   [genera la red vacía]
 
-  \InterfazFuncion{AgregarComputadora}{\Inout{r}{\tadNombre{Red}}, \In{c}{\tadNombre{Compu}}, \In{is}{\tadNombre{Compu}}}{}
+  \InterfazFuncion{AgregarComputadora}{\Inout{r}{\tadNombre{Red}}, \In{c}{\tadNombre{Compu}}, \In{is}{\tadNombre{conj(interfaz)}}}{}
   [$r \igobs r_0 \land (\forall c' : compu) (c' \in computadoras(r) \impluego ip(c) \neq ip(c'))$] 
   {$computadoras(r) = Ag(c, computadoras(r_0)) \yluego \\
      (\forall c_1, c_2 : compu) (c_1 \in computadoras(r_0) \land c_2 \in computadoras(r_0) \impluego \\ 
@@ -137,9 +137,9 @@ $\land$\\
 \begin{algorithm}
 \caption{Agregar Computadora}
 \begin{algorithmic}[1]
-  \Procedure{iAgregarComputadora}{\texttt{in/out} $r$ : \texttt{redEstr}, \texttt{in} $c$ : \texttt{compu}}
-  \State definir(r.vecinos, id($c$), Vacia()) \Comment $\Ogr(L)$
-  \State definir(r.interfaces, id($c$), $c$) \Comment $\Ogr(L)$
+  \Procedure{iAgregarComputadora}{\texttt{in/out} $r$ : \texttt{redEstr}, \texttt{in} $c$ : \texttt{compu}, \texttt{in} $is$ : \texttt{conj(interfaz)}}
+  \State definir(r.vecinos, $c$, Vacia()) \Comment $\Ogr(L)$
+  \State definir(r.interfaces, $c$, $is$) \Comment $\Ogr(L)$
  \EndProcedure
  \underline{Complejidad:} $\Ogr(L)$
 \end{algorithmic}
@@ -151,9 +151,9 @@ $\land$\\
 \begin{algorithmic}[1]
   \Procedure{iConectar}{\texttt{in/out} $r$ : \texttt{redEstr}, \texttt{in} $c_1$ : \texttt{compu}, \texttt{in} $c_2$ :  \texttt{compu}, \texttt{in} $i_1$ : \texttt{interfaz}, \texttt{in} $i_2$ : \texttt{interfaz}}{}
   \State $x \gets$ obtener(r.vecinos, $c_1$) \Comment $\Ogr(L)$
-  \State definir($x$, id($c_2$), $i_1$) \Comment $\Ogr(L)$
+  \State definir($x$, $c_2$, $i_1$) \Comment $\Ogr(L)$
   \State $x \gets$ obtener(r.vecinos, $c_2$) \Comment $\Ogr(L)$
-  \State definir($x$, id($c_1$), $i_2$) \Comment $\Ogr(L)$
+  \State definir($x$, $c_1$, $i_2$) \Comment $\Ogr(L)$
  \EndProcedure
  \underline{Complejidad:} $\Ogr(L)$
 \end{algorithmic}
@@ -176,8 +176,8 @@ $\land$\\
 \caption{Conectadas?}
 \begin{algorithmic}[1]
   \Procedure{iConectadas?}{\texttt{in} $r$ : \texttt{redEstr}, \texttt{in} $c_1$ : \texttt{compu}, \texttt{in} $c_2$ : \texttt{compu}}  $\to res$ : \texttt{bool}
-  \State $x \gets$ Obtener(id($c_1$), $r$.vecinos) \Comment $\Ogr(L)$
-  \State $res \gets$ def?(id($c_2$), $x$) \Comment $\Ogr(L)$
+  \State $x \gets$ Obtener($c_1$, $r$.vecinos) \Comment $\Ogr(L)$
+  \State $res \gets$ def?($c_2$, $x$) \Comment $\Ogr(L)$
  \EndProcedure
  \underline{Complejidad:} $\Ogr(L)$
 \end{algorithmic}
@@ -188,8 +188,8 @@ $\land$\\
 \caption{Interfaz Usada}
 \begin{algorithmic}[1]
   \Procedure{iInterfazUsada}{\texttt{in} $r$ : \texttt{redEstr}, \texttt{in} $c_1$ : \texttt{compu}, \texttt{in} $c_2$ : \texttt{compu}} $\to res$ : \texttt{interfaz}
-  \State $x \gets$ Obtener(id($c_1$), $r$.vecinos) \Comment $\Ogr(L)$
-  \State $res \gets$ Obtener(id($c_2$), $x$) \Comment $\Ogr(L)$
+  \State $x \gets$ Obtener($c_1$, $r$.vecinos) \Comment $\Ogr(L)$
+  \State $res \gets$ Obtener($c_2$, $x$) \Comment $\Ogr(L)$
  \EndProcedure
  \underline{Complejidad:} $\Ogr(L)$
 \end{algorithmic}
@@ -200,7 +200,7 @@ $\land$\\
 \caption{Vecinos}
 \begin{algorithmic}[1]
   \Procedure{iVecinos}{\texttt{in} $r$ : \texttt{redEstr}, \texttt{in} $c$ :\texttt{compu}}  $\to res$ : \texttt{conj(compu)}
-  \State $x \gets$ Obtener(id($c$), $r$.vecinos) \Comment $\Ogr(L)$
+  \State $x \gets$ Obtener($c$, $r$.vecinos) \Comment $\Ogr(L)$
   \State $res \gets$ Claves($x$) \Comment $\Ogr(n)$
  \EndProcedure
  \underline{Complejidad:} $\Ogr(n+L)$
@@ -213,7 +213,7 @@ $\land$\\
 \caption{Usa Interfaz?}
 \begin{algorithmic}[1]
   \Procedure{iUsaInterfaz?}{\texttt{in} $r$ : \texttt{redEstr}, \texttt{in} $c$ : \texttt{compu},  \texttt{in} $i$ : interfaz} $\to res$ : \texttt{bool} 
-  \State $x \gets$ Obtener(id($c$), $r$.vecinos) \Comment $\Ogr(L)$
+  \State $x \gets$ Obtener($c$, $r$.vecinos) \Comment $\Ogr(L)$
   \State $i :\tadNombre{itdicc} \gets$ NuevoIterador($x$) \Comment $\Ogr(n)$
   \State $res \gets$ False \Comment $\Ogr(1)$
   \While{haySiguiente($i$)} \Comment Se repite $\Ogr(n)$ veces

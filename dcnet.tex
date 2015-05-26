@@ -95,21 +95,33 @@
       \tupItem{\\ conjPaquetes}{conjAVL(paq)}
       \tupItem{\\ cantEnviados}{nat}                       
     \end{Tupla}
-  \end{Estructura}
-
-
+   \end{Estructura}
+ $ \newline$
+  Invariante de Representacion en palabras: $\newline$
+  $\newline$
+  1) Las computadoras del diccionario $paquetes$ estan en la red y viceversa $\newline$
+  2) Los paquetes que estan en infopaquete son los mismos, tanto en diccPaqCamino, en conjPaquetes y en colas. $\newline$
+  3) En caminos de diccPaqCamino hay un iterador que te da el camino que hizo el paquete $\newline$
+  desde su origen hasta la compu actual $\newline$
+  4) En colas de infopaquete de cualquier computadora nunca van a haber dos paquetes con la misma id y distinto origen o destino. $\newline$ 
+  5) Si dos compus estan conectadas (una es de origen y otra de destino) entonces ingresando esas dos en proximaEnCamino podes averiguar a que compu ir ahora para lograr hacer un paso mas en tu camino hacia la compu de destino. $\newline$
+  6) En la que mas envio esta una computadora que esta en la dcnet y que tiene efectivamente una cantidad mayor o igual de paquetes enviados que cualquier otra. $\newline$
+  7) No hay colas con paquetes repetidos $\newline$
+  8) No hay paquetes con la misma id en distintas computadoras $\newline$
+  
   \Rep[net][n]{computadoras(n.red) = claves(n.paquetes) $\yluego$ \\
-  									($\forall$ c : compu) [((c $\in$ claves(n.paquetes) $\Rightarrow$ (($\forall$ p : paquete) p $\in$ definicion(n.paquetes, c).conjPaquetes $\Rightarrow$ p $\in$ definicion(n.paquetes,c).colas $\land$ p $\in$ claves(definicion(paquetes, c).diccPaqCamino) $\land$  \\
-  									\hspace*{2em}($\forall$ p : paquete) p $\in$ claves(definicion(paquetes, c).diccPaqCamino) $\Rightarrow$ p $\in$ definicion(n.paquetes, c).conjPaquetes  $\land$  \\
-  									\hspace*{2em}(($\forall$ p : paquete) p $\in$ definicion(n.paquetes, c).colas $\Rightarrow $ p $\in$ definiciones(paquetes,c).colas $\yluego$ definicion(definicion(n.paquetes,c).diccPaqCamino,p).camino $\in$ caminosMinimos(n.red, p.origen, c)] $\land$ \\
+  									($\forall$ c : compu) [((c $\in$ claves(n.paquetes) $\Rightarrow$  definicion(n.paquetes, c).conjPaquetes) = elementos(definicion(n.paquetes,c).colas) $\land$ definicion(n.paquetes, c).conjPaquetes) = claves(definicion(paquetes, c).diccPaqCamino)) $\land$  \\
+  									\hspace*{2em}(($\forall$ p : paquete) (p $\in$ claves(definicion(paquetes, c).diccPaqCamino))  $\rightarrow$ siguiente(definicion(definicion(n.paquetes,c).diccPaqCamino,p).camino) $\in$ caminosMinimos(n.red, p.origen, c))] $\land$ \\
+  									($\forall$ c : compu) [ c $\in$ claves(n.paquetes) $\rightarrow$ ($\forall$ p1, p2 : paquete) (id(p1) = id(p2) $\rightarrow$ $\neg$(p2 $in$ (elementos(definicion(n.paquetes,c).colas) - {p1}) \\ 
   									($\forall$ c1, c2 : compu) (estanConectadas(n.red, c1,c2) $\Rightarrow$ \\
   									 \hspace*{2em} estaDefinida?(n.proximaEnCamino, c1) $\yluego$ \\
   									 \hspace* {2em} estaDefinida?(definicion(n.proximaEnCamino, c1),c2) $\yluego$ \\
   									 \hspace*{2em}	($\exists$ sc : secu(compu)) sc $\in$ caminosMinimos(n.red, c1, c2) $\land$\\
   									 \hspace*{3em} 	definicion(definicion(n.proximaEnCamino,c1),c2) = primero(fin(sc))) $\land$ \\
   									  (n.laQueMasEnvio).cualCompu $\in$ claves(paquetes) $\yluego$ \\
-  									  definicion(n.paquetes, (n.laQueMasEnvio).cualCompu).cantEnviados = (n.laQueMasEnvio).cuantosEnvio $\land$\\
-  									   ($\forall$ c : compu) c $\in$ claves(n.paquetes) $\Rightarrow$ (n.laQueMasEnvio).cuantosEnvio  $\geq$ definicion(n.paquetes, c).cantEnviados $\yluego$ sinrepetidos(definicion(paquetes, c).colas)         } \mbox{}
+  									  definicion(n.paquetes, (n.laQueMasEnvio).cualCompu).cantEnviados =  (n.laQueMasEnvio).cuantosEnvio $\land$\\
+  									   ($\forall$ c : compu) c $\in$ claves(n.paquetes) $\Rightarrow$ (n.laQueMasEnvio).cuantosEnvio  $\geq$ definicion(n.paquetes, c).cantEnviados $\yluego$ sinrepetidos(definicion(paquetes, c).colas)     \\
+  									   ($\forall$ c1, c2 : compu) ((c1 $\in$ claves(n.paquetes) $\land$ c2 $\in$ claves(n.paquetes))  $\rightarrow$ ( ($\forall$ p1 : paquete) p1 $\in$ definicion(n.paquetes, c1).conjPaquetes $\rightarrow$ $\neg$($\exists$ p2 : paquete) p2 $\in$ definicion(n.paquetes, c1).conjPaquetes $\land$ id(p2) = id(p1)))} \mbox{}
 
  
   \AbsFc[net]{dcnet}[n]{dnt: dcnet | red(dnt) = n.red  $\land$ (($\forall$ p : paquete) (paqueteEnTransito?(dnt,p) $\Rightarrow$ (($\exists$ c : compu) p $\in$ $\pi_2$(definicion(n, c))) $\yluego$

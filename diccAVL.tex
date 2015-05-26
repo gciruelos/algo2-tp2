@@ -28,7 +28,7 @@
     
   \InterfazFuncion{Definido?}{\In{d}{diccAVL($\kappa, \sigma$)}, \In{k}{$\kappa$}}{bool}
   {$res$ \igobs def?($k$, $d$) }
-  [$\Ogr(log(n) \times (equal_{\kappa}(k, k') + comp_{\kappa}(k, k'))$]
+  [$\Ogr(log(n) \times comp_{\kappa}(k, k'))$]
   [devuelve $true$ si la clave $k$ está definida en el diccionario.]
   
   \InterfazFuncion{Obtener}{\In{d}{diccAVL($\kappa, \sigma$)}, \In{k}{$\kappa$}}{$\sigma$}
@@ -44,7 +44,7 @@
   [$\Ogr(log(n) \times comp_{\kappa}(k, k'))$]
   [elimina la entrada $k$ del diccionario.] 
   
-  Notar que en el caso en que $equal_{\kappa}(k, k')$ y $comp_{\kappa}(k, k')$ sean $\Ogr(1)$, todas las funciones del diccionario, salvo Vacio, son $\Ogr(log(n))$
+  \underline{Nota:} en el caso en que $equal_{\kappa}(k, k')$ y $comp_{\kappa}(k, k')$ sean $\Ogr(1)$, todas las funciones del diccionario, salvo Vacio, son $\Ogr(log(n))$
   \clearpage
 \end{Interfaz}
 
@@ -277,27 +277,27 @@ Si el árbol es de altura $h$, el peor caso es que tenga $n = 2^{h}$ nodos, es d
 	 \State $res\gets false$
 	 \Comment $\Ogr(1)$
 	 \Else	
-		\If{$k = *d\to clave$}
-		\Comment $\Ogr(equal_{\kappa}(k, k'))$
-			\State $res\gets true$
-			\Comment $\Ogr(1)$
-		\Else
 			\If{$k < *d\to clave$}	
 			\Comment $\Ogr(comp_{\kappa}(k, k'))$
 				\State Definido?($\&(*d\to izq), k$)	
 				\Comment $T(n/2)$	
 			\Else
-				\State Definido?($\&(*d\to der), k$)
-				\Comment $T(n/2)$
+				\If{$*d\to clave < k$}
+				\Comment $\Ogr(comp_{\kappa}(k, k'))$
+					\State Definido?($\&(*d\to der), k$)
+					\Comment $T(n/2)$
+				\Else
+					\State $res\gets true$
+					\Comment $\Ogr(1)$	
+				\EndIf
 			\EndIf
-		\EndIf
 	\EndIf
 \EndProcedure
 \end{algorithmic}
-\underline{Complejidad:} $\Ogr(log(n) \times (equal_{\kappa}(k, k') +comp_{\kappa}(k, k')))$ \\
-\underline{Justificación:} Dado que los que nos importa es la complejidad en el peor caso podemos asumir que el elemento buscado no está. Sea T($m$) la función de costo de ejecutar Definido?, con $m = n + 1$, donde $n$ cantidad de nodos del árbol que se pasa como parámetro, dada por: T(1) = 2, T($m$) = T($m/2$) + $equal_{\kappa}(k, k') + comp_{\kappa}(k, k') + 1$ si $m > 1$.
+\underline{Complejidad:} $\Ogr(log(n)  \times comp_{\kappa}(k, k'))$ \\
+\underline{Justificación:} Dado que los que nos importa es la complejidad en el peor caso podemos asumir que el elemento buscado no está. Sea T($m$) la función de costo de ejecutar Definido?, con $m = n + 1$, donde $n$ cantidad de nodos del árbol que se pasa como parámetro, dada por: T(1) = 2, T($m$) = T($m/2$) + 2 $\times comp_{\kappa}(k, k') + 1$ si $m > 1$.
 
-Por un argumento análogo al usado en Definir podemos llegar a que, en el peor caso, T($m$) = $log_2(n + 1) \times (equal_{\kappa}(k, k') + comp_{\kappa}(k, k') + 1) + 2$. Álgebra de órdenes mediante, llegamos a que $\Ogr(T) = \Ogr(log(n) \times (equal_{\kappa}(k, k') + comp_{\kappa}(k, k')))$
+Por un argumento análogo al usado en Definir podemos llegar a que, en el peor caso, T($m$) = $log_2(n + 1) \times (2 \times comp_{\kappa}(k, k') + 1) + 2$. Álgebra de órdenes mediante, llegamos a que $\Ogr(T) = \Ogr(log(n) \times comp_{\kappa}(k, k'))$
 \end{algorithm}
 
 \begin{algorithm}
@@ -310,7 +310,7 @@ Por un argumento análogo al usado en Definir podemos llegar a que, en el peor c
 		\Comment $\Ogr(1)$
 	\Else
 		\If{$k < *d\to clave$}	
-		\Comment $\Ogr(<_{\kappa})$
+		\Comment $\Ogr(comp_{\kappa}(k, k'))$
 			\State Obtener($\&(*d\to izq), k$)	
 			\Comment $T(n/2)$	
 		\Else
@@ -321,7 +321,7 @@ Por un argumento análogo al usado en Definir podemos llegar a que, en el peor c
 
 \EndProcedure
 \end{algorithmic}
-\underline{Complejidad:} $\Ogr$, $\Ogr(T) = \Ogr(log(n) \times (equal_{\kappa}(k, k') + comp_{\kappa}(k, k')) + equal_{\kappa}(k, k'))$ \\
+\underline{Complejidad:} $\Ogr(log(n) \times (equal_{\kappa}(k, k') + comp_{\kappa}(k, k')) + equal_{\kappa}(k, k'))$ \\
 \underline{Justificación:} Sea T($n$) la función costo de ejecutar Obtener para un árbol de tamaño $n$, dada por: T(1) = $equal_{\kappa}(k, k') + 1$ , T($n$) = T($n/2) + equal_{\kappa}(k, k') + comp_{\kappa}(k, k')$. Como nos importa el peor caso, vamos a asumir que el nodo buscado es una hoja y que el árbol está balanceado por lo que la hoja está a distancia $log_2(n)$ de la raíz. Luego, en este caso, T($n$) = $log_2(n) \times (equal_{\kappa}(k, k') + comp_{\kappa}(k, k')) + equal_{\kappa}(k, k') + 1$. 
 
 Aplicando $\Ogr$, $\Ogr(T) = \Ogr(log(n) \times (equal_{\kappa}(k, k') + comp_{\kappa}(k, k')) + equal_{\kappa}(k, k'))$.
@@ -334,12 +334,12 @@ Aplicando $\Ogr$, $\Ogr(T) = \Ogr(log(n) \times (equal_{\kappa}(k, k') + comp_{\
 	\State puntero(nodo) $aux$
 	\Comment $\Ogr(1)$
 	\If{$k < (*d\to clave)$}
-	\Comment $\Ogr(<_{\kappa})$
+	\Comment $\Ogr(comp_{\kappa}(k, k'))$
 		\State Borrar($\&(*d\to izq), k$)
 		\Comment $T(n/2)$
 	\Else 
 		\If{$*d\to clave < k$}
-		\Comment $\Ogr(<_{\kappa})$
+		\Comment $\Ogr(comp_{\kappa}(k, k'))$
 			\State Borrar($\&(*d\to der), k$)
 			\Comment $T(n/2)$
 		\Else 
@@ -390,6 +390,16 @@ Aplicando $\Ogr$, $\Ogr(T) = \Ogr(log(n) \times (equal_{\kappa}(k, k') + comp_{\
 	\Comment $\Ogr(1)$
 \EndProcedure
 \end{algorithmic}
+\underline{Complejidad:} $\Ogr(log(n) \times comp_{\kappa}(k, k'))$ \\
+\underline{Justificación:} Podemos separar a la función borrar en tres partes: búsqueda del elemento, eliminación y rebalanceo.
+
+La búsqueda en el peor de los casos será $\Ogr(log(n) \times comp_{\kappa}(k, k'))$.
+
+La eliminación tiene tres casos posibles de los cuáles el peor claramente es en el que el nodo a eliminar tiene dos hijos, pues es el único en el que se hace uso de una función no constante. El orden de la eliminación en este caso es $\Ogr(log(n))$.
+
+Finalmente el rebalanceo (y la actualización de la altura) se realizará para cada recursión que haya ocurrido hasta encontrar el elemento. Esto es en el peor caso $\Ogr(log(n))$.
+
+Luego, $\Ogr(log(n)) \times comp_{\kappa}(k, k')) + \Ogr(log(n)) + \Ogr(log(n)) = \Ogr(log(n)) \times comp_{\kappa}(k, k'))$  
 \end{algorithm}
 
 \begin{algorithm}
@@ -400,7 +410,7 @@ Aplicando $\Ogr$, $\Ogr(T) = \Ogr(log(n) \times (equal_{\kappa}(k, k') + comp_{\
 	\If{$*d\to izq \neq$ NULL}
 	\Comment $\Ogr(1)$
 		\State tupla($\kappa, \sigma$) $x\gets$ borrarMin($\&(*d\to izq)$)
-		\Comment $T(n/2)$
+		\Comment $\Ogr(T(n/2))$
 		\State balancear($d$)
 		\Comment $\Ogr(1)$
 		\State actualizarAltura($*d$)
@@ -427,6 +437,8 @@ Aplicando $\Ogr$, $\Ogr(T) = \Ogr(log(n) \times (equal_{\kappa}(k, k') + comp_{\
 	\EndIf
 \EndProcedure
 \end{algorithmic}
+	\underline{Complejidad:} $\Ogr(log(n))$ \\
+	\underline{Justificación:} La función de costo en este caso es T(1) = 9, T($m$) = T($m/2$) + 4. Luego, en el peor caso (análogamente a los algoritmos anteriores), T($m$) = $log_2(n + 1) \times 4 + 9$. Es inmediato ver entonces que $\Ogr(T) = \Ogr(log(n))$
 \end{algorithm}
 
 \end{Algoritmos}

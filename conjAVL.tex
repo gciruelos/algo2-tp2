@@ -16,21 +16,23 @@
   \InterfazFuncion{Agregar}{\Inout{c}{conjAVL($\alpha$)}, \In{a}{$\alpha$}}{}
   [$c \igobs c_0$]  
   {$c$ \igobs Ag($a,c_0$)}
-  [$\Ogr(log(n) \times comp(\alpha))$\footnote{Dentro de este módulo, n es la cantidad de elementos del conjunto.}]
+  [$\Ogr(log(n) \times comp_{\alpha}(a, a'))$\footnote{Dentro de este módulo, n es la cantidad de elementos del conjunto.}]
   [agrega el elemento $a$ al conjunto $c$.]
   [$a$ se agrega por referencia.]
     
   \InterfazFuncion{Pertenece?}{\In{c}{conjAVL($\alpha$)}, \In{a}{$\alpha$}}{bool}
   {$res$ \igobs ($a\in c$) }
-  [$\Ogr(log(n) \times comp(\alpha))$]
+  [$\Ogr(log(n) \times comp_{\alpha}(a, a'))$]
   [devuelve $true$ si y sólo si el elemento $a$ pertenece al conjunto.]
   
   \InterfazFuncion{Eliminar}{\In{c}{conjAVL($\alpha$)}, \In{a}{$\alpha$}}{}
   [$c$ \igobs $c_0 \land a \in c$ ]
   {$c \igobs (c_0 - \{a\})$}
-  [$\Ogr(log(n) \times comp(\alpha))$]
+  [$\Ogr(log(n) \times comp_{\alpha}(a, a'))$]
   [elimina el elemento $a$ del conjunto.] 
   
+  \underline{Nota:} Si $comp_{\alpha}(a, a'))$ es constante entonces todas las operaciones del conjunto salvo Vacio son $\Ogr(log(n))$
+  \newpage
 \end{Interfaz}
 
 \begin{Representacion}
@@ -65,10 +67,10 @@
 \begin{algorithmic}[1]
 \Procedure{iAgregar}{\texttt{in/out} $c$ : \texttt{diccAVL($\alpha$, nat)}, \texttt{in} $a$ : \texttt{$\alpha$}}
 	\State Definir($c, a, 0$)
-	\Comment $\Ogr(log(n) \times comp(\alpha))$
+	\Comment $\Ogr(log(n) \times comp_{\alpha}(a, a'))$
 \EndProcedure
 \end{algorithmic}
-\underline{Complejidad:} $\Ogr(log(n) \times comp(\alpha))$
+\underline{Complejidad:} $\Ogr(log(n) \times comp_{\alpha}(a, a'))$
 \end{algorithm}
 
 \begin{algorithm}
@@ -76,10 +78,10 @@
 \begin{algorithmic}[1]
 \Procedure{iPertenece?}{\texttt{in/out} $c$ : \texttt{diccAVL($\alpha$, nat)}, \texttt{in} $a$ : \texttt{$\alpha$}}$\to res$ : \texttt{bool}
 	\State $res \gets$ Definido?($c, a$)
-	\Comment $\Ogr(log(n) \times comp(\alpha))$
+	\Comment $\Ogr(log(n) \times comp_{\alpha}(a, a'))$
 \EndProcedure
 \end{algorithmic}
-\underline{Complejidad:} $\Ogr(log(n) \times comp(\alpha))$
+\underline{Complejidad:} $\Ogr(log(n) \times comp_{\alpha}(a, a'))$
 \end{algorithm}
 
 \begin{algorithm}
@@ -87,9 +89,9 @@
 \begin{algorithmic}[1]
 \Procedure{iEliminar}{\texttt{in/out} $c$ : \texttt{diccAVL($\alpha$, nat)}, \texttt{in} $a$ : \texttt{$\alpha$}}
 	\State Borrar($c, a$)
-	\Comment $\Ogr(log(n) \times comp(\alpha))$
+	\Comment $\Ogr(log(n) \times comp_{\alpha}(a, a'))$
 \EndProcedure
 \end{algorithmic}
-\underline{Complejidad:} $\Ogr(log(n) \times comp(\alpha))$
+\underline{Complejidad:} $\Ogr(log(n) \times comp_{\alpha}(a, a'))$
 \end{algorithm}
 \end{Algoritmos}

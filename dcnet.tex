@@ -14,7 +14,7 @@
 
   \InterfazFuncion{CrearPaquete}{\Inout{s}{\tadNombre{dcnet}}, \In{p}{\tadNombre{paquete}}}{}
   [$s \igobs s_0 \land 
-   \neg((\exists p':paquete) (paqueteEnTransito?(s_0,p') \land id(p') \igobs id(p)) \land\\ 
+   \neg(\exists p':paquete) (paqueteEnTransito?(s_0,p') \land id(p') \igobs id(p)) \land\\ 
    \hspace*{3em} origen(p) \in computadoras(red(s_0)) \yluego
    destino(p) \in computadoras(red(s_0)) \yluego\\
    \hspace*{3em} hayCamino?(red(s), origen(p), destino(p))$]
@@ -112,9 +112,9 @@
 
 \newpage 
   \Rep[net][n]{computadoras(n.red) = claves(n.paquetes) $\yluego$ \\
-  									($\forall$ c : compu) [((c $\in$ claves(n.paquetes) $\Rightarrow$  definicion(n.paquetes, c).conjPaquetes) = elementos(definicion(n.paquetes,c).colas) $\land$ definicion(n.paquetes, c).conjPaquetes) = claves(definicion(paquetes, c).diccPaqCamino)) $\land$  \\
-  									\hspace*{2em}(($\forall$ p : paquete) (p $\in$ claves(definicion(paquetes, c).diccPaqCamino))  $\rightarrow$ siguiente(definicion(definicion(n.paquetes,c).diccPaqCamino,p).camino) $\in$ caminosMinimos(n.red, p.origen, c))] $\land$ \\
-  									($\forall$ c : compu) [ c $\in$ claves(n.paquetes) $\rightarrow$ ($\forall$ p1, p2 : paquete) (id(p1) = id(p2) $\rightarrow$ $\neg$(p2 $in$ (elementos(definicion(n.paquetes,c).colas) - {p1}) \\ 
+  									($\forall$ c : compu) [((c $\in$ claves(n.paquetes) $\Rightarrow$  definicion(n.paquetes, c).conjPaquetes = elementos(definicion(n.paquetes,c).colas) $\land$ definicion(n.paquetes, c).conjPaquetes) = claves(definicion(paquetes, c).diccPaqCamino) $\land$  \\
+  									\hspace*{2em}(($\forall$ p : paquete) (p $\in$ claves(definicion(paquetes, c).diccPaqCamino))  $\Rightarrow$ siguiente(definicion(definicion(n.paquetes,c).diccPaqCamino,p).camino) $\in$ caminosMinimos(n.red, p.origen, c)))] $\land$ \\
+  									($\forall$ c : compu) [ c $\in$ claves(n.paquetes) $\Rightarrow$ ($\forall$ p1, p2 : paquete) (id(p1) = id(p2) $\Rightarrow$ $\neg$(p2 $in$ (elementos(definicion(n.paquetes,c).colas) - {p1}))) ] \\ 
   									($\forall$ c1, c2 : compu) (estanConectadas(n.red, c1,c2) $\Rightarrow$ \\
   									 \hspace*{2em} estaDefinida?(n.proximaEnCamino, c1) $\yluego$ \\
   									 \hspace* {2em} estaDefinida?(definicion(n.proximaEnCamino, c1),c2) $\yluego$ \\
@@ -123,13 +123,15 @@
   									  (n.laQueMasEnvio).cualCompu $\in$ claves(paquetes) $\yluego$ \\
   									  definicion(n.paquetes, (n.laQueMasEnvio).cualCompu).cantEnviados =  (n.laQueMasEnvio).cuantosEnvio $\land$\\
   									   ($\forall$ c : compu) c $\in$ claves(n.paquetes) $\Rightarrow$ (n.laQueMasEnvio).cuantosEnvio  $\geq$ definicion(n.paquetes, c).cantEnviados $\yluego$ sinrepetidos(definicion(paquetes, c).colas)     \\
-  									   ($\forall$ c1, c2 : compu) ((c1 $\in$ claves(n.paquetes) $\land$ c2 $\in$ claves(n.paquetes))  $\rightarrow$ ( ($\forall$ p1 : paquete) p1 $\in$ definicion(n.paquetes, c1).conjPaquetes $\rightarrow$ $\neg$($\exists$ p2 : paquete) p2 $\in$ definicion(n.paquetes, c1).conjPaquetes $\land$ id(p2) = id(p1)))} \mbox{}
+  									   ($\forall$ c1, c2 : compu) ((c1 $\in$ claves(n.paquetes) $\land$ c2 $\in$ claves(n.paquetes))  $\Rightarrow$ ( ($\forall$ p1 : paquete) p1 $\in$ definicion(n.paquetes, c1).conjPaquetes $\Rightarrow$ $\neg$($\exists$ p2 : paquete) p2 $\in$ definicion(n.paquetes, c1).conjPaquetes $\land$ id(p2) = id(p1)))} \mbox{}
 
  
-  \AbsFc[net]{dcnet}[n]{dnt: dcnet | red(dnt) = n.red  $\land$ (($\forall$ p : paquete) (paqueteEnTransito?(dnt,p) $\Rightarrow$ (($\exists$ c : compu) p $\in$ $\pi_2$(definicion(n, c))) $\yluego$
- ($\forall$ p : paquete) ($\exists$ c : compu) c in computadoras(dnt) $\Rightarrow$ siguiente(definicion($\pi_2$(definicion(n.paquetes,c)),p) = caminorecorrido(c,p)  $\yluego$
-($\forall$ c : compu) (c $\in$ computadoras(red(dcn)) $\Rightarrow$ (cantidadEnviados(dcn, c) = $\pi_3$(definicion(n.paquetes, c) $\yluego$ 
-($\forall$ c : compu) c $\in$ computadoras(dnt) $\Rightarrow$ enEspera(dnt, c) = $\pi_2$(definicion(n.paquetes,c))}
+  \AbsFc[net]{dcnet}[n]{dnt: dcnet | red(dnt) = n.red  $\land$ \\
+  																		($\forall$ p : paquete) (paqueteEnTransito?(dnt,p) $\Rightarrow$ ($\exists$ c : compu) p $\in$ $\pi_2$(definicion(n, c))) $\yluego$\\
+  																		($\forall$ p : paquete) ($\exists$ c : compu) c $\in$ computadoras(dnt) $\Rightarrow$\\
+  																		\hspace*{2em} siguiente(definicion($\pi_2$(definicion(n.paquetes,c)),p)) = caminorecorrido(c,p)  $\yluego$\\
+  																		($\forall$ c : compu) (c $\in$ computadoras(red(dcn)) $\Rightarrow$ (cantidadEnviados(dcn, c) = $\pi_3$(definicion(n.paquetes, c) $\yluego$ \\
+  																		($\forall$ c : compu) c $\in$ computadoras(dnt) $\Rightarrow$ enEspera(dnt, c) = $\pi_2$(definicion(n.paquetes,c))}
 
 \end{Representacion}
 

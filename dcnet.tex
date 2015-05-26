@@ -197,7 +197,7 @@
 		\State cantEnviados++ \Comment  $\Ogr(1)$
 		\If{cantEnviados > $s$.laQueMasEnvio.cuantosEnvio} \Comment  $\Ogr(1)$
 		   \State $laQueMasEnvio.cuantosEnvio \gets$ $s$.cantEnviados \Comment  $\Ogr(1)$
-		   \State $laQueMasEnvio.cualCompu \gets$ ultimo(Siguiente($pi_1$($estePaquete$))) \Comment  $\Ogr(1)$
+		   \State $laQueMasEnvio.cualCompu \gets$ ultimo(Siguiente($\pi_1$($estePaquete$))) \Comment  $\Ogr(1)$
 		\EndIf 
 	\EndIf
 	\State Avanzar($it$) \Comment  $\Ogr(1)$

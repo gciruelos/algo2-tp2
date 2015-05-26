@@ -14,7 +14,7 @@
 
   \InterfazFuncion{CrearPaquete}{\Inout{s}{\tadNombre{dcnet}}, \In{p}{\tadNombre{paquete}}}{}
   [$s \igobs s_0 \land 
-   \neg((\exists p':paquete) (paqueteEnTransito?(s_0,p') \land id(p') \igobs id(p)) \land\\ 
+   \neg((\exists p':paquete) (paqueteEnTransito?(s_0,p') \land id(p') \igobs id(p))) \land\\ 
    \hspace*{3em} origen(p) \in computadoras(red(s_0)) \yluego
    destino(p) \in computadoras(red(s_0)) \yluego\\
    \hspace*{3em} hayCamino?(red(s), origen(p), destino(p))$]
@@ -110,9 +110,9 @@
   8) No hay paquetes con la misma id en distintas computadoras $\newline$
   
   \Rep[net][n]{computadoras(n.red) = claves(n.paquetes) $\yluego$ \\
-  									($\forall$ c : compu) [((c $\in$ claves(n.paquetes) $\Rightarrow$  definicion(n.paquetes, c).conjPaquetes) = elementos(definicion(n.paquetes,c).colas) $\land$ definicion(n.paquetes, c).conjPaquetes) = claves(definicion(paquetes, c).diccPaqCamino)) $\land$  \\
-  									\hspace*{2em}(($\forall$ p : paquete) (p $\in$ claves(definicion(paquetes, c).diccPaqCamino))  $\rightarrow$ siguiente(definicion(definicion(n.paquetes,c).diccPaqCamino,p).camino) $\in$ caminosMinimos(n.red, p.origen, c))] $\land$ \\
-  									($\forall$ c : compu) [ c $\in$ claves(n.paquetes) $\rightarrow$ ($\forall$ p1, p2 : paquete) (id(p1) = id(p2) $\rightarrow$ $\neg$(p2 $in$ (elementos(definicion(n.paquetes,c).colas) - {p1}) \\ 
+  									($\forall$ c : compu) [((c $\in$ claves(n.paquetes) $\Rightarrow$  definicion(n.paquetes, c).conjPaquetes = elementos(definicion(n.paquetes,c).colas) $\land$ definicion(n.paquetes, c).conjPaquetes) = claves(definicion(paquetes, c).diccPaqCamino) $\land$  \\
+  									\hspace*{2em}(($\forall$ p : paquete) (p $\in$ claves(definicion(paquetes, c).diccPaqCamino))  $\rightarrow$ siguiente(definicion(definicion(n.paquetes,c).diccPaqCamino,p).camino) $\in$ caminosMinimos(n.red, p.origen, c)))] $\land$ \\
+  									($\forall$ c : compu) [ c $\in$ claves(n.paquetes) $\rightarrow$ ($\forall$ p1, p2 : paquete) (id(p1) = id(p2) $\rightarrow$ $\neg$(p2 $in$ (elementos(definicion(n.paquetes,c).colas) - {p1}))) ] \\ 
   									($\forall$ c1, c2 : compu) (estanConectadas(n.red, c1,c2) $\Rightarrow$ \\
   									 \hspace*{2em} estaDefinida?(n.proximaEnCamino, c1) $\yluego$ \\
   									 \hspace* {2em} estaDefinida?(definicion(n.proximaEnCamino, c1),c2) $\yluego$ \\

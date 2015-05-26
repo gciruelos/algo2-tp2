@@ -221,13 +221,13 @@
 \begin{algorithmic}[1]
   \Procedure{caminoRecorrido(\textbf{in} $s$ : dcnet, \textbf{in} $p$ : paquete) $\to res$ : secu(compu)}{}
    \State itDiccTrie $it$ $\gets$ CrearIt(paquetes) \Comment $\Ogr(1)$
-   \While{$\neg$($p \in$ enEspera(s,siguienteClave(it)))} \Comment n veces $\Ogr(L)$
+   \While{$\neg$($p \in$ siguienteDefinicion(it).conjPaquete)} \Comment n veces $\Ogr(log \ k)$
    \State avanzar(it) \Comment $\Ogr(1)$
    \EndWhile
-   \State res $\gets$ siguiente(Obtener((Obtener(s.paquetes,siguienteClave(it)).diccPaqCamino,p)) \Comment $\Ogr(1)$
+   \State res $\gets$ siguiente(Obtener(siguienteDefinicion(it).diccPaqCamino,p)) \Comment $\Ogr(log \ k)$
   \EndProcedure
-   \underline{Complejidad:} $\Ogr(L)$
- \underline{Justificación:} $\Ogr(1)+\Ogr(1)+\Ogr(L)+\Ogr(1) = \Ogr(L)$
+   \underline{Complejidad:} $\Ogr(n.log \ k)$
+ \underline{Justificación:} $\Ogr(1)+\Ogr(n.log \ k)+\Ogr(1)+\Ogr(log \ k) = \Ogr(n.log \ k)$
 \end{algorithmic}
 \end{algorithm}
 
@@ -236,8 +236,11 @@
 \caption{Cantidad Enviados}
 \begin{algorithmic}[1]
   \Procedure{cantidadEnviados(\textbf{in} $s$ : dcnet, \textbf{in} $c$ : compu)  $\to res$ : nat}{}
-   \State res $\gets$ $\pi_3$(Obtener(s.paquetes, c)) \Comment $\Ogr(L)$
+   \State res $\gets$ (Obtener(s.paquetes, c)).cantEnviados \Comment $\Ogr(L)$
   \EndProcedure
+   \underline{Complejidad:} $\Ogr(1)$
+ \underline{Justificación:} $\Ogr(1)+\Ogr(n.log \ k)+\Ogr(1)+\Ogr(log \ k) = \Ogr(n.log \ k)$
+
 \end{algorithmic}
 \end{algorithm}
 

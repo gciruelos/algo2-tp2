@@ -89,7 +89,7 @@
   \tadAxioma{tamano(NULL)}{0}
   \tadAxioma{tamano(\& $x$)}{1 + tamano($x$.izq) + tamano($x$.der)}
 
-  \tadOperacion{propiedadMinHeap)}{puntero(nodo($\alpha$))}{bool}{}
+  \tadOperacion{propiedadMinHeap}{puntero(nodo($\alpha$))}{bool}{}
   \tadAxioma{propiedadMinHeap(NULL)}{true}
   \tadAxioma{propiedadMinHeap(\& $x$)}{$x.dato < x.izq \to dato \land x.dato < x.der \to dato \land$ \\ propiedadMinHeap($x$.izq) $\land$ propiedadMinHeap($x$.der)}
    
@@ -197,7 +197,7 @@
  \EndProcedure
 \end{algorithmic}
  \underline{Complejidad:} $\Ogr(log(tam) \cdot max\{copy(\alpha), comparar(\alpha, <_\alpha)\})$\\
- \underline{Justificación:} $\Ogr(log(tam)) \cdot \Ogr(copy(\alpha)) + 3\Ogr(1) + \Ogr(log(tam)) \cdot \Ogr(1) + \Ogr(log(tam)) \cdot (6\Ogr(1) + \Ogr(comparar(\alpha, <_\alpha)) = \Ogr(log(tam)) \cdot \Ogr(copy(\alpha)) + \Ogr(log(tam)) \cdot \Ogr(comparar(\alpha, <_\alpha) = \Ogr(log(tam)) \cdot (\Ogr(copy(\alpha)) + \Ogr(comparar(\alpha, <_\alpha)) = \Ogr(log(tam) \cdot max\{copy(\alpha), comparar(\alpha, <_\alpha)\}) $.
+ \underline{Justificación:} $\Ogr(log(tam)) \cdot \Ogr(copy(\alpha)) + 3\Ogr(1) + \Ogr(log(tam)) \cdot \Ogr(1) + \Ogr(log(tam)) \cdot (6\Ogr(1) + \Ogr(comparar(\alpha, <_\alpha)) = \Ogr(log(tam)) \cdot \Ogr(copy(\alpha)) + \Ogr(log(tam)) \cdot \Ogr(comparar(\alpha, <_\alpha)) = \Ogr(log(tam)) \cdot (\Ogr(copy(\alpha)) + \Ogr(comparar(\alpha, <_\alpha)) = \Ogr(log(tam) \cdot max\{copy(\alpha), comparar(\alpha, <_\alpha)\}) $.
 \end{algorithm}
 
 \begin{algorithm}

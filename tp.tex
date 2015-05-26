@@ -84,6 +84,7 @@
     \item Al trabajar con $p$ : \texttt{puntero(tupla($campo_1$:tipo$_1$, $\dots$, $campo_n$:tipo$_n$))}, usamos la notación $p\to campo_i$ que equivale a decir $(*p).campo_i$. 
     \item Al calcular complejidades de operaciones que tienen condicionales, siempre hacemos la rama que tiene mayor complejidad, pues lo que nos interesa es la complejidad en el peor caso. 
 	\item Cuando ingresamos un paquete, este ya viene con su id en lugar de generarlo nosotros (como sí pasaba en un ejercicio visto en clase). Esta es una decisión que tomamos para respetar lo más posible el tad. 
+	\item En DCNet, es importante aclarar que se considera que el tipo \texttt{paquete} tiene dos relaciones de orden: una dada por el $id$ (que es la que usa el ConjAVL(\texttt{paquete}) y el diccAVL que tiene como clave $paquete$), y otra por su $prioridad$ (que es utilizada por la cola).
 
 \end{enumerate}
 

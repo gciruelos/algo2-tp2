@@ -75,7 +75,7 @@
 
 \section{Aclaraciones}
 \begin{enumerate}
-  \item Dado que consultando con algunos JTP nos sugirieron que en las funciones de DCNet en las que devolvemos computadoras, nos manejemos solamente con sus ips (es decir, no devolvamos una tupla \texttt{(ip, conj(interfaz))} sino simplemente una \texttt{ip}). La información de las interfaces obviamente no se ``perdió'', sigue estando en la red, sólo que no se está manipulando y devolviendo todo el tiempo.
+  \item Dado que consultando con algunos JTP nos sugirieron que en las funciones de DCNet en las que devolvemos computadoras, nos manejemos solamente con sus ips (es decir, no devolvamos una tupla \texttt{(ip, conj(interfaz))} sino simplemente una \texttt{ip}). La información de las interfaces obviamente no se 'perdió', sigue estando en la red, sólo que no se está manipulando y devolviendo todo el tiempo.
    
     Además nos dijeron qué cambios deberíamos hacerle al TAD DCNet para que sea consistente con estos cambios. Los cambios que deberían hacerse son simples, solo debería devolverse la ip de las computadoras, por ejemplo, en \texttt{recorridoPaquete}, en la que se devuelve una secuencia de computadoras, debería devolverse una secuencia de ip.
     

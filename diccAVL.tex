@@ -1,0 +1,444 @@
+\begin{Interfaz}
+  \textbf{parámetros formales}\hangindent=2\parindent\\
+  \parbox{1.7cm}{\textbf{géneros}} $\sigma$\\
+  \parbox[t]{1.7cm}{\textbf{función}}\parbox[t]{\textwidth-2\parindent-1.7cm}{    	
+    \InterfazFuncion{Copiar}{\In{s}{$\sigma$}}{$\sigma$}
+    {$res \igobs s$}
+    [$\Theta(copy(s))$]
+    [función de copia de $\sigma$]
+    }
+      
+  \textbf{se explica con}: \tadNombre{diccionario($\kappa, \sigma$)}.
+
+  \textbf{géneros}: \TipoVariable{diccAVL($\kappa, \sigma$)}.
+
+  \section*{Operaciones básicas DiccAVL($\kappa, \sigma$)}
+
+  \InterfazFuncion{Vacío}{}{diccAVL($\kappa, \sigma$)}
+  {$res$ \igobs vacío()}
+  [$\Ogr(1)$]
+  [genera un diccionario vacío.]
+
+  \InterfazFuncion{Definir}{\Inout{d}{diccAVL($\kappa, \sigma$)}, \In{k}{$\kappa$}, \In{s}{$\sigma$}}{}
+  [$d \igobs d_0$]  
+  {$d$ \igobs definir($k, s, d_0$)}
+  [$\Ogr(log(n) \times comp_{\kappa}(k, k'))$\footnote{Dentro de este módulo, $n$ es la cantidad de entradas del diccionario.}]
+  [define la clave $k$ con el sinificado $s$.]
+  [$k$ y $s$ se definen por referencia.]
+    
+  \InterfazFuncion{Definido?}{\In{d}{diccAVL($\kappa, \sigma$)}, \In{k}{$\kappa$}}{bool}
+  {$res$ \igobs def?($k$, $d$) }
+  [$\Ogr(log(n) \times comp_{\kappa}(k, k'))$]
+  [devuelve $true$ si la clave $k$ está definida en el diccionario.]
+  
+  \InterfazFuncion{Obtener}{\In{d}{diccAVL($\kappa, \sigma$)}, \In{k}{$\kappa$}}{$\sigma$}
+  [def?($k$, $d$)]  
+  {alias($res$ \igobs obtener($k$, $d$))}
+  [$\Ogr(log(n) \times (equal_{\kappa}(k, k') + comp_{\kappa}(k, k')) + equal_{\kappa}(k, k'))$]
+  [devuelve el significado de la clave $k$ en $d$.]
+  [$res$ es modificable si y sólo si $d$ lo es]
+  
+  \InterfazFuncion{Borrar}{\In{d}{diccAVL($\kappa, \sigma$)}, \In{k}{$\kappa$}}{}
+  [$d$ \igobs $d_0 \land$ def?($k$, $d_0$) ]
+  {$d \igobs$ borrar($k$, $d_0$)}
+  [$\Ogr(log(n) \times comp_{\kappa}(k, k'))$]
+  [elimina la entrada $k$ del diccionario.] 
+  
+  \underline{Nota:} en el caso en que $equal_{\kappa}(k, k')$ y $comp_{\kappa}(k, k')$ sean $\Ogr(1)$, todas las funciones del diccionario, salvo Vacio, son $\Ogr(log(n))$
+  \clearpage
+\end{Interfaz}
+
+\begin{Representacion}
+    
+  \section*{Representación de DiccAVL($\kappa, \sigma$)}
+
+  \begin{Estructura}{diccAVL($\kappa, \sigma$)}[puntero(puntero(nodo))]
+    \begin{Tupla}[nodo]
+      \tupItem{clave}{$\kappa$}
+      \tupItem{\\significado}{$\sigma$}
+      \tupItem{\\izq}{puntero(nodo)}
+      \tupItem{\\der}{puntero(nodo)}
+      \tupItem{\\altura}{nat}
+    \end{Tupla}
+
+  \end{Estructura}
+
+  \Rep[puntero(puntero(nodo))][a]{
+  					   $a \neq $NULL \yluego \\
+  					   \hspace*{4em}$*a$ = NULL \oluego \\
+  					   \hspace*{4em}($\exists n:$nat) finaliza($*a$, $n$) \yluego \\
+  					   \hspace*{4em}$(*a)\rightarrow altura$\footnote{La notación $p\rightarrow campo$, donde $p$ es un puntero a una tupla y $campo$ algun campo de esa tupla, equivale a decir ($*p$).$campo$.} = alto($*a$) $\land$ \\
+  					   \hspace*{4em}diferenciaDeAlturas($(*a)\rightarrow izq$, $(*a)\rightarrow der$)$\leq$ 1 $\land$ \\
+  					   \hspace*{4em}($\forall c:\kappa$) ($c\in$ ClavesDelAvl($(*a)\rightarrow izq$) $\Rightarrow (*a)\rightarrow clave \leq c)$ $\land $\\
+  					   \hspace*{4em}($\forall c:\kappa$) ($c\in$ ClavesDelAvl($(*a)\rightarrow der$) $\Rightarrow (*a)\rightarrow clave \leq c)$ $\land $\\
+  					   \hspace*{4em}Rep($(*a) \rightarrow izq$) $\land$ Rep($(*a) \rightarrow der$)}
+  					   
+  
+  \AbsFc[puntero(puntero(nodo))]{diccAVL($\kappa, \sigma$)}[a]{
+	$d$:dicc($\kappa, \sigma$) |
+	($\forall c:\kappa$) (def?($c, d$) $\Leftrightarrow$ $c \in$ clavesDelAvl($*a$)) \yluego\\
+	\hspace*{5.9em}($\forall c:\kappa$) (def?($c, d$) \impluego obtener($c, d$) = darSignificado($*a, c$))
+  }  
+  
+  \tadOperacion{finaliza}{puntero(nodo), nat}{bool}{}
+	\tadAxioma{finaliza($p,n$)}{$n > 0$ \yluego ($p$ = NULL \oluego (finaliza($p\rightarrow izq$, $n-1$) $\land$ finaliza($p\rightarrow der$, $n-1$)))}
+
+  \tadOperacion{alto}{puntero(nodo)}{nat}{}
+	\tadAxioma{alto($p$)}{\IF $p = $NULL THEN 0 ELSE $1 + $max(alto($p\rightarrow izq$), alto($p\rightarrow der$))FI}
+ 
+  \tadOperacion{diferenciaDeAlturas}{puntero(nodo) , puntero(nodo)}{nat}{}
+	\tadAxioma{diferenciaDeAlturas($p, p'$)}{\IF $p\rightarrow altura \leq p'\rightarrow altura$
+											THEN $(p'\rightarrow altura) - (p\rightarrow altura)$
+											ELSE $(p\rightarrow altura) - (p'\rightarrow altura)$
+											FI} 
+ 
+  \tadOperacion{clavesDelAvl}{puntero(nodo)}{conj($\kappa$)}{}
+	\tadAxioma{clavesDelAvl($p$)}{\IF $p = $NULL THEN $\emptyset$ ELSE Ag($p\rightarrow clave$, clavesDelAvl($p\rightarrow izq$) $\cup$ clavesDelAvl($p\rightarrow der$))FI} 
+    
+   
+  \tadOperacion{darSignificado}{puntero(nodo)/p , $\kappa$/c}{$\sigma$}{$c \in$ clavesDelAvl($p$)}
+	\tadAxioma{darSignificado($p, c$)}{\IF $p\rightarrow clave$ = $c$ THEN $p\rightarrow significado$ ELSE 
+											{\IF $c\in$ clavesDelAvl($p\rightarrow izq$)
+											THEN darSignificado($p\rightarrow izq$, $c$)
+											ELSE darSignificado($p\rightarrow der$, $c$)
+											FI}
+										FI} 
+
+\end{Representacion}
+
+\begin{Algoritmos}
+
+\begin{algorithm}
+\caption{actualizarAltura}
+\begin{algorithmic}[1]
+\Procedure{actualizarAltura}{\texttt{in/out} $p$ : \texttt{puntero(nodo)}}
+	\If{$p\neq$ NULL}
+	\Comment $\Ogr(1)$
+    \State $(p\to altura)\gets 1 + $max($(p\to izq)\to altura, (p\to der)\to altura)$
+    \Comment $\Ogr(1)$
+  \EndIf
+\EndProcedure
+\end{algorithmic}
+\underline{Complejidad:} $\Ogr(1)$ \\
+\underline{Justificación:} $\Ogr(1) + \Ogr(1) = \Ogr(1)$
+\end{algorithm}
+
+\begin{algorithm}
+\caption{rotarSimple}
+\begin{algorithmic}[1]
+\Procedure{rotarSimple}{\texttt{in/out} $a$ : \texttt{puntero(puntero(nodo))}, \texttt{in} $rota\_izq$ : \texttt{bool}}
+	\State puntero(nodo) $a_1$
+	\Comment $\Ogr(1)$
+  \If{$rota\_izq$}
+  \Comment $\Ogr(1)$
+    \State $a_1 \gets (*a\to izq)$
+    \Comment $\Ogr(1)$
+    \State $(*a\to izq) \gets (a_1\to der)$
+    \Comment $\Ogr(1)$
+    \State $(a_1\to der)\gets *a$
+    \Comment $\Ogr(1)$
+  \Else
+    \State $a_1 \gets (*a\to der)$
+    \Comment $\Ogr(1)$
+    \State $(*a\to der) \gets (a_1\to izq)$
+    \Comment $\Ogr(1)$
+    \State $(a_1\to izq)\gets *a$
+    \Comment $\Ogr(1)$
+  \EndIf
+
+  \State actualizarAltura($*a$)
+  \Comment $\Ogr(1)$
+  \State actualizarAltura($a_1$)
+  \Comment $\Ogr(1)$
+  
+  \State $*a \gets a_1$
+  \Comment $\Ogr(1)$
+\EndProcedure
+\end{algorithmic}
+\underline{Complejidad:} $\Ogr(1)$ \\
+\underline{Justificación:} Siempre se llevan a cabo 8 operaciones con costo $\Ogr(1)$. Luego, el orden total es $\Ogr(1)$.
+\end{algorithm}
+
+\begin{algorithm}
+\caption{rotarDoble}
+\begin{algorithmic}[1]
+\Procedure{rotarDoble}{\texttt{in/out} $a$ : \texttt{puntero(puntero(nodo))}, \texttt{in} $rota\_izq$ : \texttt{bool}}
+	\If{$rota\_izq$}
+	\Comment $\Ogr(1)$
+    \State rotarSimple($\&(*a\to izq), false$)
+    \Comment $\Ogr(1)$
+    \State rotarSimple($a, true$)
+    \Comment $\Ogr(1)$
+  \Else
+		\State rotarSimple($\&(*a\to der), true$)
+		\Comment $\Ogr(1)$
+    \State rotarSimple($a, false$)
+    \Comment $\Ogr(1)$
+  \EndIf
+\EndProcedure
+\end{algorithmic}
+\underline{Complejidad:} $\Ogr(1)$ \\
+\underline{Justificación:} Siempre se llevan a cabo 3 operaciones con costo $\Ogr(1)$
+\end{algorithm}
+
+\begin{algorithm}
+\caption{balancear}
+\begin{algorithmic}[1]
+\Procedure{balancear}{\texttt{in/out} $a$}
+	\If{$*a \neq$ NULL}
+	\Comment $\Ogr(1)$
+ 		\If{$(*a\to izq)\to altura \geq (*a\to der)\to altura$}		
+ 		\Comment $\Ogr(1)$
+ 			\If{$(*a\to izq)\to altura - (*a\to der)\to altura = 2$}
+ 				\Comment desequilibrio hacia la izquierda $\Ogr(1)$
+ 				\If{$((*a\to izq)\to izq)\to altura \geq ((*a\to izq)\to der)\to altura $}
+ 		   		\Comment desequilibrio simple $\Ogr(1)$
+ 		   		\State rotarSimple($a, true$)
+ 		   		\Comment $\Ogr(1)$
+ 		   	\Else \Comment desequilibrio doble
+ 		   		\State rotarDoble($a, true$)
+ 		   		\Comment $\Ogr(1)$
+ 		   	\EndIf			
+			\EndIf	
+			\Else
+			\If{$(*a\to der)\to altura - (*a\to izq)\to altura = 2$}
+				\Comment desequilibrio hacia la derecha $\Ogr(1)$
+				\If{$((*a\to der)\to der)\to altura \geq ((*a\to der)\to der)\to altura $}
+ 		   		\Comment desequilibrio simple $\Ogr(1)$
+ 		   		\State rotarSimple($a, false$)
+ 		   		\Comment $\Ogr(1)$
+ 		   	\Else \Comment desequilibrio doble
+ 		   		\State rotarDoble($a, false$)
+ 		   		\Comment $\Ogr(1)$
+ 		   	\EndIf
+			\EndIf
+		\EndIf
+  \EndIf
+\EndProcedure
+\end{algorithmic}
+\underline{Complejidad:} $\Ogr(1)$ \\
+\underline{Justificación:} Siempre se llevan a cabo 5 operaciones con costo $\Ogr(1)$
+\end{algorithm}
+
+\begin{algorithm}
+\caption{Vacio}
+\begin{algorithmic}[1]
+\Procedure{iVacio}{}$\to res$ : \texttt{puntero(puntero(nodo))}
+	\State $*res \gets$ NULL
+	\Comment $\Ogr(1)$
+\EndProcedure
+\end{algorithmic}
+\underline{Complejidad:} $\Ogr(1)$
+\end{algorithm}
+
+\begin{algorithm}
+\caption{Definir}
+\begin{algorithmic}[1]
+\Procedure{iDefinir}{\texttt{in/out} $d$ : \texttt{puntero(puntero(nodo))}, \texttt{in} $k$ : \texttt{$\kappa$}, \texttt{in} $s$ : \texttt{$\sigma$}}
+	\If{$*d =$ NULL}
+	\Comment $\Ogr(1)$
+    \State nodo $nuevo \gets$ $(k, s,$ NULL, NULL, $1)$
+    \Comment $\Ogr(1)$
+    \State $*d \gets \&nuevo$
+    \Comment $\Ogr(1)$
+  \Else
+		\If{$k < *d\to clave$}
+		\Comment $\Ogr(comp_{\kappa}(k, k'))$
+			\State Definir($\&(*d\to izq), k, s$)
+			\Comment $\Ogr(T(n/2))$
+		\Else
+			\State Definir($\&(*d\to der), k, s$)
+			\Comment $\Ogr(T(n/2))$
+		\EndIf
+  \EndIf
+  \State balancear($d$)
+  \Comment $\Ogr(1)$
+  \State actualizarAltura($*d$)
+  \Comment $\Ogr(1)$
+\EndProcedure
+\end{algorithmic}
+\underline{Complejidad:} $\Ogr(log(n) \times comp_{\kappa}(k, k'))$ \\
+\underline{Justificación:} Sea T($m$) la función costo de ejecutar Definir, con $m = n + 1$, donde $n$ cantidad de nodos del árbol que se pasa como parámetro (el +1 es por cuestiones prácticas a la hora de definir el caso base), definida de la siguiente forma:
+
+T(1) = 4, T($m$) = T($m/2$) + $comp_{\kappa}(k, k') + 2$ si $m > 1$
+
+Notar que como el AVL está casi perfectamente balanceado, no está mal suponer que cada recursión toma como parámetro aproximadamente la mitad de la cantidad de los elementos del árbol.
+
+Si el árbol es de altura $h$, el peor caso es que tenga $n = 2^{h}$ nodos, es decir que tenga todos sus niveles completos, pues habrá que recorrer una rama de largo $h = log_2(n)$ para agregar el nuevo elemento. Luego, T se puede escribir como T($m$) = $log_2(n + 1) \times (comp_{\kappa}(k, k') + 2) + 4$. Tomando $\Ogr$, nos queda $\Ogr(T) = \Ogr(max(log_2(n + 1) \times (comp_{\kappa}(k, k') + 2), 1)) = \Ogr(log_2(n + 1) \times (comp_{\kappa}(k, k') + 2)) = \Ogr(log_2(n + 1) \times comp_{\kappa}(k, k')) = \Ogr(log(n + 1) \times comp_{\kappa}(k, k'))$, por álgebra de órdenes. Y como el análisis es asintótico, $\Ogr(log(n + 1) \times comp_{\kappa}(k, k')) = \Ogr(log(n) \times comp_{\kappa}(k, k'))$.
+
+\end{algorithm}
+
+\begin{algorithm}
+\caption{Definido?}
+\begin{algorithmic}[1]
+\Procedure{iDefinido?}{\texttt{in} $d$ : \texttt{puntero(puntero(nodo))}, \texttt{in} $k$ : \texttt{$\kappa$}}$\to res$ : \texttt{bool}
+	\If{$*d = NULL$}
+	\Comment $\Ogr(1)$
+	 \State $res\gets false$
+	 \Comment $\Ogr(1)$
+	 \Else	
+			\If{$k < *d\to clave$}	
+			\Comment $\Ogr(comp_{\kappa}(k, k'))$
+				\State Definido?($\&(*d\to izq), k$)	
+				\Comment $T(n/2)$	
+			\Else
+				\If{$*d\to clave < k$}
+				\Comment $\Ogr(comp_{\kappa}(k, k'))$
+					\State Definido?($\&(*d\to der), k$)
+					\Comment $T(n/2)$
+				\Else
+					\State $res\gets true$
+					\Comment $\Ogr(1)$	
+				\EndIf
+			\EndIf
+	\EndIf
+\EndProcedure
+\end{algorithmic}
+\underline{Complejidad:} $\Ogr(log(n)  \times comp_{\kappa}(k, k'))$ \\
+\underline{Justificación:} Dado que los que nos importa es la complejidad en el peor caso podemos asumir que el elemento buscado no está. Sea T($m$) la función de costo de ejecutar Definido?, con $m = n + 1$, donde $n$ cantidad de nodos del árbol que se pasa como parámetro, dada por: T(1) = 2, T($m$) = T($m/2$) + 2 $\times comp_{\kappa}(k, k') + 1$ si $m > 1$.
+
+Por un argumento análogo al usado en Definir podemos llegar a que, en el peor caso, T($m$) = $log_2(n + 1) \times (2 \times comp_{\kappa}(k, k') + 1) + 2$. Álgebra de órdenes mediante, llegamos a que $\Ogr(T) = \Ogr(log(n) \times comp_{\kappa}(k, k'))$
+\end{algorithm}
+
+\begin{algorithm}
+\caption{Obtener}
+\begin{algorithmic}[1]
+\Procedure{iObtener}{\texttt{in} $d$ : \texttt{puntero(puntero(nodo))}, \texttt{in} $k$ : \texttt{$\kappa$}}$\to res$ : \texttt{$\sigma$}	
+	\If{$k = *d\to clave$}
+	\Comment $\Ogr(=_{\kappa})$
+		\State $res\gets (*d\to significado)$
+		\Comment $\Ogr(1)$
+	\Else
+		\If{$k < *d\to clave$}	
+		\Comment $\Ogr(comp_{\kappa}(k, k'))$
+			\State Obtener($\&(*d\to izq), k$)	
+			\Comment $T(n/2)$	
+		\Else
+			\State Obtener($\&(*d\to der), k$)
+			\Comment $T(n/2)$
+		\EndIf
+	\EndIf
+
+\EndProcedure
+\end{algorithmic}
+\underline{Complejidad:} $\Ogr(log(n) \times (equal_{\kappa}(k, k') + comp_{\kappa}(k, k')) + equal_{\kappa}(k, k'))$ \\
+\underline{Justificación:} Sea T($n$) la función costo de ejecutar Obtener para un árbol de tamaño $n$, dada por: T(1) = $equal_{\kappa}(k, k') + 1$ , T($n$) = T($n/2) + equal_{\kappa}(k, k') + comp_{\kappa}(k, k')$. Como nos importa el peor caso, vamos a asumir que el nodo buscado es una hoja y que el árbol está balanceado por lo que la hoja está a distancia $log_2(n)$ de la raíz. Luego, en este caso, T($n$) = $log_2(n) \times (equal_{\kappa}(k, k') + comp_{\kappa}(k, k')) + equal_{\kappa}(k, k') + 1$. 
+
+Aplicando $\Ogr$, $\Ogr(T) = \Ogr(log(n) \times (equal_{\kappa}(k, k') + comp_{\kappa}(k, k')) + equal_{\kappa}(k, k'))$.
+\end{algorithm}
+
+\begin{algorithm}
+\caption{Borrar}
+\begin{algorithmic}[1]
+\Procedure{iBorrar}{\texttt{in/out} $d$ : \texttt{puntero(puntero(nodo))}, \texttt{in} $k$ : \texttt{$\kappa$}}
+	\State puntero(nodo) $aux$
+	\Comment $\Ogr(1)$
+	\If{$k < (*d\to clave)$}
+	\Comment $\Ogr(comp_{\kappa}(k, k'))$
+		\State Borrar($\&(*d\to izq), k$)
+		\Comment $T(n/2)$
+	\Else 
+		\If{$*d\to clave < k$}
+		\Comment $\Ogr(comp_{\kappa}(k, k'))$
+			\State Borrar($\&(*d\to der), k$)
+			\Comment $T(n/2)$
+		\Else 
+			\If{$*d\to izq =$ NULL $\land *d\to der =$ NULL}
+				\Comment Es una hoja $\Ogr(1)$
+				\State delete($*d$)
+				\Comment $\Ogr(1)$
+				\State $*d\gets$ NULL
+				\Comment $\Ogr(1)$
+			\Else
+				\If{$*d\to izq =$ NULL}
+					\Comment subárbol izquierdo vacío $\Ogr(1)$
+					\State $aux \gets *d$
+					\Comment $\Ogr(1)$
+					\State $*d\gets (*d\to der)$
+					\Comment $\Ogr(1)$
+					\State delete($aux$)
+					\Comment $\Ogr(1)$
+					\State $aux \gets$ NULL
+					\Comment $\Ogr(1)$
+				\Else
+					\If{$*d\to der =$ NULL} 
+						\Comment subárbol derecho vacío $\Ogr(1)$
+						\State $aux \gets *d$
+						\Comment $\Ogr(1)$
+						\State $*d\gets (*d\to izq)$
+						\Comment $\Ogr(1)$
+						\State delete($aux$)
+						\Comment $\Ogr(1)$
+						\State $aux \gets$ NULL
+						\Comment $\Ogr(1)$
+					\Else
+						\Comment el árbol tiene dos hijos
+						\State tupla($\kappa, \sigma)$ $min$ $\gets$ borrarMin($\&(*d\to der)$)
+						\Comment $\Ogr(log(n))$
+						\State($*d\to clave) \gets \pi_1(min)$
+						\Comment $\Ogr(1)$
+						\State($*d\to significado) \gets \pi_2(min)$
+						\Comment $\Ogr(1)$
+					\EndIf
+				\EndIf
+			\EndIf 
+		\EndIf
+	\EndIf
+	\State balancear($d$)
+	\Comment $\Ogr(1)$
+	\State actualizarAltura($*d$)
+	\Comment $\Ogr(1)$
+\EndProcedure
+\end{algorithmic}
+\underline{Complejidad:} $\Ogr(log(n) \times comp_{\kappa}(k, k'))$ \\
+\underline{Justificación:} Podemos separar a la función borrar en tres partes: búsqueda del elemento, eliminación y rebalanceo.
+
+La búsqueda en el peor de los casos será $\Ogr(log(n) \times comp_{\kappa}(k, k'))$.
+
+La eliminación tiene tres casos posibles de los cuáles el peor claramente es en el que el nodo a eliminar tiene dos hijos, pues es el único en el que se hace uso de una función no constante. El orden de la eliminación en este caso es $\Ogr(log(n))$.
+
+Finalmente el rebalanceo (y la actualización de la altura) se realizará para cada recursión que haya ocurrido hasta encontrar el elemento. Esto es en el peor caso $\Ogr(log(n))$.
+
+Luego, $\Ogr(log(n)) \times comp_{\kappa}(k, k')) + \Ogr(log(n)) + \Ogr(log(n)) = \Ogr(log(n)) \times comp_{\kappa}(k, k'))$  
+\end{algorithm}
+
+\begin{algorithm}
+\caption{borrarMin}
+\begin{algorithmic}[1]
+\Procedure{borrarMin}{\texttt{in/out} $d$ : \texttt{puntero(puntero(nodo))}}$\to res$ : \texttt{tupla($\kappa, \sigma$)}
+	\Comment $Pre: *d \neq NULL$
+	\If{$*d\to izq \neq$ NULL}
+	\Comment $\Ogr(1)$
+		\State tupla($\kappa, \sigma$) $x\gets$ borrarMin($\&(*d\to izq)$)
+		\Comment $\Ogr(T(n/2))$
+		\State balancear($d$)
+		\Comment $\Ogr(1)$
+		\State actualizarAltura($*d$)
+		\Comment $\Ogr(1)$
+		\State $res \gets x$
+		\Comment $\Ogr(1)$
+	\Else
+		\State puntero(nodo) $aux \gets *d$
+		\Comment $\Ogr(1)$
+		\State tupla($\kappa, \sigma) x \gets (aux\to clave, aux\to significado$)
+		\Comment $\Ogr(1)$
+		\State $*d\gets (*d\to der)$
+		\Comment $\Ogr(1)$
+		\State delete($aux$)
+		\Comment $\Ogr(1)$
+		\State $aux \gets$ NULL
+		\Comment $\Ogr(1)$
+		\State balancear($d$)
+		\Comment $\Ogr(1)$
+		\State actualizarAltura($*d$)
+		\Comment $\Ogr(1)$
+		\State $res \gets x$
+		\Comment $\Ogr(1)$
+	\EndIf
+\EndProcedure
+\end{algorithmic}
+	\underline{Complejidad:} $\Ogr(log(n))$ \\
+	\underline{Justificación:} La función de costo en este caso es T(1) = 9, T($m$) = T($m/2$) + 4. Luego, en el peor caso (análogamente a los algoritmos anteriores), T($m$) = $log_2(n + 1) \times 4 + 9$. Es inmediato ver entonces que $\Ogr(T) = \Ogr(log(n))$
+\end{algorithm}
+
+\end{Algoritmos}

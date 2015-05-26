@@ -3,8 +3,8 @@ algo2-tp2 1c 2015
 
 Cosas que faltan
 ----------------
-- [ ] Algoritmo de caminos minimos en red
-- [ ] interfaz dcnet
+- [x] Algoritmo de caminos minimos en red
+- [x] interfaz dcnet
 - [ ] invrep y abs dcnet
 - [ ] algoritmos dcnet
 - [ ] interfaz dicc trie
@@ -13,10 +13,10 @@ Cosas que faltan
 - [ ] interfaz iterador dicc trie
 - [x] invrep y abs iterador dicc trie (no hay que hacerlo)
 - [x] algoritmos iterador dicc trie (no hay que hacerlo)
-- [ ] interfaz colaprior heap
-- [ ] invrep y abs colaprior heap
-- [ ] algoritmos colaprior heap
-
+- [x] interfaz colaprior heap
+- [x] invrep y abs colaprior heap
+- [x] algoritmos colaprior heap
+- [ ] complejidades de todo
 
 Git
 ---

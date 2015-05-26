@@ -1,0 +1,97 @@
+\begin{Interfaz}
+  \textbf{parámetros formales}\hangindent=2\parindent\\
+  \parbox{1.7cm}{\textbf{géneros}} $\alpha$\\	
+	
+  \textbf{se explica con}: \tadNombre{conj($\alpha$)}.
+
+  \textbf{géneros}: \TipoVariable{conjAVL($\alpha$)}.
+
+  \section*{Operaciones básicas ConjAVL($\alpha$)}
+
+  \InterfazFuncion{Vacio}{}{conjAVL($\alpha$)}
+  {$res \igobs \emptyset$}
+  [$\Ogr(1)$]
+  [genera un conjunto vacío.]
+
+  \InterfazFuncion{Agregar}{\Inout{c}{conjAVL($\alpha$)}, \In{a}{$\alpha$}}{}
+  [$c \igobs c_0$]  
+  {$c$ \igobs Ag($a,c_0$)}
+  [$\Ogr(log(n) \times comp_{\alpha}(a, a'))$\footnote{Dentro de este módulo, n es la cantidad de elementos del conjunto.}]
+  [agrega el elemento $a$ al conjunto $c$.]
+  [$a$ se agrega por referencia.]
+    
+  \InterfazFuncion{Pertenece?}{\In{c}{conjAVL($\alpha$)}, \In{a}{$\alpha$}}{bool}
+  {$res$ \igobs ($a\in c$) }
+  [$\Ogr(log(n) \times comp_{\alpha}(a, a'))$]
+  [devuelve $true$ si y sólo si el elemento $a$ pertenece al conjunto.]
+  
+  \InterfazFuncion{Eliminar}{\In{c}{conjAVL($\alpha$)}, \In{a}{$\alpha$}}{}
+  [$c$ \igobs $c_0 \land a \in c$ ]
+  {$c \igobs (c_0 - \{a\})$}
+  [$\Ogr(log(n) \times comp_{\alpha}(a, a'))$]
+  [elimina el elemento $a$ del conjunto.] 
+  
+  \underline{Nota:} Si $comp_{\alpha}(a, a'))$ es constante entonces todas las operaciones del conjunto salvo Vacio son $\Ogr(log(n))$
+  \newpage
+\end{Interfaz}
+
+\begin{Representacion}
+    
+  \section*{Representación de ConjAVL($\alpha$)}
+
+  \begin{Estructura}{conjAVL($\alpha$)}[diccAVL($\alpha$, nat)]
+  \end{Estructura}
+  
+  \Rep[diccAVL($\alpha${,} nat)][d]{true}
+  
+  \AbsFc[diccAVL($\alpha${,} nat)]{conjAVL($\alpha$)}[d]{
+	$c$ : conj($\alpha$) | ($\forall a: \alpha$) ($a\in c \Leftrightarrow a\in claves(d)$)}
+\end{Representacion}
+
+
+\begin{Algoritmos}
+
+\begin{algorithm}
+\caption{Vacio}
+\begin{algorithmic}[1]
+\Procedure{iVacio}{}$\to res$ : \texttt{diccAVL($\alpha$, nat)}
+	\State $res \gets$ Vacio()
+	\Comment $\Ogr(1)$
+\EndProcedure
+\end{algorithmic}
+\underline{Complejidad:} $\Ogr(1)$
+\end{algorithm}
+
+\begin{algorithm}
+\caption{Agregar}
+\begin{algorithmic}[1]
+\Procedure{iAgregar}{\texttt{in/out} $c$ : \texttt{diccAVL($\alpha$, nat)}, \texttt{in} $a$ : \texttt{$\alpha$}}
+	\State Definir($c, a, 0$)
+	\Comment $\Ogr(log(n) \times comp_{\alpha}(a, a'))$
+\EndProcedure
+\end{algorithmic}
+\underline{Complejidad:} $\Ogr(log(n) \times comp_{\alpha}(a, a'))$
+\end{algorithm}
+
+\begin{algorithm}
+\caption{Pertenece?}
+\begin{algorithmic}[1]
+\Procedure{iPertenece?}{\texttt{in/out} $c$ : \texttt{diccAVL($\alpha$, nat)}, \texttt{in} $a$ : \texttt{$\alpha$}}$\to res$ : \texttt{bool}
+	\State $res \gets$ Definido?($c, a$)
+	\Comment $\Ogr(log(n) \times comp_{\alpha}(a, a'))$
+\EndProcedure
+\end{algorithmic}
+\underline{Complejidad:} $\Ogr(log(n) \times comp_{\alpha}(a, a'))$
+\end{algorithm}
+
+\begin{algorithm}
+\caption{Eliminar}
+\begin{algorithmic}[1]
+\Procedure{iEliminar}{\texttt{in/out} $c$ : \texttt{diccAVL($\alpha$, nat)}, \texttt{in} $a$ : \texttt{$\alpha$}}
+	\State Borrar($c, a$)
+	\Comment $\Ogr(log(n) \times comp_{\alpha}(a, a'))$
+\EndProcedure
+\end{algorithmic}
+\underline{Complejidad:} $\Ogr(log(n) \times comp_{\alpha}(a, a'))$
+\end{algorithm}
+\end{Algoritmos}

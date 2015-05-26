@@ -7,15 +7,15 @@
 
   \InterfazFuncion{IniciarRed}{}{red}
   {$res \igobs iniciarRed()$}
-  [$\Theta()$]
+  [$\Ogr(1)$]
   [genera la red vacía]
 
-  \InterfazFuncion{AgregarComputadora}{\Inout{r}{\tadNombre{Red}}, \In{c}{\tadNombre{Compu}}}{}
+  \InterfazFuncion{AgregarComputadora}{\Inout{r}{\tadNombre{Red}}, \In{c}{\tadNombre{Compu}}, \In{is}{\tadNombre{conj(interfaz)}}}{}
   [$r \igobs r_0 \land (\forall c' : compu) (c' \in computadoras(r) \impluego ip(c) \neq ip(c'))$] 
   {$computadoras(r) = Ag(c, computadoras(r_0)) \yluego \\
      (\forall c_1, c_2 : compu) (c_1 \in computadoras(r_0) \land c_2 \in computadoras(r_0) \impluego \\ 
    conectadas(r_0, c_1, c_2) = conectadas(r, c_1, c_2) \land interfazUsada(r_0, c_1, c_2) = interfazUsada(r, c_1, c_2)$)}
-  [$\Theta()$]
+  [$\Ogr(L)$]
   [agrega el la computadora $c$ a la red $r$.]
   [el elemento $c$ agrega por copia.]
   
@@ -26,13 +26,13 @@
     (\forall c'_1, c'_2 : compu) (c'_1 \in computadoras(r_0) \land c'_2 \in computadoras(r_0) \land \{c_1, c_2\} \neq \{c'_1, c'_2\} \impluego \\ 
    conectadas(r_0, c'_1, c'_2) = conectadas(r, c'_1, c'_2) \land interfazUsada(r_0, c'_1, c'_2) = interfazUsada(r, c'_1, c'_2)) \land \\
    conectadas(r_0, c_1, c_2) \land interfazUsada(r, c_1, c_2) = i_1 \land interfazUsada(r, c_2, c_1) = i_2$}
-  [$\Theta()$]
+  [$\Ogr(L)$]
   [conecta las computadoras $c_1$ y $c_2$ mediante las interfaces $i_1$ e $i_2$ respectivamente en la red $r$.]
 
 
-  \InterfazFuncion{computadoras}{\In{r}{\tadNombre{Red}}}{}
+  \InterfazFuncion{computadoras}{\In{r}{\tadNombre{Red}}}{\tadNombre{conj(compu)}}
   {$res = computadoras(r)$}
-  [$\Theta()$]
+  [$\Ogr(n)$]
   [devuelve un conjunto con todas las computadoras de la red $r$.]
   [?]
 
@@ -40,21 +40,21 @@
   \InterfazFuncion{conectadas?}{\In{r}{\tadNombre{Red}}, \In{c_1}{\tadNombre{Compu}}, \In{c_2}{\tadNombre{Compu}}}{\tadNombre{bool}}
   [$c_1 \in computadoras(r) \land c_2 \in computadoras(r)$]
   {$res = conectadas?(r,c_1,c_2)$}
-  [$\Theta()$]
+  [$\Ogr(L)$]
   [dice si las computadoras $c_1$ y $c_2$ están conectadas en la red $r$]
 
 
   \InterfazFuncion{interfazUsada}{\In{r}{\tadNombre{Red}}, \In{c_1}{\tadNombre{Compu}}, \In{c_2}{\tadNombre{Compu}}}{\tadNombre{bool}}
   [$conectadas?(r,c_1,c_2)$]
   {$res = interfazUsada(r,c_1,c_2)$}
-  [$\Theta()$]
+  [$\Ogr(L)$]
   [devuelve la interfaz mediante la cual $c_1$ se conecta a $c_2$  en la red $r$.]
 
 
   \InterfazFuncion{vecinos}{\In{r}{\tadNombre{Red}}, \In{c}{\tadNombre{Compu}}}{\tadNombre{conj(compu)}}
   [$c \in computadoras(r)$]
   {$res = vecinos(r,c)$}
-  [$\Theta()$]
+  [$\Ogr(n+L)$]
   [devuelve las computadoras conectadas a $c$ en la red $r$.]
   [?]
 
@@ -62,22 +62,22 @@
   \InterfazFuncion{usaInterfaz?}{\In{r}{\tadNombre{Red}}, \In{c}{\tadNombre{Compu}}, \In{i}{\tadNombre{Interfaz}}}{\tadNombre{bool}}
   [$c \in computadoras(r)$]
   {$res = usaInterfaz?(r,c,i)$}
-  [$\Theta()$]
+  [$\Ogr(nL)$]
   [devuelve true si y solo si $c$ está conectada a otra pc mediante la interfaz $i$ en la red $r$.]
 
 
   \InterfazFuncion{caminosMinimos}{\In{r}{\tadNombre{Red}}, \In{c_1}{\tadNombre{Compu}}, \In{c_2}{\tadNombre{Compu}}}{\tadNombre{conj(secu(compu))}}
   [$c_1 \in computadoras(r) \land c_2 \in computadoras(r)$]
   {$res = caminosMinimos(r,c_1,c_2)$}
-  [$\Theta()$]
+  [$\Ogr(n \cdot n^2!)$]
   [devuelve un conjunto con los caminos más cortos entre las computadoras $c_1$ y $c_2$ en la red $r$.]
 
 %%
 
   \InterfazFuncion{hayCamino?}{\In{r}{\tadNombre{Red}}, \In{c_1}{\tadNombre{Compu}}, \In{c_2}{\tadNombre{Compu}}}{\tadNombre{bool}}
   [$c_1 \in computadoras(r) \land c_2 \in computadoras(r)$]
-  {$res = hayCamino?(r,c_1,c_2)$}
-  [$\Theta()$]
+  {$res = hayCamino?(r,c_1,c_2)$} 
+  [$\Ogr(n \cdot n^2!)$]
   [devuelve true si y solo si hay un camino entre las computadoras $c_1$ y $c_2$ en la red $r$.]
 
 
@@ -90,15 +90,15 @@
   
   \section*{Representación de la red}
 
-  \begin{Estructura}{red}[estr]
-    \begin{Tupla}[estr]
-      \tupItem{vecinos}{dicc(id, dicc(id, interfaz))}\\
-      \tupItem{compus}{dicc(id, compu)}%
+  \begin{Estructura}{red}[redEstr]
+    \begin{Tupla}[topo]
+      \tupItem{vecinos}{dicc(compu, dicc(compu, interfaz))}\\
+      \tupItem{interfaces}{dicc(compu, conj(interfaces))}%
     \end{Tupla}
 
   \end{Estructura}
 
-  \Rep[estr][e]{claves(e.vecinos) $=$ claves(e.compus) $\yluego$ \\
+  \Rep[redEstr][e]{claves(e.vecinos) $=$ claves(e.compus) $\yluego$ \\
   ($\forall i_1, i_2$ : id) def?($i_2$, (obtener($i_1$, e.vecinos))) $\impluego$ def?($i_2$, e.vecinos) $\yluego$ def?($i_1$, obtener($i_2$, e.vecinos)) $\yluego$ \\
 obtener($i_2$, obtener($i_1$, e.vecinos)) $\in$  interfaces(obtener($i_1$, e.compus))
 $\land$\\ 
@@ -108,7 +108,7 @@ $\land$\\
 }\mbox{}
   
    
-   \AbsFc[estr]{red}[e]{
+   \AbsFc[redEstr]{red}[e]{
      r : red / computadoras(r) = significados(e.compus) $\land$ \\ 
      ($\forall c_1, c_2$ : computadora) conectadas($r, c_1, c_2$) = def?(id($c_1$), obtener(id($c_2$), e.vecinos)) $\land$ \\
      ($\forall c_1, c_2$: computadora) ($\forall i$ : interfaz) conectadas($r,c_1,c_2$) $\impluego$ interfazUsada($r, c_1, c_2$) = obtener(id($c_1$), obtener(id($c_2$), e.vecinos))
@@ -124,11 +124,12 @@ $\land$\\
 \begin{algorithm}
   \caption{Algoritmos de \tadNombre{RED}}
 \begin{algorithmic}[1]
-  \Procedure{IniciarRed() $\to$ $res$ : red}{}
-  \State vecinos $\gets$ Vacia()
-  \State interfaces $\gets$ Vacia()
-  \State $res \gets$ (vecinos, interfaces)
+  \Procedure{iIniciarRed}{\ } $\to$ $res$ : \texttt{redEstr}
+  \State vecinos $\gets$ Vacia() \Comment $\Ogr(1)$
+  \State interfaces $\gets$ Vacia() \Comment $\Ogr(1)$
+  \State $res \gets$ (vecinos, interfaces) \Comment $\Ogr(1)$
   \EndProcedure
+  \underline{Complejidad:} $\Ogr(1)$
 \end{algorithmic}
 \end{algorithm}
 
@@ -136,102 +137,167 @@ $\land$\\
 \begin{algorithm}
 \caption{Agregar Computadora}
 \begin{algorithmic}[1]
-  \Procedure{AgregarComputadora(\textbf{in/out} $r$ : red, \textbf{in} $c$ : compu)}{}
-  \State definir(r.vecinos, id($c$), Vacia())
-  \State definir(r.interfaces, id($c$), $c$)
+  \Procedure{iAgregarComputadora}{\texttt{in/out} $r$ : \texttt{redEstr}, \texttt{in} $c$ : \texttt{compu}, \texttt{in} $is$ : \texttt{conj(interfaz)}}
+  \State definir(r.vecinos, $c$, Vacia()) \Comment $\Ogr(L)$
+  \State definir(r.interfaces, $c$, $is$) \Comment $\Ogr(L)$
  \EndProcedure
+ \underline{Complejidad:} $\Ogr(L)$
+\end{algorithmic}
+\end{algorithm}
+
+
+\begin{algorithm}
+\caption{Conectar}
+\begin{algorithmic}[1]
+  \Procedure{iConectar}{\texttt{in/out} $r$ : \texttt{redEstr}, \texttt{in} $c_1$ : \texttt{compu}, \texttt{in} $c_2$ :  \texttt{compu}, \texttt{in} $i_1$ : \texttt{interfaz}, \texttt{in} $i_2$ : \texttt{interfaz}}{}
+  \State $x \gets$ obtener(r.vecinos, $c_1$) \Comment $\Ogr(L)$
+  \State definir($x$, $c_2$, $i_1$) \Comment $\Ogr(L)$
+  \State $x \gets$ obtener(r.vecinos, $c_2$) \Comment $\Ogr(L)$
+  \State definir($x$, $c_1$, $i_2$) \Comment $\Ogr(L)$
+ \EndProcedure
+ \underline{Complejidad:} $\Ogr(L)$
 \end{algorithmic}
 \end{algorithm}
 
 
 
 \begin{algorithm}
-%\caption{Conectar}
+\caption{Computadoras}
 \begin{algorithmic}[1]
-  \Procedure{Conectar(\textbf{in/out} $r$ : red, \textbf{in} $c_1$ : compu, \textbf{in} $c_2$ : compu, \textbf{in} $i_1$ : interfaz, \textbf{in} $i_2$ : interfaz)}{}
-  \State $x \gets$ obtener(r.vecinos, $c_1$)
-  \State definir($x$, id($c_2$), $i_1$)
-  \State $x \gets$ obtener(r.vecinos, $c_2$)
-  \State definir($x$, id($c_1$), $i_2$)
+  \Procedure{iComputadoras}{\texttt{in} $r$ : \texttt{redEstr}} $\to res$ : \texttt{conj(compu)} 
+  \State $res \gets$ Claves($interfaces$) \Comment $\Ogr(n)$
  \EndProcedure
+\underline{Complejidad:} $\Ogr(n)$
 \end{algorithmic}
-
-
-
-
-%\caption{Computadoras}
-\begin{algorithmic}[1]
-  \Procedure{Computadoras(\textbf{in} $r$ : red) $\to res$ : conj(compu)}{} 
-  \State $i :\tadNombre{itdicc} \gets$ NuevoIterador($r$.vecinos)
-  \State $res :\tadNombre{conj(compu)} \gets$ Vacio()
-  \While{haySiguiente($i$)}
-    \State Agregar($res$, Obtener(Siguiente($i$), $r$.vecinos))
-    \State Avanzar($i$)
-  \EndWhile
- \EndProcedure
-\end{algorithmic}
-
-
-%\caption{Conectadas?}
-\begin{algorithmic}[1]
-  \Procedure{Conectadas?(\textbf{in} $r$ : red, \textbf{in} $c_1$ : compu, \textbf{in} $c_2$ : compu)  $\to res$ : bool}{}
-  \State $x \gets$ Obtener(id($c_1$), $r$.vecinos)
-  \State $res \gets$ def?(id($c_2$), $x$)
- \EndProcedure
-\end{algorithmic}
-
-
-%\caption{InterfazUsada}
-\begin{algorithmic}[1]
-  \Procedure{InterfazUsada(\textbf{in} $r$ : red, \textbf{in} $c_1$ : compu, \textbf{in} $c_2$ : compu)  $\to res$ : interfaz}{}
-  \State $x \gets$ Obtener(id($c_1$), $r$.vecinos)
-  \State $res \gets$ Obtener(id($c_2$), $x$)
- \EndProcedure
-\end{algorithmic}
-
-
-%\caption{Vecinos}
-\begin{algorithmic}[1]
-  \Procedure{Vecinos(\textbf{in} $r$ : red, \textbf{in} $c$ : compu)  $\to res$ : conj(compu)}{}
-  \State $x \gets$ Obtener(id($c$), $r$.vecinos)
-  \State $res \gets$ Claves($x$)
- \EndProcedure
-\end{algorithmic}
-
-
-%\caption{UsaInterfaz?}
-\begin{algorithmic}[1]
-  \Procedure{UsaInterfaz?(\textbf{in} $r$ : red, \textbf{in} $c$ : compu,  \textbf{in} $i$ : interfaz) $\to res$ : bool}{} 
-  \State $x \gets$ Obtener(id($c$), $r$.vecinos)
-  \State $i :\tadNombre{itdicc} \gets$ NuevoIterador($x$)
-  \State $res \gets$ False
-  \While{haySiguiente($i$)}
-    \If {Obtener(Siguiente($i$), $x$) = $i$} $res \gets$ True  \EndIf
-    \State Avanzar($i$)
-  \EndWhile
- \EndProcedure
-\end{algorithmic}
-
-
-
-%\caption{CaminosMinimos}
-\begin{algorithmic}[1]
-  \Procedure{CaminosMinimos(\textbf{in} $r$ : red, \textbf{in} $c_1$ : compu,  \textbf{in} $c_2$ : compu) $\to res$ : conj(secu(compu))}{} 
-   \State En construcción 
-\EndProcedure
-\end{algorithmic}
-
-
-%\caption{HayCamino?}
-\begin{algorithmic}[1]
-  \Procedure{HayCamino?(\textbf{in} $r$ : red, \textbf{in} $c_1$ : compu,  \textbf{in} $c_2$ : compu) $\to res$ : bool}{} 
-   \State $res \gets$ $\neg$ esVacio?(CaminosMinimos($r$,$c_1$, $c_2$))
-\EndProcedure
-\end{algorithmic}
-
-
 \end{algorithm}
 
+
+\begin{algorithm}
+\caption{Conectadas?}
+\begin{algorithmic}[1]
+  \Procedure{iConectadas?}{\texttt{in} $r$ : \texttt{redEstr}, \texttt{in} $c_1$ : \texttt{compu}, \texttt{in} $c_2$ : \texttt{compu}}  $\to res$ : \texttt{bool}
+  \State $x \gets$ Obtener($c_1$, $r$.vecinos) \Comment $\Ogr(L)$
+  \State $res \gets$ def?($c_2$, $x$) \Comment $\Ogr(L)$
+ \EndProcedure
+ \underline{Complejidad:} $\Ogr(L)$
+\end{algorithmic}
+\end{algorithm}
+
+
+\begin{algorithm}
+\caption{Interfaz Usada}
+\begin{algorithmic}[1]
+  \Procedure{iInterfazUsada}{\texttt{in} $r$ : \texttt{redEstr}, \texttt{in} $c_1$ : \texttt{compu}, \texttt{in} $c_2$ : \texttt{compu}} $\to res$ : \texttt{interfaz}
+  \State $x \gets$ Obtener($c_1$, $r$.vecinos) \Comment $\Ogr(L)$
+  \State $res \gets$ Obtener($c_2$, $x$) \Comment $\Ogr(L)$
+ \EndProcedure
+ \underline{Complejidad:} $\Ogr(L)$
+\end{algorithmic}
+\end{algorithm}
+
+
+\begin{algorithm}
+\caption{Vecinos}
+\begin{algorithmic}[1]
+  \Procedure{iVecinos}{\texttt{in} $r$ : \texttt{redEstr}, \texttt{in} $c$ :\texttt{compu}}  $\to res$ : \texttt{conj(compu)}
+  \State $x \gets$ Obtener($c$, $r$.vecinos) \Comment $\Ogr(L)$
+  \State $res \gets$ Claves($x$) \Comment $\Ogr(n)$
+ \EndProcedure
+ \underline{Complejidad:} $\Ogr(n+L)$
+\end{algorithmic}
+\end{algorithm}
+
+
+
+\begin{algorithm}
+\caption{Usa Interfaz?}
+\begin{algorithmic}[1]
+  \Procedure{iUsaInterfaz?}{\texttt{in} $r$ : \texttt{redEstr}, \texttt{in} $c$ : \texttt{compu},  \texttt{in} $i$ : interfaz} $\to res$ : \texttt{bool} 
+  \State $x \gets$ Obtener($c$, $r$.vecinos) \Comment $\Ogr(L)$
+  \State $i :\tadNombre{itdicc} \gets$ NuevoIterador($x$) \Comment $\Ogr(n)$
+  \State $res \gets$ False \Comment $\Ogr(1)$
+  \While{haySiguiente($i$)} \Comment Se repite $\Ogr(n)$ veces
+    \If {Obtener(Siguiente($i$), $x$) = $i$}  \Comment $\Ogr(L)$
+       \State $res \gets$ True  \Comment $\Ogr(1)$
+    \EndIf
+    \State Avanzar($i$) \Comment $\Ogr(1)$
+  \EndWhile
+ \EndProcedure
+ \underline{Complejidad:} $\Ogr(nL)$
+ \underline{Justificación:} $\Ogr(L) + \Ogr(n) + \Ogr(1) + \Ogr(n)(\Ogr(L) + \Ogr(1) = \Ogr(n)\Ogr(L) = \Ogr(nL)$
+\end{algorithmic}
+\end{algorithm}
+
+
+\begin{algorithm}
+\caption{Caminos Minimos}
+\begin{algorithmic}[1]
+  \Procedure{iCaminosMinimos}{\texttt{in} $r$ : \texttt{redEstr}, \textbf{in} $c_1$ : \texttt{compu},  \texttt{in} $c_2$ : \texttt{compu}} $\to res$ : \texttt{conj(secu(compu))}  
+   \State $k \gets$ 1 \Comment $\Ogr(1)$
+   \State $n \gets$ Cardinal(Computadoras($r$))  \Comment $\Ogr(n)$
+   \While{$k<n$ $\land$ esVacio?(CaminosDeLargoN($r$, $c_1$, $c_2$, k))} \Comment Se repite $\Ogr(n)$ veces y cuesta  $\Ogr(n^2!)$
+     \State k++ \Comment $\Ogr(1)$
+   \EndWhile
+   \State $res \gets$ CaminosDeLargoN($r$, $c_1$, $c_2$, k) \Comment $\Ogr(n^2!)$
+\EndProcedure
+\underline{Complejidad:} $\Ogr(n \cdot n^2!)$
+\underline{Justificacion:} $\Ogr(1) + \Ogr(n) + \Ogr(n)\Ogr(n^2!) + \Ogr(n^2!) = \Ogr(n)\Ogr(n^2!) = \Ogr(n \cdot n^2!)$
+\end{algorithmic}
+\end{algorithm}
+
+
+\begin{algorithm}
+\caption{Hay Camino?}
+\begin{algorithmic}[1]
+  \Procedure{iHayCamino?}{\texttt{in} $r$ : \texttt{redEstr}, \texttt{in} $c_1$ : \texttt{compu},  \texttt{in} $c_2$ : \texttt{compu}} $\to res$ : \texttt{bool} 
+   \State $res \gets$ $\neg$ esVacio?(CaminosMinimos($r$,$c_1$, $c_2$)) \Comment  $\Ogr(n \cdot n^2!)$
+\EndProcedure
+\underline{Complejidad:} $\Ogr(n \cdot n^2!)$
+\end{algorithmic}
+\end{algorithm}
+
+\begin{algorithm}
+\caption{Caminos De Largo N }
+\begin{algorithmic}[1]
+  \Procedure{iCaminosDeLargoN}{\texttt{in} $r$ : \texttt{redEstr}, \textbf{in} $c_1$ : \texttt{compu},  \texttt{in} $c_2$ : \texttt{compu}, \texttt{in} $n$ : \texttt{nat}} $\to res$ : \texttt{conj(secu(compu))} 
+   \State conj(secu(compu)) $caminos \gets$ Vacio() \Comment $\Ogr(1)$
+   \If{n = 0}
+     \State secu(compus) $camino \gets$ Vacio \Comment $\Ogr(1)$
+     \State AgregarAtras($camino$, $c_1$) \Comment $\Ogr(1)$
+     \State Agregar($camino$, $caminos$) \Comment $\Ogr(1)$
+   \Else
+     \State $vec \gets$ vecinos($c_1$) \Comment $\Ogr(n+L)$
+     \State $itVecinos \gets$ CrearIt($vec$) \Comment $\Ogr(1)$
+     \While{haySiguiente?($itVecinos$)} \Comment Se va a repetir $\Ogr(n)$ veces
+       \State $v \gets$ Siguiente($itVecinos$) \Comment $\Ogr(1)$
+       \State $cams \gets$ CaminosDeLargoN($r$, $v$, $c_2$, $n-1$) \Comment $T(n-1)$
+       \State $itCaminos \gets$ CreatIt($cams$) \Comment $\Ogr(1)$
+       \While{haySiguiente?($itCaminos$)}  \Comment Se va a repetir $\Ogr(|caminos|) \subseteq \Ogr(n^2!)$ veces \footnotesize{Si el grafo de computadoras fuera completo (alcanzando asi la maxima cantidad de links posibles, que es $\frac{n(n-1)}{2})$ es claro que se puede elegir $\frac{n(n-1)}{2}!$ caminos distintos, por combinatoria} \normalsize
+         \State $camino \gets$ Siguiente($itCaminos$) \Comment $\Ogr(1)$
+         \If{Ultimo($camino$) = $c_2$} \Comment $\Ogr(1)$
+           \State $camino_2 \gets$ camino \Comment $\Ogr(1)$
+           \State AgregarAdelante($c_1$, $camino_2$) \Comment $\Ogr(1)$
+           \State Agregar ($camino_2$, $caminos$) \Comment $\Ogr(1)$
+         \EndIf
+       \State Avanzar($itCaminos$) \Comment $\Ogr(1)$
+       \EndWhile
+    \State Avanzar($itVecinos$) \Comment $\Ogr(1)$
+    \EndWhile    
+   \EndIf
+   
+   \State $itCaminos \gets$ crearIt($caminos$) \Comment $\Ogr(1)$
+   \While{haySiguiente?($itCaminos$)} \Comment Se va a repetir $\Ogr(n)$ veces
+     \If{ultimo(Siguiente($itCaminos$)) $\neq$ $c_2$} \Comment $\Ogr(1)$
+       \State EliminarSiguiente($itCaminos$) \Comment $\Ogr(1)$
+      \EndIf
+    \EndWhile
+    \State $res \gets caminos$ \Comment $\Ogr(1)$
+
+ \EndProcedure
+ \underline{Complejidad:} $\Ogr(n^2!)$
+ \underline{Justificación:} $T(0) = \Ogr(1), T(n) = \Ogr(n+L) + \Ogr(n) \cdot T(n-1) + \Ogr(n^2!) + \Ogr(n)$ \hspace{3cm}  Por lo tanto, $T(n) =  \Ogr(n)T(n-1) + \Ogr(n^2!) = \Ogr(n)(\Ogr(n-1)T(n-1) + \Ogr((n-1)^2!)) + \Ogr(n^2!)) = \Ogr(n)\Ogr(n-1) T(n-2) + \Ogr((n-1)^2!)\Ogr(n) + \Ogr(n^2!) = \Ogr(n)\Ogr(n-1) T(n-2) + \Ogr(n^2!) = ... = \Ogr(n)\cdot ... \cdot \Ogr(1) + \Ogr(n^2!) = \Ogr(n!) + \Ogr(n^2!) = \Ogr(n^2!)$
+\end{algorithmic}
+\end{algorithm}
 
 
 \end{Algoritmos}

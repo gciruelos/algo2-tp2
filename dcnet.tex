@@ -221,7 +221,7 @@
    
   \State itLista(tupla(paq, itLista(lista(compu)))) $it_2 \gets$ CrearIt($paquetesAEnviar$) \Comment  $\Ogr(1)$
   \While{HaySiguientes?($it_2$)} \Comment  $se repite \Ogr(n) veces$
-      \State tupla(paq, itLista(lista(compu)) $p \gets$ Siguiente($it_2$) \Comment  $\Ogr(1)$
+      \State tupla(paq, itLista(lista(compu))) $p \gets$ Siguiente($it_2$) \Comment  $\Ogr(1)$
       \State compu $proximaCompu \gets$ Obtener(Obtener($proximaEnCamino$, $Ultimo(Siguiente(\pi_1(p)))$), destino($p$)) 
       \State \Comment  $\Ogr(L + L)$
       \If {proximaCompu != $\pi_0(p)$} \Comment  $\Ogr(1)$
